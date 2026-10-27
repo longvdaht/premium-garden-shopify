@@ -1,0 +1,162 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "subheading_option": "breadcrumb"
+          }
+        },
+        "price": {
+          "type": "price"
+        },
+        "variants": {
+          "type": "variants"
+        },
+        "buttons": {
+          "type": "buttons"
+        },
+        "pickup": {
+          "type": "pickup",
+          "disabled": true
+        },
+        "tabs": {
+          "type": "tab_richtext"
+        },
+        "divider_1": {
+          "type": "divider",
+          "settings": {
+            "padding_bottom": 16
+          }
+        },
+        "icon_text_1": {
+          "type": "icon-text",
+          "settings": {
+            "icon_key": "arrow-circle-up-right",
+            "text": "<p>Free 30 Days Returns<\/p>"
+          }
+        },
+        "icon_text_2": {
+          "type": "icon-text",
+          "settings": {
+            "icon_key": "package",
+            "text": "<p>Free shipping on orders over $100<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variants",
+        "buttons",
+        "pickup",
+        "tabs",
+        "divider_1",
+        "icon_text_1",
+        "icon_text_2"
+      ]
+    },
+    "custom": {
+      "type": "section-custom-content",
+      "blocks": {
+        "custom-0": {
+          "type": "image",
+          "settings": {
+            "title": "",
+            "description": "",
+            "link_text": ""
+          }
+        },
+        "custom-1": {
+          "type": "text",
+          "settings": {
+            "subheading": "Introducing",
+            "title": "Product feature",
+            "align_text": "text-left",
+            "bg_color": "#f7f7f7",
+            "button_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "custom-0",
+        "custom-1"
+      ],
+      "settings": {
+        "height": "screen-height-one-half",
+        "padding": true
+      }
+    },
+    "imgtxt": {
+      "type": "section-custom-content",
+      "blocks": {
+        "imgtxt-0": {
+          "type": "text",
+          "settings": {
+            "subheading": "Introducing",
+            "title": "Another feature",
+            "align_text": "text-left",
+            "bg_color": "#f7f7f7",
+            "button_text": ""
+          }
+        },
+        "imgtxt-1": {
+          "type": "image",
+          "settings": {
+            "title": "",
+            "description": "",
+            "link_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "imgtxt-0",
+        "imgtxt-1"
+      ],
+      "settings": {
+        "height": "screen-height-one-half",
+        "padding": true
+      }
+    },
+     "related": {
+      "type": "section-related-products",
+      "blocks": {
+        "related": {
+          "type": "related",
+          "settings": {
+            "product_recommendations_heading": "Related products",
+            "limit": 4
+          }
+        },
+        "recent": {
+          "type": "recent",
+          "settings": {
+            "product_recently_heading": "Recently viewed",
+            "product_recently_limit": 4
+          }
+        }
+      },
+      "block_order": [
+        "related",
+        "recent"
+      ],
+      "settings": {
+        "enable_tabs": true,
+        "heading_alignment": "text-center",
+        "heading_font_size": "heading-small",
+        "layout_mobile": "slider",
+        "color_scheme": "",
+        "padding_top": 30,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom",
+    "imgtxt",
+    "related"
+  ]
+}

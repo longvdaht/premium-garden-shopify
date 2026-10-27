@@ -1,0 +1,1128 @@
+{%- render 'announcement' -%}
+
+{% schema %}
+{
+  "name": "Scrolling text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Scrolling text"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Autoplay speed",
+      "unit": "%",
+      "min": 50,
+      "max": 300,
+      "step": 25,
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Text direction",
+      "default": "ticker-rtl",
+      "options": [
+        {"value": "ticker-ltr", "label": "Left to right"},
+        {"value": "ticker-rtl", "label": "Right to left"}
+      ]
+    },
+    {
+      "type": "range",
+      "id": "message_spacing",
+      "label": "Space between messages",
+      "default": 10,
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Background image (optional)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Image",
+      "info": "3200 x 1200px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Make an announcement"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-small",
+          "options": [
+            {"value": "heading-mini", "label": "Mini"},
+            {"value": "heading-x-small", "label": "Extra small"},
+            {"value": "heading-small", "label": "Small"},
+            {"value": "heading-medium", "label": "Medium"},
+            {"value": "heading-large", "label": "Large"},
+            {"value": "heading-x-large", "label": "Extra large"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p><strong>Make an announcement</strong> | More info</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-small",
+          "options": [
+            {"value": "body-x-small", "label": "Extra small"},
+            {"value": "body-small", "label": "Small"},
+            {"value": "body-medium", "label": "Medium"},
+            {"value": "body-large", "label": "Large"},
+            {"value": "body-x-large", "label": "Extra large"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text "
+        },
+        {
+          "type": "header",
+          "content": "Target device"
+        },
+        {
+          "id": "target_device_enabled",
+          "type": "checkbox",
+          "label": "Limit to desktop or mobile"
+        },
+        {
+          "type": "select",
+          "id": "target_device",
+          "label": "Device ",
+          "default": "mobile",
+          "options": [
+            {"value": "mobile", "label": "Only show on mobile"},
+            {"value": "desktop", "label": "Only show on desktop"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "name": "Custom code",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "code",
+          "label": "Code",
+          "default": "<p>Custom code</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "default": "body-small",
+          "options": [
+            {"value": "body-x-small", "label": "Extra small"},
+            {"value": "body-small", "label": "Small"},
+            {"value": "body-medium", "label": "Medium"},
+            {"value": "body-large", "label": "Large"},
+            {"value": "body-x-large", "label": "Extra large"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Target device"
+        },
+        {
+          "id": "target_device_enabled",
+          "type": "checkbox",
+          "label": "Limit to desktop or mobile"
+        },
+        {
+          "type": "select",
+          "id": "target_device",
+          "label": "Device ",
+          "default": "mobile",
+          "options": [
+            {"value": "mobile", "label": "Only show on mobile"},
+            {"value": "desktop", "label": "Only show on desktop"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "360 x 360px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Width",
+          "unit": "px",
+          "min": 20,
+          "max": 180,
+          "step": 10,
+          "default": 100
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "default": "body-small",
+          "options": [
+            {"value": "body-x-small", "label": "Extra small"},
+            {"value": "body-small", "label": "Small"},
+            {"value": "body-medium", "label": "Medium"},
+            {"value": "body-large", "label": "Large"},
+            {"value": "body-x-large", "label": "Extra large"}
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "type_font_caps",
+          "label": "Uppercase",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text "
+        }
+      ]
+    },
+    {
+      "type": "advanced-text",
+      "name": "Advanced text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p><strong>Make an announcement</strong> | More info</p>"
+        },
+        {
+          "type": "font_picker",
+          "id": "type_font",
+          "label": "Font",
+          "default": "poppins_n4"
+        },
+        {
+          "type": "range",
+          "id": "text_font_size_px",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Text size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "type_letter_spacing",
+          "min": -25,
+          "max": 200,
+          "step": 25,
+          "unit": "%",
+          "label": "Letter spacing",
+          "default": 0
+        },
+        {
+          "type": "checkbox",
+          "id": "type_font_caps",
+          "label": "Uppercase",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text"
+        },
+        {
+          "type": "header",
+          "content": "Target device"
+        },
+        {
+          "id": "target_device_enabled",
+          "type": "checkbox",
+          "label": "Limit to desktop or mobile"
+        },
+        {
+          "type": "select",
+          "id": "target_device",
+          "label": "Device ",
+          "default": "mobile",
+          "options": [
+            {"value": "mobile", "label": "Only show on mobile"},
+            {"value": "desktop", "label": "Only show on desktop"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Title<\/p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-small",
+          "options": [
+            {"value": "body-x-small", "label": "Extra small"},
+            {"value": "body-small", "label": "Small"},
+            {"value": "body-medium", "label": "Medium"},
+            {"value": "body-large", "label": "Large"},
+            {"value": "body-x-large", "label": "Extra large"}
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling text",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Make an announcement</strong> | Target to specific devices</p>"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Create a free shipping countdown</strong></p>"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Create a scrolling marquee or a simple announcement</strong></p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside"]
+  }
+}
+{% endschema %}

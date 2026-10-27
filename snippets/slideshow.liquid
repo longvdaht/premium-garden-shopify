@@ -1,0 +1,126 @@
+{%- comment -%}
+  Shared by the Slideshow and Testimonial slider sections.
+  Optional `badges`: rendered Badges blocks, placed over the whole slideshow.
+{%- endcomment -%}
+
+{%- liquid
+  assign has_slides = false
+  if content_blocks contains '<swiper-slide'
+    assign has_slides = true
+  endif
+
+  assign desktop_height = section.settings.height
+  assign mobile_height = section.settings.mobile_height
+  assign autoplay = section.settings.autoplay
+  assign autoplay_delay = 0
+  assign show_arrows = section.settings.show_arrows
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign selected_color_scheme = section.settings.color_scheme | strip
+  assign scheme_bg_color = settings.color_schemes[selected_color_scheme].settings.section_bg
+  assign scheme_text_color = settings.color_schemes[selected_color_scheme].settings.section_text
+
+  case section.settings.transition
+    when 'slide'
+      assign transition_style = transition_style | append: 'swiper--slide'
+    when 'fade'
+      assign transition_style = transition_style | append: 'swiper--fade'
+    when 'zoom-out'
+      assign transition_style = transition_style | append: 'swiper--zoom-out'
+    when 'wipe'
+      assign transition_style = transition_style | append: 'swiper--wipe'
+  endcase
+
+  if autoplay
+    assign autoplay_delay = section.settings.autoplay_delay | times: 1000
+  endif
+
+  comment
+    Eager-load the first image in early template sections. Do not promote it to
+    fetchpriority=high here — only one LCP image per page should use high.
+  endcomment
+  if section.index < 3
+    assign content_blocks = content_blocks | replace_first: ' loading="lazy"', ' loading="eager"'
+  endif
+-%}
+
+{%- capture style -%}
+  --PT: {{ section.settings.padding_top }}px;
+  --PB: {{ section.settings.padding_bottom }}px;
+{%- endcapture -%}
+
+{%- render 'stylesheet', name: 'section-slideshow.css' -%}
+
+<script src="{{ 'slideshow.js' | asset_url }}" defer="defer"></script>
+
+<slideshow-component
+  class="index-hero slideshow swiper {{ transition_style }} {{ desktop_height }} {{ mobile_height }} section-padding {{ color_scheme }} no-bg"
+  data-section-id="{{ section.id }}"
+  data-section-type="slideshow"
+  data-overlay-header
+  data-shape-divider-root
+  {% if badges != blank %}
+    data-badge-host
+  {% endif %}
+  style="{{ style }}"
+>
+  <div class="{{ section.settings.width }}">
+    {%- if has_slides -%}
+      <swiper-container
+        id="swiper-{{ section.id }}"
+        {%- if autoplay %}
+          autoplay="{{ autoplay }}"
+          autoplay-delay="{{ autoplay_delay }}"
+          autoplay-disable-on-interaction="false"
+        {%- endif -%}
+        {%- if section.settings.transition == 'slide' %}
+          effect="slide"
+        {%- else %}
+          effect="fade"
+          fade-effect-cross-fade="true"
+        {%- endif -%}
+        {%- if show_arrows %}
+          navigation="true"
+          navigation-prev-el=".{{ section.id }}--button.swiper-button-prev"
+          navigation-next-el=".{{ section.id }}--button.swiper-button-next"
+        {%- endif -%}
+        {%- unless settings.dots_style == 'hidden' %}
+          pagination="true"
+          pagination-clickable="true"
+        {%- endunless %}
+        threshold="1"
+        free-mode="false"
+        loop="true"
+        grab-cursor="true"
+        speed="500"
+      >
+        {{ content_blocks }}
+      </swiper-container>
+
+      {%- if show_arrows -%}
+        <button
+          type="button"
+          class="{{ section.id }}--button swiper-button-prev"
+          data-aria-controls="swiper-{{ section.id }}"
+          aria-label="{{ 'general.accessibility.previous_slide' | t }}"
+        >
+          {%- render 'icon', name: 'caret-left' -%}
+        </button>
+        <button
+          type="button"
+          class="{{ section.id }}--button swiper-button-next"
+          data-aria-controls="swiper-{{ section.id }}"
+          aria-label="{{ 'general.accessibility.next_slide' | t }}"
+        >
+          {%- render 'icon', name: 'caret-right' -%}
+        </button>
+      {%- endif -%}
+    {%- else -%}
+      <div class="swiper-slide--onboarding {{ section.settings.height }} {{ section.settings.mobile_height }}">
+        <div class="text-center">{{ 'home_page.onboarding.no_content' | t }}</div>
+        <div class="image-overlay"></div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {{ badges }}
+</slideshow-component>

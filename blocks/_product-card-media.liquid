@@ -1,0 +1,19 @@
+{% liquid
+  assign product = closest.product
+-%}
+
+{% render 'product-card-media', product: product, shopify_attributes: block.shopify_attributes %}
+
+{% schema %}
+{
+  "name": "Media",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Media",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,10 @@
+{% comment %}
+  {%- render 'upsell-product', product: product -%}
+{% endcomment %}
+
+<div data-api-content>
+  {%- render 'stylesheet', name: 'product.css', async: true -%}
+  {%- render 'stylesheet', name: 'product-media.css', async: true -%}
+
+  {%- render 'upsell-product', upsell_product: product -%}
+</div>

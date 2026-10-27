@@ -1,0 +1,565 @@
+{%- doc -%}
+  Renders the media of a product card: the product image with its hover, variant and sibling
+  images, the badges, and the quick add that sits over the image (Drawer and Inline styles).
+  With the "Stacked" quick add style, the quick add is rendered by 'product-card-content' instead.
+  When the product is empty, renders the placeholder card for the theme editor.
+
+  @param {object} product - The product object. When empty, renders placeholders
+  @param {string} [shopify_attributes] - Theme editor attributes for the image wrapper
+  @param {string} [unique_id] - Id of the product card. Defaults to one built from the section and product ids
+  @param {number} [index] - Position of the card in its grid, starting at 1. Sets the image loading priority. Default: 1
+  @param {number} [block_index] - Index of the block the card is rendered in, used by tab collections. Default: 1
+  @param {string} [sizes] - Sizes attribute of the product image. Derived from the section grid settings when omitted
+  @param {number} [aos_delay] - Animation delay of the image and badge, in ms. Derived from the card position when omitted
+  @param {string} [aos_anchor] - Animation anchor of the image and badge. Defaults to unique_id
+  @param {object} [block] - Parent theme block; available automatically when rendered from a block
+  @param {section} [section] - Parent section; available automatically when rendered from a section
+
+  @example
+  {% render 'product-card-media', product: product, unique_id: unique_id, index: forloop.index %}
+{%- enddoc -%}
+
+{%- liquid
+  assign current_variant = product.first_available_variant
+  assign product_url = product.url | within: collection
+  assign shopify_attributes = shopify_attributes | default: ''
+  assign unique_id = unique_id | default: ''
+  assign section_id = unique_id | default: section.id
+  assign index = index | default: 1
+  assign block_index = block_index | default: 1
+  assign sizes = sizes | default: ''
+
+  assign double_img = false
+  if product.media[1].preview_image and settings.image_hover_enable
+    assign double_img = true
+  endif
+
+  if unique_id == blank
+    capture unique_id
+      echo 'ProductCard-' | append: section.id | append: '-' | append: product.id
+    endcapture
+  endif
+
+  # Section blocks: aos_delay is passed and should be the result of section blocks forloop.index0 multiplied by 100
+  if aos_delay == blank
+    # Theme blocks: aos_delay is blank and should be calculated from block index
+    assign product_card_index = block.id | split: '-' | last | plus: 0 | default: 0
+    if block.id == blank
+      assign product_card_index = index | plus: 0 | default: 0
+    endif
+    assign aos_delay = product_card_index | times: 100
+  endif
+  assign aos_anchor = aos_anchor | default: unique_id
+
+  assign aspect_ratio = 1 | divided_by: settings.product_grid_aspect_ratio
+
+  assign layout_desktop = section.settings.layout_desktop
+  assign columns_desktop = section.settings.grid | plus: 0
+  assign columns_medium = 2
+  assign columns_small = 2
+  assign columns_mobile = section.settings.grid_mobile | plus: 0
+
+  if columns_desktop == 0
+    assign columns_desktop = 4
+  endif
+
+  if columns_mobile == 0
+    assign columns_mobile = 1
+  endif
+
+  if columns_desktop == 2 or columns_desktop == 4
+    assign columns_medium = 2
+  endif
+
+  if sizes == blank
+    case layout_desktop
+      when 'grid'
+        if section.settings.width == 'wrapper'
+          assign sizes = '(min-width: 1400px) calc(80vw / ' | append: columns_desktop | append: '), (min-width: 750px) calc(100vw / ' | append: columns_medium | append: '), (min-width: 480px) calc(100vw / ' | append: columns_small | append: '), calc(100vw / ' | append: columns_mobile | append: ')'
+        else
+          assign sizes = '(min-width: 1400px) calc(100vw / ' | append: columns_desktop | append: '), (min-width: 750px) calc(100vw / ' | append: columns_medium | append: '), (min-width: 480px) calc(100vw / ' | append: columns_small | append: '), calc(100vw / ' | append: columns_mobile | append: ')'
+        endif
+
+      when 'slider'
+        assign sizes = '(min-width: 990px) calc(100vw * 0.28), (min-width: 750px) calc(100vw * 0.38), calc(100% - 50px )'
+      else
+        assign sizes = '500px'
+    endcase
+  endif
+
+  assign loading = 'eager'
+  if columns_desktop <= 3
+    assign eager_images_limit = columns_desktop
+  else
+    assign eager_images_limit = columns_desktop | times: 2
+  endif
+
+  if layout_desktop == 'slider' and index > 3
+    assign loading = 'lazy'
+  elsif index > eager_images_limit
+    assign loading = 'lazy'
+  endif
+
+  assign image_priority = false
+  if index == 1 and section.location == 'template'
+    if section.index == 1
+      if template.name == 'collection' or template.name == 'index'
+        assign image_priority = true
+      endif
+    elsif template.name == 'collection' and collection.image == blank
+      # The collection grid is always section 2, behind the banner section. The banner
+      # claims priority itself, but only renders when collection.image exists. Without
+      # one, nothing on the page claims LCP, so the first card takes it.
+      assign image_priority = true
+    endif
+  endif
+
+  # "block_index" used in:
+  # - section-tab-collections.liquid
+  if block_index > 1
+    assign loading = 'lazy'
+  endif
+  # End of sizes and images loading logic
+
+  assign widths = '136, 160, 180, 220, 254, 284, 292, 320, 480, 528, 640, 720, 960, 1080, 1296, 1512, 1728, 1950'
+
+  assign siblings_line_item_props = ''
+  assign siblings_image = ''
+  if settings.show_siblings
+    capture siblings_line_item_props
+      render 'product-card-siblings', part: 'line-item-props', product: product
+    endcapture
+    capture siblings_image
+      render 'product-card-siblings', part: 'image', product: product
+    endcapture
+  endif
+
+  assign is_onboarding = false
+  if product == empty
+    assign is_onboarding = true
+  endif
+-%}
+
+{%- assign variant_images = '' -%}
+{%- assign has_colors = false -%}
+{%- assign option_color_position = 0 -%}
+{%- assign quick_add_overlay_option = '' -%}
+{%- if settings.enable_swatches and settings.show_grid_swatches -%}
+  {%- assign swatch_translation = 'general.swatches.color' | t -%}
+  {%- assign swatch_labels = swatch_translation | append: ',' | split: ',' -%}
+
+  {%- for label in swatch_labels -%}
+    {%- assign sanitized_label = label | lstrip | rstrip -%}
+    {%- assign option = product.options_by_name[sanitized_label] -%}
+
+    {%- if option.values.size > 0 -%}
+      {%- assign limit = 2048 -%}
+      {%- assign option_color_position = option.position -%}
+      {%- assign has_colors = true -%}
+
+      {%- if option.values.size > 5 and settings.collection_swatch_style == 'limited' -%}
+        {%- assign limit = 5 -%}
+      {%- endif -%}
+
+      {%- for value in option.values limit: limit -%}
+        {%- if value.variant.featured_image != blank -%}
+          {%- capture variant_images -%}
+            {{ variant_images }}
+
+            <div
+              class="product-card__bg__inner"
+              data-variant-title="{{ product.id }}-{{ value.variant.id }}-{{ value | handle }}"
+            >
+              {%- render 'image',
+                image: value.variant.featured_image,
+                aspect_ratio: aspect_ratio,
+                sizes: sizes,
+                widths: widths,
+                cover: true,
+                loading: 'lazy'
+              -%}
+            </div>
+          {%- endcapture -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if settings.quick_add_style == 'inline' -%}
+  {%- if product.options_with_values.size == 2 and has_colors -%}
+    {%- assign other_option = '' -%}
+    {%- if option_color_position == 2 -%}
+      {%- assign other_option = product.options_with_values | first -%}
+    {%- else -%}
+      {%- assign other_option = product.options_with_values | last -%}
+    {%- endif -%}
+
+    {%- if other_option.values.size > 1 and other_option.values.size < 6 -%}
+      {%- assign quick_add_overlay_option = other_option -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if product.options_with_values.size == 1
+    and product.options_with_values[0].values.size > 1
+    and product.options_with_values[0].values.size < 6
+    and has_colors == false
+  -%}
+    {%- assign quick_add_overlay_option = product.options_with_values | first -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if is_onboarding -%}
+  {%- render 'product-card-media-onboarding', index: index, aos_delay: aos_delay, aos_anchor: aos_anchor -%}
+
+  {%- break -%}
+{%- endif -%}
+
+{%- capture over_image_content -%}
+  {%- liquid
+    assign product_tags = product.tags | join: ',' | append: ','
+    assign preorder = false
+    assign is_preorder_meta = false
+    assign on_sale = false
+    assign sold_out = false
+    assign badge = ''
+    assign badge_new = ''
+    assign badge_soldout = ''
+    assign badge_content = ''
+
+    if settings.show_custom_badge
+      if product.metafields.theme.badge != blank and product.metafields.theme.badge.type == 'single_line_text_field'
+        assign badge = product.metafields.theme.badge.value
+      endif
+
+      if badge == '' and product_tags contains '_badge_'
+        assign badge = product_tags | split: '_badge_'
+        assign badge = badge[1] | split: ',' | first | replace: '_', ' '
+      endif
+    endif
+
+    if settings.show_preorder_badge
+      if product.metafields.theme.preorder.type == 'boolean' and product.metafields.theme.preorder.value == true
+        assign is_preorder_meta = true
+      endif
+
+      if product_tags contains '_preorder' or is_preorder_meta
+        assign preorder = true
+      endif
+    endif
+
+    if product.compare_at_price > product.price and settings.sale_tags_enable
+      assign on_sale = true
+    endif
+
+    unless product.available
+      assign sold_out = true
+    endunless
+
+    if settings.show_automatic_new_badge
+      assign product_created_timestamp = product.created_at | date: '%s' | plus: 0
+      assign days_in_seconds = settings.badge_new_date_limit | times: 24 | times: 60 | times: 60
+      assign current_date_timestamp = "now" | date: '%s'
+      assign check_date_timestamp = current_date_timestamp | minus: days_in_seconds
+
+      if product_created_timestamp > check_date_timestamp
+        assign badge_new = 'products.product.new' | t
+      endif
+    endif
+
+    if settings.show_sold_out_badge and sold_out
+      assign badge_soldout = 'products.product.sold_out' | t
+    endif
+  -%}
+
+  {%- if badge != '' or badge_new != '' or badge_soldout != '' -%}
+    {%- capture badge_content -%}
+      <span class="badge-box{% if badge_new != '' %} badge-box--new{% elsif badge_soldout != '' %} badge-box--sold{% endif %}"
+        data-aos="fade"
+        data-aos-delay="{{ aos_delay }}"
+        data-aos-anchor="{{ aos_anchor }}">
+        {%- if badge_soldout != '' -%}
+          {{ badge_soldout }}
+        {%- elsif badge_new != '' -%}
+          {{ badge_new }}
+        {%- else -%}
+          {{ badge }}
+        {%- endif -%}
+      </span>
+    {%- endcapture -%}
+  {%- elsif preorder and sold_out == false -%}
+    {%- capture badge_content -%}
+      <span class="badge-box badge-box--preorder"
+        data-aos="fade"
+        data-aos-delay="{{ aos_delay }}"
+        data-aos-anchor="{{ aos_anchor }}">{{ 'products.product.pre_order' | t }}</span>
+    {%- endcapture -%}
+  {%- elsif on_sale and sold_out == false -%}
+    {%- capture badge_content -%}
+      <span
+        class="badge-box badge-box--sale"
+        data-aos="fade"
+        data-aos-delay="{{ aos_delay }}"
+        data-aos-anchor="{{ aos_anchor }}"
+      >
+        {{ 'products.product.on_sale' | t }}
+
+        {%- if settings.show_saving_badge -%}
+          {%- liquid
+            assign price_difference = product.compare_at_price | minus: product.price
+            assign discount = price_difference | money_without_trailing_zeros
+
+            if settings.currency_code_enable
+              assign discount = price_difference | money_with_currency
+            endif
+
+            if settings.saving_badge_type == 'percentage'
+              assign percent_off = price_difference | times: 1.00 | divided_by: product.compare_at_price | times: 100
+              assign discount = percent_off | floor | append: '%'
+            endif
+          -%}
+          &bull; {{ discount }} {{ 'products.product.off' | t }}
+        {%- endif -%}
+      </span>
+    {%- endcapture -%}
+  {%- endif -%}
+
+  {%- liquid
+    capture image_badges_content
+      render 'badge-images', product: product, sizes: '48px', loading: loading, aos_delay: aos_delay, aos_anchor: aos_anchor
+    endcapture
+
+    # Image badges aligned with the text badge stack below it instead of overlapping it.
+    # On the opposite side, the text badge leaves room for the image badge column.
+    assign badges_stacked = false
+    assign badge_container_modifier = ''
+    if badge_content != '' and image_badges_content != blank
+      if settings.image_badge_alignment == settings.badge_alignment
+        assign badges_stacked = true
+        assign badge_container_modifier = ' badge-box-container--stacked'
+      elsif settings.image_badge_alignment == 'align--top-right'
+        assign badge_container_modifier = ' badge-box-container--image-right'
+      else
+        assign badge_container_modifier = ' badge-box-container--image-left'
+      endif
+    endif
+  -%}
+
+  {%- if badge_content != '' -%}
+    <div class="badge-box-container {{ settings.badge_alignment }}{{ badge_container_modifier }}{% if settings.badge_font == 'subheading' %} subheading{% else %} {{ settings.badge_font_size }}{% endif %}">
+      {{ badge_content }}
+      {%- if badges_stacked -%}
+        {{ image_badges_content }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- unless badges_stacked -%}
+    {{ image_badges_content }}
+  {%- endunless -%}
+
+  {%- if current_variant -%}
+    {%- if settings.quickview_enable and settings.quick_add_style != 'stacked' -%}
+      {%- liquid
+        assign has_preorder_meta = false
+        assign has_preorder_tag = false
+
+        if current_variant.available and product.metafields.theme.preorder.type == 'boolean' and product.metafields.theme.preorder.value == true
+          assign has_preorder_meta = true
+        endif
+
+        if current_variant.available and product.tags contains '_preorder'
+          assign has_preorder_tag = true
+        endif
+
+        if has_preorder_meta or has_preorder_tag
+          assign preorder_name = 'products.product.sale_type' | t | strip_html | escape
+          assign preorder_value = 'products.product.pre_order' | t | strip_html | escape
+        endif
+
+        assign unique = section.id | append: '-' | append: product.id
+      -%}
+
+      <quick-add-product>
+        <div class="quick-add__holder" data-quick-add-holder="{{ product.id }}">
+          {%- if quick_add_overlay_option != '' -%}
+            <div class="quick-add__errors" data-cart-errors-container></div>
+
+            <div class="quick-add__values">
+              {%- render 'svg-loader', class: 'quick-add__loader' -%}
+
+              {%- for value in quick_add_overlay_option.values -%}
+                <button type="button"
+                  class="quick-add__value"
+                  data-quick-add-value="{{ value.variant.id }}"
+                  style="--value-index: {{ forloop.index0 }}"
+                  {% unless value.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {{ value | escape }}
+                </button>
+              {%- endfor -%}
+            </div>
+
+            <button class="quick-add__button caps"
+              type="button"
+              aria-label="{{ 'products.general.quick_add' | t }}"
+              data-quick-add-btn-inline
+            >
+              <span class="btn__text">
+                {%- if preorder -%}
+                  {{ 'products.product.pre_order' | t }}
+                {%- else -%}
+                  {{ 'products.general.quick_add' | t }}
+                {%- endif -%}
+              </span>
+              <span class="btn__bag">{% render 'icon', name: 'shopping-bag' %}</span>
+              <span class="btn__added">&nbsp;</span>
+              <span class="btn__loader">
+                {%- render 'svg-loader' -%}
+              </span>
+            </button>
+          {%- else -%}
+            {%- if product.variants.size == 1 -%}
+              {%- assign product_form_id = 'ProductForm-' | append: unique -%}
+              {%- form 'product', product, id: product_form_id -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+                {{- siblings_line_item_props -}}
+
+                {%- if preorder_value != blank -%}
+                  <input
+                    type="hidden"
+                    name="properties[{{ preorder_name }}]"
+                    value="{{ preorder_value }}">
+                {%- endif -%}
+
+                <button class="quick-add__button caps"
+                  id="ProductSubmitButton-{{ section_id }}"
+                  type="submit"
+                  name="add"
+                  aria-label="{{ 'products.general.quick_add' | t }}"
+                  data-add-to-cart
+                >
+                  <span class="btn__text">
+                    {%- if preorder -%}
+                      {{ 'products.product.pre_order' | t }}
+                    {%- else -%}
+                      {{ 'products.general.quick_add' | t }}
+                    {%- endif -%}
+                  </span>
+                  <span class="btn__bag">{% render 'icon', name: 'shopping-bag' %}</span>
+                  <span class="btn__added">&nbsp;</span>
+                  <span class="btn__loader">
+                    {%- render 'svg-loader' -%}
+                  </span>
+                  <span class="btn__error" data-message-error>&nbsp;</span>
+                </button>
+              {%- endform -%}
+            {%- else -%}
+              <button class="quick-add__button caps"
+                type="button"
+                aria-label="{{ 'products.general.quick_add' | t }}"
+                data-quick-add-btn
+                data-quick-add-modal-handle="{{ product.handle }}"
+              >
+                <span class="btn__text">
+                  {%- if preorder -%}
+                    {{ 'products.product.pre_order' | t }}
+                  {%- else -%}
+                    {{ 'products.general.quick_add' | t }}
+                  {%- endif -%}
+                </span>
+                <span class="btn__bag">{% render 'icon', name: 'shopping-bag' %}</span>
+                <span class="btn__added">&nbsp;</span>
+                <span class="btn__loader">
+                  {%- render 'svg-loader' -%}
+                </span>
+              </button>
+            {%- endif -%}
+
+            {%- unless product.has_only_default_variant -%}
+              {%- render 'product-quick-add-modal-template', product_id: product.id, unique: unique -%}
+            {%- endunless -%}
+          {%- endif -%}
+        </div>
+      </quick-add-product>
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture image_animations -%}
+  data-aos="img-in"
+  data-aos-delay="{{ aos_delay }}"
+  data-aos-anchor="{{ aos_anchor }}"
+{%- endcapture -%}
+
+<div
+  class="product-card__image{% if double_img %} double__image{% endif %}{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
+  data-product-image
+  {% if quick_add_overlay_option != '' %}
+    data-product-image-overlay
+  {% endif %}
+  {{ shopify_attributes }}
+>
+  <a
+    class="product-card__link"
+    href="{{ product_url }}"
+    aria-label="{{ product.title | strip_html | escape }}"
+    data-product-link="{{ product_url }}"
+  >
+    {%- if product.media.size > 0 -%}
+      <div class="product-card__bg" data-product-image-default>
+        {%- liquid
+          capture featured_image
+            render 'image', image: product.featured_media.preview_image, aspect_ratio: aspect_ratio, sizes: sizes, widths: widths, loading: loading, fetchpriority: 'auto', priority: image_priority, attributes: image_animations, cover: true
+          endcapture
+        -%}
+
+        {{ featured_image }}
+
+        {%- if variant_images != '' -%}
+          {{ variant_images }}
+        {%- endif -%}
+      </div>
+
+      {%- if double_img -%}
+        <div class="product-card__bg__under{% if product.media[1].media_type == 'video' or product.media[1].media_type == 'external_video' %} deferred-media{% endif %}">
+          {%- if product.media[1].media_type == 'video' or product.media[1].media_type == 'external_video' -%}
+            {%- liquid
+              case product.media[1].media_type
+                when 'video'
+                  echo product.media[1] | media_tag: image_size: '1024x1024', class: 'media-video', autoplay: true, loop: true, controls: false, preload: 'none', muted: true
+                when 'external_video'
+                  if product.media[1].host == 'youtube'
+                    echo product.media[1] | external_video_url: autoplay: true, playsinline: true, loop: true, playlist: product.media[1].external_id, controls: false, mute: true, showinfo: false | external_video_tag: loading: 'lazy', data-host: product.media[1].host
+                  else
+                    echo product.media[1] | external_video_url: autoplay: true, playsinline: true, loop: true, controls: false, muted: true | external_video_tag: data-host: product.media[1].host
+                  endif
+              endcase
+            -%}
+          {%- else -%}
+            {%- render 'image',
+              image: product.media[1].preview_image,
+              aspect_ratio: aspect_ratio,
+              sizes: sizes,
+              widths: widths,
+              cover: true,
+              loading: 'lazy'
+            -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      {%- comment -%} Show Empty image if product has no media {%- endcomment -%}
+      <div class="product-card__bg image--empty" data-product-image-default></div>
+    {%- endif -%}
+
+    {{- siblings_image -}}
+  </a>
+
+  {{ over_image_content }}
+</div>

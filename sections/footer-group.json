@@ -1,0 +1,61 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "social": {
+          "type": "social",
+          "settings": {
+            "title": "About the Brand",
+            "text": "<p>We make performance pieces that feel like self-care: sculpting without squeezing, breathable without being sheer, and elevated enough to wear all day.<\/p>",
+            "column_width": 40
+          }
+        },
+        "divider": {
+          "type": "divider",
+          "settings": {
+            "show_line": false,
+            "column_width": 40
+          }
+        },
+        "links": {
+          "type": "linklist",
+          "settings": {
+            "linklist": "bestsellers",
+            "title": "Shop our collections",
+            "heading_font_size": "heading-x-small",
+            "column_width": 20
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "title": "Join our newsletter",
+            "button_text": "Subscribe",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid"
+          }
+        }
+      },
+      "block_order": [
+        "social",
+        "divider",
+        "links",
+        "newsletter"
+      ],
+      "settings": {
+        "logo_image_width": 150,
+        "overlay_opacity": 75,
+        "overlay_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

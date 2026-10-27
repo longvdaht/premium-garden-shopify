@@ -1,0 +1,173 @@
+{%- doc -%}
+  Renders block info bubbles with specific positions for Shop the look banner and Clickable details sections.
+
+  @param {int} info_bubbles_position_desktop - The info bubble position for desktop.
+  @param {int} info_bubbles_position_mobile - The info bubble position for mobile. (Inherits desktop if not set)
+
+  @example
+  {% render 'look-bubbles', info_bubbles_position: info_bubbles_position, info_bubbles_position_desktop: info_bubbles_position_desktop, info_bubbles_position_mobile: info_bubbles_position_mobile %}
+{%- enddoc -%}
+
+{%- liquid
+  assign section_width = section.settings.width | default: 'wrapper'
+  assign section_width_padded = settings.section_width_padded | default: '100'
+  assign info_bubbles_position_mobile = info_bubbles_position_mobile | default: info_bubbles_position_desktop
+
+  # Hotspot title's max width in their absolute positioned container
+  case section_width
+    when 'wrapper--full'
+      echo ' --wrapper-width: calc(100vw - var(--scrollbar-width, 0px));'
+    when 'wrapper--full-padded'
+      unless settings.grid_override
+        echo ' --wrapper-width: calc(100vw - var(--scrollbar-width, 0px) - 2 * var(--outer));'
+      else
+        echo ' --wrapper-width: calc(' | append: section_width_padded | append: 'vw - var(--scrollbar-width, 0px) - 2 * var(--outer));'
+      endunless
+    when 'wrapper'
+      echo ' --wrapper-width: calc(var(--WIDTH-NORMAL) - var(--scrollbar-width, 0px));'
+  endcase
+
+  # Alignment in "display: grid"
+  ## right half of the clock face
+  if info_bubbles_position_desktop > 0 and info_bubbles_position_desktop < 30
+    echo ' --justify-lg: start;'
+  endif
+  if info_bubbles_position_mobile > 0 and info_bubbles_position_mobile < 30
+    echo ' --justify-sm: start;'
+  endif
+  if info_bubbles_position_desktop == 15
+    echo ' --align-lg: center;'
+  endif
+  if info_bubbles_position_mobile == 15
+    echo ' --align-sm: center;'
+  endif
+  ## left half of the clock face
+  if info_bubbles_position_desktop > 30 and info_bubbles_position_desktop < 60
+    echo ' --justify-lg: end;'
+  endif
+  if info_bubbles_position_mobile > 30 and info_bubbles_position_mobile < 60
+    echo ' --justify-sm: end;'
+  endif
+  if info_bubbles_position_desktop == 45
+    echo ' --align-lg: center;'
+  endif
+  if info_bubbles_position_mobile == 45
+    echo ' --align-sm: center;'
+  endif
+
+  # Logical start and end offsets
+  ## 0-15 --- inset-block-start: auto;
+  ## 0-15 --- inset-inline-end: auto;
+  ## 15-30 -- inset-block-end: auto;
+  ## 15-30 -- inset-inline-end: auto;
+  ## 30-45 -- inset-block-end: auto;
+  ## 30-45 -- inset-inline-start: auto;
+  ## 45-60 -- inset-block-start: auto;
+  ## 45-60 -- inset-inline-start: auto;
+  if info_bubbles_position_desktop == 0
+    echo ' --inset-block-lg: auto calc(100% + var(--hotspot-offset));'
+    echo ' --inset-inline-lg: auto auto;'
+  endif
+  if info_bubbles_position_mobile == 0
+    echo ' --inset-block-sm: auto calc(100% + var(--hotspot-offset));'
+    echo ' --inset-inline-sm: auto auto;'
+  endif
+  if info_bubbles_position_desktop == 5
+    echo '--inset-block-lg: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+    echo '--inset-inline-lg: calc(33% + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_mobile == 5
+    echo '--inset-block-sm: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+    echo '--inset-inline-sm: calc(33% + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_desktop == 10
+    echo '--inset-block-lg: auto calc(33% + var(--hotspot-offset));'
+    echo '--inset-inline-lg: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+  endif
+  if info_bubbles_position_mobile == 10
+    echo '--inset-block-sm: auto calc(33% + var(--hotspot-offset));'
+    echo '--inset-inline-sm: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+  endif
+  if info_bubbles_position_desktop == 15
+    echo ' --inset-block-lg: auto auto;'
+    echo ' --inset-inline-lg: calc(0% + var(--hotspot-size) + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_mobile == 15
+    echo ' --inset-block-sm: auto auto;'
+    echo ' --inset-inline-sm: calc(0% + var(--hotspot-size) + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_desktop == 20
+    echo '--inset-block-lg: calc(33% + var(--hotspot-offset)) auto;'
+    echo '--inset-inline-lg: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+  endif
+  if info_bubbles_position_mobile == 20
+    echo '--inset-block-sm: calc(33% + var(--hotspot-offset)) auto;'
+    echo '--inset-inline-sm: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+  endif
+  if info_bubbles_position_desktop == 25
+    echo '--inset-block-lg: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+    echo '--inset-inline-lg: calc(33% + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_mobile == 25
+    echo '--inset-block-sm: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+    echo '--inset-inline-sm: calc(33% + var(--hotspot-offset)) auto;'
+  endif
+  if info_bubbles_position_desktop == 30
+    echo ' --inset-block-lg: calc(100% + var(--hotspot-offset)) auto;'
+    echo ' --inset-inline-lg: auto auto;'
+  endif
+  if info_bubbles_position_mobile == 30
+    echo ' --inset-block-sm: calc(100% + var(--hotspot-offset)) auto;'
+    echo ' --inset-inline-sm: auto auto;'
+  endif
+  if info_bubbles_position_desktop == 35
+    echo '--inset-block-lg: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+    echo '--inset-inline-lg: auto calc(33% + var(--hotspot-offset));'
+  endif
+  if info_bubbles_position_mobile == 35
+    echo '--inset-block-sm: calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33) auto;'
+    echo '--inset-inline-sm: auto calc(33% + var(--hotspot-offset));'
+  endif
+  if info_bubbles_position_desktop == 40
+    echo '--inset-block-lg: calc(33% + var(--hotspot-offset)) auto;'
+    echo '--inset-inline-lg: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+  endif
+  if info_bubbles_position_mobile == 40
+    echo '--inset-block-sm: calc(33% + var(--hotspot-offset)) auto;'
+    echo '--inset-inline-sm: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+  endif
+  if info_bubbles_position_desktop == 45
+    echo ' --inset-block-lg: auto auto;'
+    echo ' --inset-inline-lg: auto calc(0% + var(--hotspot-size) + var(--hotspot-offset));'
+  endif
+  if info_bubbles_position_mobile == 45
+    echo ' --inset-block-sm: auto auto;'
+    echo ' --inset-inline-sm: auto calc(0% + var(--hotspot-size) + var(--hotspot-offset));'
+  endif
+  if info_bubbles_position_desktop == 50
+    echo ' --inset-block-lg: auto calc(33% + var(--hotspot-offset));'
+    echo ' --inset-inline-lg: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+  endif
+  if info_bubbles_position_mobile == 50
+    echo ' --inset-block-sm: auto calc(33% + var(--hotspot-offset));'
+    echo ' --inset-inline-sm: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+  endif
+  if info_bubbles_position_desktop == 55
+    echo ' --inset-block-lg: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+    echo ' --inset-inline-lg: auto calc(33% + var(--hotspot-offset));'
+  endif
+  if info_bubbles_position_mobile == 55
+    echo ' --inset-block-sm: auto calc(100% + var(--hotspot-offset) - var(--hotspot-offset) * 0.33);'
+    echo ' --inset-inline-sm: auto calc(33% + var(--hotspot-offset));'
+  endif
+
+  # Hotspot line rotation values
+  ## Draw each line from a single center point
+  ## Starting from 90deg at the value of 0
+  ## Each next info bubble position, with a step of 5, adds another 30deg
+  assign rotation_lg = info_bubbles_position_desktop | divided_by: 5 | times: 30 | plus: 90
+  assign rotation_sm = info_bubbles_position_mobile | divided_by: 5 | times: 30 | plus: 90
+
+  echo ' --rotate-lg: ' | append: rotation_lg | append: 'deg;'
+  echo ' --rotate-sm: ' | append: rotation_sm | append: 'deg;'
+-%}

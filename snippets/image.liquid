@@ -1,0 +1,150 @@
+{%- doc -%}
+  Renders a responsive image that fills its container width using object-fit: cover.
+  Handles srcset, aspect ratio, backfill and placeholders.
+
+  Do not pass `loading` unless you are deliberately overriding the default: the snippet
+  sets `eager` for header, aside and the first three template sections, `lazy` otherwise.
+  Hardcoding `lazy` above the fold is an LCP regression. For the LCP image, pass
+  `priority: true` instead of setting loading, fetchpriority and preload by hand.
+
+  @param {object} image - The image object to render
+  @param {number} [width] - Default image width. Defaults to the image's own width, capped at 5760
+  @param {number} [height] - Default image height. Derived from width and aspect_ratio when omitted
+  @param {string} [sizes] - Media conditions for the sizes attribute. Default: '100vw'
+  @param {string} [widths] - Comma-separated srcset widths. Defaults to the full theme ladder
+  @param {number} [aspect_ratio] - Aspect ratio as {ratio}:1. Defaults to the image's own ratio
+  @param {string} [modifier] - Extra classes on the image wrapper
+  @param {string} [attributes] - Extra attributes on the image wrapper
+  @param {string} [alt] - Overrides the image's alt text
+  @param {boolean} [decorative] - Outputs an empty alt so screen readers skip the image, overriding alt. Default: false
+  @param {string} [loading] - 'eager' or 'lazy'. Derived from section position when omitted
+  @param {string} [placeholder] - Placeholder when image is blank: 'image', 'collection-1'..'collection-4', 'lifestyle-1'..'lifestyle-2', 'product-1'..'product-6'. Default: 'image'
+  @param {boolean} [preload] - Emit a preload hint. Only the LCP image should set this
+  @param {string} [fetchpriority] - 'auto', 'high' or 'low'. Default: 'auto'. Use 'high' on the LCP element only
+  @param {boolean} [priority] - LCP image only. Sets loading 'eager', fetchpriority 'high' and preload true, overriding those three params. Default: false
+  @param {boolean} [show_backfill] - Render the backfill behind the image. Default: true
+  @param {boolean} [cover] - Fill the container height as well as its width. Default: false
+  @param {section} [section] - Parent section, used for the loading default; available automatically when rendered from a section
+
+  @example
+  {% render 'image', image: block.settings.image, sizes: '100vw', widths: '360, 720, 1440', cover: true %}
+  {% render 'image', image: section.settings.image, sizes: '100vw', priority: true %}
+{%- enddoc -%}
+
+{%- liquid
+  assign placeholder = placeholder | default: 'image'
+  assign image_aspect_ratio = image.aspect_ratio
+  assign aspect_ratio = aspect_ratio | default: image_aspect_ratio | default: 1
+  assign image_width = image.width | at_most: 5760 | default: 5760
+  assign width = width | default: image_width
+  assign height = height | default: width | divided_by: aspect_ratio
+  assign sizes = sizes | default: '100vw'
+  assign widths = widths | default: '180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 1950, 2100, 2260, 2450, 2700, 3000, 3350, 3750, 4100, 4450, 4800, 5150, 5500, 5760'
+  assign default_image_label = 'general.accessibility.slide_image' | t
+  assign alt = alt | default: image.alt | default: default_image_label
+  if decorative
+    assign alt = ''
+  endif
+  assign alt = alt | escape
+  assign attributes = attributes | default: null
+  assign modifier = modifier | default: null
+  assign fetchpriority = fetchpriority | default: 'auto'
+  assign preload = preload | default: null
+  assign cover = cover | default: false
+  assign fill = false
+
+  if aspect_ratio != image.aspect_ratio
+    assign fill = true
+  endif
+
+  if show_backfill == null
+    assign show_backfill = true
+
+    unless image
+      assign show_backfill = false
+    endunless
+  endif
+
+  if priority
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+    assign preload = true
+  endif
+
+  unless loading
+    if section.location == 'header' or section.location == 'aside' or section.location == 'template' and section.index < 3
+      unless loading == 'lazy'
+        assign loading = 'eager'
+      endunless
+    else
+      assign loading = 'lazy'
+    endif
+  endunless
+
+  capture wrapper_classes
+    if modifier
+      echo modifier | append: ' '
+    endif
+
+    echo 'image-wrapper'
+
+    if cover
+      echo ' image-wrapper--cover'
+    endif
+
+    echo ' lazy-image'
+
+    if show_backfill
+      echo ' lazy-image--backfill'
+    endif
+
+    if image
+      echo ' is-loading'
+    endif
+  endcapture
+
+  capture wrapper_attributes
+    echo 'style="'
+    echo '--aspect-ratio: ' | append: aspect_ratio | append: ';'
+    echo '"'
+
+    if attributes != blank
+      echo ' ' | append: attributes
+    endif
+  endcapture
+
+  capture img_class
+    if fill
+      echo ' fit-cover'
+    endif
+
+    if image
+      echo ' is-loading '
+    endif
+  endcapture
+
+  capture srcset
+    render 'image-srcset', image: image, widths: widths
+  endcapture
+-%}
+
+<figure class="{{ wrapper_classes }}" {{ wrapper_attributes }}>
+  {%- if image != blank -%}
+    {{
+      image
+      | image_url: width: width, height: height
+      | image_tag:
+        loading: loading,
+        srcset: srcset,
+        sizes: sizes,
+        alt: alt,
+        fetchpriority: fetchpriority,
+        preload: preload,
+        class: img_class
+    }}
+  {%- elsif placeholder != blank -%}
+    {{ placeholder | placeholder_svg_tag: 'svg-placeholder' }}
+  {%- else -%}
+    <img src="{{ 'blank.svg' | asset_url }}" loading="lazy" class="{{ img_class }}" alt="{{ alt }}">
+  {%- endif -%}
+</figure>

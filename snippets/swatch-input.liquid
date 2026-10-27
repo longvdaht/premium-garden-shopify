@@ -1,0 +1,89 @@
+{% comment %}
+  Renders a swatch input component.
+  Accepts:
+  - id: {String} unique input id
+  - type: {String} input type. Accepts 'radio' or 'checkbox', defaults to 'radio' (optional)
+  - name: {String} input name
+  - value: {ProductOptionValueDrop} input value
+  - swatch: {SwatchDrop} the swatch drop
+  - product_form_id: {String} id of the form associated with the input
+  - checked: {Boolean} default checked status
+  - disabled: {Boolean} default disabled status (optional)
+  - visually_disabled: {Boolean} style the swatch as disabled, but leave the input enabled (optional)
+  - help_text: {String} additional content to render inside the label (optional)
+  - additional_props: {String} additional properties to attach to the input (optional)
+  - metaobject_color_entries: {Array} metaobjects[settings.theme_color].values
+      filtered with `| where: 'name'`. Pass nil if not available; priority 1
+      (metaobject) will be skipped but the snippet still renders.
+  - product: {ProductDrop} the product being rendered. Forwarded to the
+      swatch priority resolver to scope metaobject entries by product_list.
+
+  Usage:
+   {% render 'swatch-input',
+      id: input_id,
+      name: input_name,
+      value: value,
+      swatch: swatch,
+      product: product,
+      metaobject_color_entries: metaobject_color_entries,
+      product_form_id: product_form_id,
+      checked: checked
+    %}
+{% endcomment %}
+{%- liquid
+  capture swatch_value
+    render 'swatch-style-value', value: value, product: product, metaobject_entries: metaobject_color_entries, image_width: 96
+  endcapture
+  assign swatch_value = swatch_value | strip
+
+  capture swatch_style
+    if swatch_value != blank
+      echo '--swatch: ' | append: swatch_value | append: ';'
+    endif
+  endcapture
+
+  assign sale = false
+  if value.variant.compare_at_price > value.variant.price and settings.variant_on_sale
+    assign sale = true
+  endif
+-%}
+
+<tooltip-component
+  data-tooltip="{{ value | escape | capitalize }}"
+  class="
+    swatch__button
+    swatch__button--{{ settings.swatch_style }}
+    swatch__button swatch-{{ value | handle }}
+    {% if sale %} swatch__button--sale{% endif %}
+    swatches
+  "
+  {%- if swatch_style != '' -%}
+    style="{{ swatch_style }}"
+  {%- endif -%}
+>
+  <input
+    type="{{ type | default: 'radio' }}"
+    id="{{ id }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    form="{{ product_form_id }}"
+    class="swatch-input__input{% if visually_disabled %} visually-disabled{% endif %}"
+    {% if checked %}
+      checked
+      data-swatch-input-checked
+    {% endif %}
+    {% if disabled %}
+      disabled
+    {% endif %}
+    {% if additional_props %}
+      {{ additional_props }}
+    {% endif %}
+  >
+  <label
+    for="{{ id }}"
+    title="{{ value }}"
+    class="swatch-input__label"
+  >
+    {{ help_text }}
+  </label>
+</tooltip-component>

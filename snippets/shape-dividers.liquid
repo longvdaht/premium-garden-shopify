@@ -1,0 +1,25 @@
+{%- doc -%}
+  Renders Shape divider blocks either from the block itself or at the root of a
+  mixed-block host. Theme blocks must use block mode: section.blocks reports
+  them as "@theme" with no settings, so a host can neither find nor read them.
+  Host mode is for sections whose dividers are local schema blocks.
+
+  @param {string} mode - Render mode: "block" or "host"
+  @param {object} [block] - Current Shape divider block when mode is "block"
+{%- enddoc -%}
+
+{%- liquid
+  if mode == 'host'
+    assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  endif
+-%}
+
+{%- if mode != 'host' -%}
+  <script src="{{ 'shape-divider.js' | asset_url }}" defer="defer"></script>
+  {%- render 'shape-divider', block: block -%}
+{%- elsif shape_divider_blocks != blank -%}
+  <script src="{{ 'shape-divider.js' | asset_url }}" defer="defer"></script>
+  {%- for block in shape_divider_blocks -%}
+    {%- render 'shape-divider', block: block -%}
+  {%- endfor -%}
+{%- endif -%}

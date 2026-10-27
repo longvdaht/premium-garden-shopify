@@ -1,0 +1,95 @@
+{%- doc -%}
+  Renders a top bar for switching between the Headlands demo stores and previewing the store at mobile width. Outputs nothing unless the shop is one of the demo stores, and nothing in the theme editor.
+
+  @example
+  {% render 'demo-switcher' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign demo_names = 'Athleisure,Beauty,Food' | split: ','
+  assign demo_domains = 'presidio-demo-athleisure.myshopify.com,presidio-demo-beauty.myshopify.com,presidio-demo-food-yrjhdyak.myshopify.com' | split: ','
+  assign demo_coming_soon = 'presidio-demo-food-yrjhdyak.myshopify.com' | split: ','
+
+  assign current_name = ''
+  for domain in demo_domains
+    if domain == shop.permanent_domain
+      assign current_name = demo_names[forloop.index0]
+    endif
+  endfor
+-%}
+
+{%- if current_name != blank and request.design_mode == false -%}
+  <demo-switcher
+    class="demo-switcher color-scheme-1"
+    data-demo-switcher
+    data-frame-title="{{ 'general.demo_switcher.mobile_preview' | t | escape }}"
+  >
+    {%- render 'stylesheet', name: 'demo-switcher.css', inline: true -%}
+    <script src="{{ 'demo-switcher.js' | asset_url }}" defer="defer"></script>
+
+    <popout-select class="popout demo-switcher__popout">
+      <button
+        type="button"
+        class="demo-switcher__toggle"
+        aria-expanded="false"
+        aria-controls="DemoSwitcherList"
+        data-popout-toggle
+      >
+        <span>{{ 'general.demo_switcher.theme_style' | t }} <strong>{{ current_name }}</strong></span>
+        {%- render 'icon', name: 'caret-down' -%}
+      </button>
+
+      <ul id="DemoSwitcherList" class="popout-list demo-switcher__list" data-popout-list>
+        {%- for domain in demo_domains -%}
+          {%- liquid
+            assign demo_name = demo_names[forloop.index0]
+            assign is_current = false
+            if domain == shop.permanent_domain
+              assign is_current = true
+            endif
+          -%}
+          <li class="popout-list__item{% if is_current %} is-active{% endif %}">
+            {%- if demo_coming_soon contains domain and is_current == false -%}
+              <span class="popout-list__option demo-switcher__option--disabled">
+                <span>{{ demo_name }}</span>
+                <small>{{ 'general.demo_switcher.coming_soon' | t }}</small>
+              </span>
+            {%- else -%}
+              <a
+                class="popout-list__option"
+                href="https://{{ domain }}/"
+                {% if is_current %}
+                  aria-current="true"
+                {% endif %}
+                data-popout-option
+              >
+                <span>{{ demo_name }}</span>
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </popout-select>
+
+    <div class="demo-switcher__views">
+      <button
+        type="button"
+        class="demo-switcher__view"
+        aria-label="{{ 'general.demo_switcher.desktop_view' | t | escape }}"
+        aria-pressed="true"
+        data-demo-view="desktop"
+      >
+        {%- render 'icon', name: 'desktop' -%}
+      </button>
+      <button
+        type="button"
+        class="demo-switcher__view"
+        aria-label="{{ 'general.demo_switcher.mobile_view' | t | escape }}"
+        aria-pressed="false"
+        data-demo-view="mobile"
+      >
+        {%- render 'icon', name: 'mobile' -%}
+      </button>
+    </div>
+  </demo-switcher>
+{%- endif -%}

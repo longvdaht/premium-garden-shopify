@@ -1,0 +1,154 @@
+{%- doc -%}
+  Renders a product's price: regular, sale with the compare-at price struck through, unit price and sale badges.
+  The sale price markup is always rendered for products with selling plans, so subscription apps can show plan discounts.
+
+  @param {product} [product] - Product whose price is rendered
+  @param {boolean} [onboarding_product] - Renders a placeholder price
+  @param {boolean} [use_variant] - Renders the selected or first available variant price instead of the product price
+  @param {boolean} [show_badges] - Renders the Sale and Final sale badges when they apply
+  @param {string} [price_class] - Extra class for the price element
+  @param {string} [price_font_size] - Font size class for the price element
+
+  @example
+  {% render 'price', product: product, use_variant: true %}
+{%- enddoc -%}
+
+{%- liquid
+  # Determine price target (variant or product)
+  assign current_variant = product.selected_or_first_available_variant
+  if use_variant
+    assign target = current_variant
+  elsif onboarding_product
+    assign target = null
+  else
+    assign target = product
+  endif
+
+  # Extract price data from product/variant
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign price_min = product.price_min
+  assign price_max = product.price_max
+  assign available = target.available | default: false
+
+  assign money_price = price | money
+  assign money_price_min = price_min | money
+  assign money_price_max = price_max | money
+
+  if settings.currency_code_enable
+    assign money_price = price | money_with_currency
+    assign money_price_min = price_min | money_with_currency
+    assign money_price_max = price_max | money_with_currency
+  endif
+
+  if price == 0
+    assign money_price = 'general.money.free' | t
+  endif
+
+  # Add "from" prefix if price varies
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+
+  # Unit price detection
+  assign has_units = false
+  if current_variant.unit_price_measurement
+    assign has_units = true
+  endif
+
+  # Sale detection
+  assign is_on_sale = false
+  if compare_at_price > price
+    assign is_on_sale = true
+  endif
+
+  # Sale badges
+  assign show_badges = show_badges | default: false
+  assign sale_badge = settings.sale_badge
+  assign final_sale = false
+
+  # Check for final sale metafield on product
+  if settings.final_sale or product.metafields.theme.final_sale.type == 'boolean' and product.metafields.theme.final_sale.value == true
+    assign final_sale = true
+  endif
+
+  # Check for final sale metafield on variant
+  if target.metafields.theme.final_sale.type == 'boolean' and target.metafields.theme.final_sale.value == true
+    assign final_sale = true
+  endif
+-%}
+
+<div
+  class="
+    price
+    {%- if has_units %} price--has-units{% endif -%}
+    {%- if price_class %} {{ price_class }}{% endif -%}
+    {%- if price_font_size != blank %} {{ price_font_size }}{% endif -%}
+    {%- if available == false %} price--sold-out{% endif -%}
+    {%- if is_on_sale %} price--on-sale{% endif -%}
+    {%- if product.price_varies == false and product.compare_at_price_varies %} price--no-compare{% endif -%}
+    {%- if show_badges %} price--show-badge{% endif -%}
+  "
+>
+  <div class="price__container">
+    {%- comment -%} Regular Price {%- endcomment -%}
+    <div class="price__regular">
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+      <span class="price-item price-item--regular">{{ money_price }}</span>
+    </div>
+
+    {%- comment -%} Sale Price (when compare_at_price > price, always for selling plans) {%- endcomment -%}
+    {%- if is_on_sale or product.selling_plan_groups.size > 0 -%}
+      <div class="price__sale">
+        <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
+        <span class="price-item price-item--sale price-item--last">
+          {{ money_price }}
+        </span>
+
+        <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+        <span>
+          <s class="price-item price-item--regular">
+            {%- if settings.currency_code_enable -%}
+              {{ compare_at_price | money_with_currency }}
+            {%- else -%}
+              {{ compare_at_price | money }}
+            {%- endif -%}
+          </s>
+        </span>
+      </div>
+    {%- endif -%}
+
+    {%- if has_units -%}
+      {%- render 'unit-price',
+        price: current_variant.unit_price,
+        measurement: current_variant.unit_price_measurement
+      -%}
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Sale Badges {%- endcomment -%}
+  {%- if show_badges -%}
+    {%- if sale_badge or final_sale -%}
+      <div class="product__sale">
+        {%- if is_on_sale and sale_badge -%}
+          <span class="product__price--off">
+            <span>{{ compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round }}%</span>
+            {{ 'products.product.off' | t }}
+          </span>
+        {%- endif -%}
+
+        {%- if is_on_sale and final_sale -%}
+          <div class="product__final-sale-wrap">
+            <div class="product__final-sale">{{ 'products.product.final_sale' | t }}</div>
+            <tooltip-component
+              class="product__final-sale-question"
+              data-tooltip="<div style='--text: var(--COLOR-SALE);'>{{ settings.final_sale_tooltip | replace: '"', "'" }}</div>"
+            >
+              {%- render 'icon', name: 'info' -%}
+            </tooltip-component>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>

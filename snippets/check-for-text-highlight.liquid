@@ -1,0 +1,29 @@
+{%- comment -%}
+  Check if the title contains a text highlight
+
+  Accepts:
+  - title: {String} The title to check (required)
+  - heading_highlight_type: {String} The type of highlight (required)
+  - get: {String} The type of check to perform (required)
+
+  Usage:
+  {% capture getter %}
+    {% render 'check-for-text-highlight', title: title, heading_highlight_type: heading_highlight_type, get: 'getter' %}
+  {% endcapture %}
+{%- endcomment -%}
+
+{%- liquid
+  case get
+    when 'has_text_highlight'
+      if title contains '<em>'
+        case heading_highlight_type
+          when 'stroke', 'circle', 'circle-hand-drawn', 'squiggle', 'highlight', 'highlight-color', 'underline', 'underline-hand-drawn', 'alternate-font'
+            echo true
+          else
+            echo false
+        endcase
+      endif
+    when 'text_highlight_wrapper_class'
+      echo 'text-highlight-wrapper text-highlight-wrapper--' | append: heading_highlight_type
+  endcase
+-%}

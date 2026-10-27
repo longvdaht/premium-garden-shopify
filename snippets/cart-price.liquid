@@ -1,0 +1,149 @@
+{%- liquid
+  assign subtotal = cart.total_price | plus: 0
+  assign original_subtotal = cart.original_total_price | plus: 0
+  assign currency_code_enable = settings.currency_code_enable
+
+  # Build a complete list of discount codes from cart and line items applications
+  assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
+  # Build a list of non-discount_code discounts
+  assign other_discount_types = blank | split: ''
+  for item in cart.items
+    for allocation in item.line_level_discount_allocations
+      if allocation.discount_application.type == 'discount_code'
+        assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
+      endif
+
+      if allocation.discount_application.title != blank and allocation.discount_application.type != 'discount_code'
+        assign other_discount_types = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: other_discount_types
+      endif
+    endfor
+  endfor
+  assign discount_codes = discount_codes | uniq
+  assign other_discount_types = other_discount_types | uniq
+
+  assign cart_discount_size = discount_codes.size | plus: other_discount_types.size
+
+  if cart_discount_size == 0
+    assign cart_total_discount_hidden = true
+  endif
+
+  # Calculate total savings
+  assign total_savings = original_subtotal | minus: subtotal
+  assign has_savings = false
+  if total_savings > 0
+    assign has_savings = true
+    if currency_code_enable
+      assign total_savings_formatted = total_savings | money_with_currency
+    else
+      assign total_savings_formatted = total_savings | money
+    endif
+  endif
+-%}
+
+{%- if has_savings -%}
+  <div class="cart__total cart__total--savings">
+    <span class="cart__total__label">{{- 'cart.general.savings' | t -}}</span>
+
+    <span class="cart__total__price">
+      -
+      {{- total_savings_formatted -}}
+    </span>
+  </div>
+{%- endif -%}
+
+{%- unless cart_total_discount_hidden -%}
+  <div class="cart__total__discount">
+    {%- if other_discount_types.size > 0 -%}
+      {%- for discount_title in other_discount_types -%}
+        {%- liquid
+          assign total_allocated_discount_cents = 0
+
+          # Sum line-level allocations matching this discount title (non-discount_code types only)
+          for item in cart.items
+            for allocation in item.line_level_discount_allocations
+              if allocation.discount_application.title == discount_title and allocation.discount_application.type != 'discount_code'
+                assign total_allocated_discount_cents = total_allocated_discount_cents | plus: allocation.amount
+              endif
+            endfor
+          endfor
+
+          if currency_code_enable
+            assign total_allocated_discount = total_allocated_discount_cents | money_with_currency
+          else
+            assign total_allocated_discount = total_allocated_discount_cents | money
+          endif
+        -%}
+
+        <div class="cart__total" data-discount-body data-discount-title="{{ discount_title }}">
+          <span class="cart__total__discount-title">
+            {{- discount_title -}}
+          </span>
+
+          <span class="cart__total__discount-amount">
+            &nbsp;-
+            {{- total_allocated_discount -}}
+          </span>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- if discount_codes.size > 0 -%}
+      {%- for discount_code in discount_codes -%}
+        {%- liquid
+          assign total_allocated_discount_cents = 0
+
+          # Sum cart-level allocations matching this code
+          for cart_discount in cart.cart_level_discount_applications
+            if cart_discount.title == discount_code
+              assign total_allocated_discount_cents = total_allocated_discount_cents | plus: cart_discount.total_allocated_amount
+            endif
+          endfor
+
+          # Sum line-level allocations matching this code
+          for item in cart.items
+            for allocation in item.line_level_discount_allocations
+              if allocation.discount_application.type == 'discount_code' and allocation.discount_application.title == discount_code
+                assign total_allocated_discount_cents = total_allocated_discount_cents | plus: allocation.amount
+              endif
+            endfor
+          endfor
+
+          if currency_code_enable
+            assign total_allocated_discount = total_allocated_discount_cents | money_with_currency
+          else
+            assign total_allocated_discount = total_allocated_discount_cents | money
+          endif
+        -%}
+
+        <div class="cart__total" data-discount-body data-discount-code="{{ discount_code }}">
+          <span class="cart__total__discount-title">
+            {{- discount_code -}}
+          </span>
+
+          <span class="cart__total__discount-amount">
+            &nbsp;-
+            {{- total_allocated_discount -}}
+          </span>
+
+          <span class="remove-discount" aria-label="{{ 'cart.general.remove_discount' | t }}" data-remove-discount>
+            {%- render 'icon', name: 'x' -%}
+          </span>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+{%- endunless -%}
+
+<div class="cart__total">
+  <span class="cart__total__label">{{- 'cart.general.subtotal' | t -}}</span>
+
+  <span class="cart__total__price cart__total__price--animated" data-cart-total="{{ subtotal }}">
+    {%- if subtotal == 0 -%}
+      {{ 'general.money.free' | t }}
+    {%- else -%}
+      {{- subtotal | money_with_currency -}}
+    {%- endif -%}
+  </span>
+
+  <div class="cart__price__loader loader"><div class="loader-indeterminate"></div></div>
+</div>

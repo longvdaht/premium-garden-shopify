@@ -1,0 +1,404 @@
+{% comment %}
+  Renders Free shipping message
+
+  Accepts:
+  - block: {Object} Block object (required)
+  - show_wheel: {Boolean} Show progress wheel
+  - show_progress_bar: {Boolean} Show progress bar
+  - is_cart_drawer: {Boolean} Is cart drawer
+
+  Usage:
+  {% render 'free-shipping', message: block.settings.message, show_wheel: true, show_progress_bar: false, is_cart_drawer: false %}
+{% endcomment %}
+
+{%- liquid
+  assign promo_1_enabled = settings.free_shipping_promotion_1
+  assign promo_2_enabled = settings.free_shipping_promotion_2
+  assign promo_1_text = settings.free_shipping_promotion_text_1
+  assign promo_2_text = settings.free_shipping_promotion_text_2
+  assign block_message = section.blocks | where: 'type', 'message'
+  assign enable_promos = promo_1_enabled | default: promo_2_enabled
+  assign show_message = false
+  assign is_message_block = false
+
+  # Announcement bar "Free shipping message" block
+  if block_message.size > 0
+    assign message = block.settings.message
+    if message != blank and enable_promos
+      assign show_message = true
+      assign is_message_block = true
+    endif
+  else
+    # Cart promo messages
+    if enable_promos
+      assign message = promo_1_text | default: promo_2_text
+      if message != blank
+        assign show_message = true
+      endif
+    endif
+  endif
+
+  assign show_wheel = show_wheel | default: block.settings.show_wheel | default: false
+  assign align_text = block.settings.align_text
+-%}
+
+{%- if show_message -%}
+  {%- liquid
+    # Get promotion values
+    assign promo_1_value = settings.free_shipping_limit | default: 0 | plus: 0
+    assign promo_2_value = settings.free_gift_limit | default: 0 | plus: 0
+
+    assign swap_promos = false
+    if promo_1_enabled and promo_2_enabled and promo_2_value == 0 and promo_1_value > promo_2_value
+      assign swap_promos = true
+    endif
+
+    # Determine which promotion to show
+    assign show_promo_1 = false
+    assign show_promo_2 = false
+    if promo_1_enabled
+      assign show_promo_1 = true
+    endif
+    assign promo_2_only = false
+    if promo_1_enabled == false and promo_2_enabled and promo_2_value > 0
+      assign promo_2_only = true
+    endif
+    if promo_2_enabled
+      assign show_promo_2 = true
+    endif
+
+    # Set the active promotion and limit
+    assign active_promo = 0
+    assign active_limit = 0
+    assign center_limit = 0
+    assign show_dual_promotion = false
+
+    if show_promo_1 and show_promo_2
+      if promo_1_value > promo_2_value
+        # Dual promotion: promo 1 (free shipping) at center, promo 2 (free gift) at end
+        assign active_promo = 2
+        assign show_dual_promotion = true
+        assign active_limit = promo_1_value
+        assign center_limit = promo_2_value
+      elsif promo_2_value > promo_1_value
+        # Dual promotion: reversed values
+        assign active_promo = 2
+        assign show_dual_promotion = true
+        assign active_limit = promo_2_value
+        assign center_limit = promo_1_value
+      else
+        # Equal values, treat as single promotion
+        assign active_promo = 1
+        assign active_limit = promo_1_value
+      endif
+    elsif show_promo_1
+      # Single primary promotion: only free shipping
+      assign active_promo = 1
+      assign active_limit = promo_1_value
+    elsif show_promo_2 or promo_2_only
+      # Single secondary promotion: only free gift
+      assign active_promo = 2
+      assign active_limit = promo_2_value
+    endif
+
+    # Calculate progress
+    assign subtotal_without_currency = cart.total_price | plus: 0 | divided_by: 100
+    assign percent = 0
+    assign percent_center = 0
+    assign promo_fraction = 0
+
+    if active_limit > 0
+      assign percent = active_limit | minus: subtotal_without_currency | times: 100.0 | divided_by: active_limit
+      assign percent = 100 | minus: percent
+      assign percent = percent | at_least: 0 | at_most: 100
+    endif
+    if promo_2_only
+      assign center_limit = promo_2_value
+    endif
+
+    if show_dual_promotion and center_limit > 0
+      assign percent_center = center_limit | times: 100.0 | divided_by: active_limit
+      assign promo_fraction = center_limit | times: 1.0 | divided_by: active_limit
+    endif
+
+    # Calculate currency amounts
+    assign limit_currency_center = center_limit | times: 100.0
+    assign limit_currency = active_limit | times: 100
+
+    if settings.currency_code_enable
+      assign limit_currency_center = limit_currency_center | minus: cart.total_price | money_with_currency
+      assign limit_currency = limit_currency | minus: cart.total_price | money_with_currency
+    else
+      assign limit_currency_center = limit_currency_center | minus: cart.total_price | money_without_trailing_zeros
+      assign limit_currency = limit_currency | minus: cart.total_price | money_without_trailing_zeros
+    endif
+
+    # Prepare message with amount
+    capture left_to_spend
+      echo '<span data-left-to-spend>' | append: limit_currency | append: '</span>'
+    endcapture
+
+    capture left_to_spend_center
+      echo '<span data-left-to-spend-promo>' | append: limit_currency_center | append: '</span>'
+    endcapture
+
+    # Set the appropriate message based on active promotion
+    assign display_message = message
+
+    unless is_message_block
+      if active_promo == 1
+        assign display_message = promo_1_text
+      elsif active_promo == 2 and show_dual_promotion == false
+        assign display_message = promo_2_text
+      endif
+    endunless
+
+    if show_dual_promotion
+      assign display_message = display_message | replace: '||amount||', left_to_spend_center
+    else
+      assign display_message = display_message | replace: '||amount||', left_to_spend
+    endif
+
+    assign both_promos_zero = false
+    if promo_1_enabled and promo_2_enabled and promo_1_value == 0 and promo_2_value == 0
+      assign both_promos_zero = true
+    endif
+
+    # Set success message
+    assign qualified_message_html = 'cart.general.primary_promo_qualified_message_html' | t
+    if show_dual_promotion or both_promos_zero
+      assign qualified_message_html = 'cart.general.dual_promos_qualified_message_html' | t
+    elsif active_promo == 2
+      assign qualified_message_html = 'cart.general.secondary_promo_qualified_message_html' | t
+    endif
+
+    assign qualified_shipping_message = ''
+    if subtotal_without_currency >= active_limit
+      assign qualified_shipping_message = qualified_message_html
+    endif
+
+    if is_message_block
+      assign display_message = display_message | replace: '<br />', '' | replace: '<br>', ''
+      assign promo_2_text = promo_2_text | replace: '<br />', '' | replace: '<br>', ''
+      assign qualified_message_html = qualified_message_html | replace: '<br />', '' | replace: '<br>', ''
+    endif
+
+    # CSS classes
+    capture free_shipping_classes
+      if is_cart_drawer
+        echo 'drawer__message '
+      endif
+
+      if template.name == 'cart'
+        echo 'cart__message '
+      endif
+
+      echo 'free-shipping'
+
+      if align_text != blank
+        echo ' ' | append: align_text
+      endif
+
+      if block.settings.text_font_size != blank
+        echo ' ' | append: block.settings.text_font_size
+      endif
+    endcapture
+  -%}
+
+  <div
+    class="{{ free_shipping_classes }}"
+    data-free-shipping="{% if qualified_shipping_message != blank %}true{% else %}false{% endif %}"
+    data-free-shipping-limit="{{ active_limit }}"
+    data-free-shipping-primary-promo="{{ settings.free_shipping_promotion_1 }}"
+    data-free-shipping-secondary-promo="{{ settings.free_shipping_promotion_2 }}"
+    {% if show_dual_promotion or promo_2_only %}
+      data-promo-center-limit="{{ center_limit }}"
+    {% endif %}
+  >
+    {%- if show_wheel -%}
+      <div class="free-shipping__graph" data-progress-graph style="--stroke-dashoffset: 87.96459430051421;">
+        <svg height="18" width="18" viewBox="0 0 18 18">
+          <circle r="7" cx="9" cy="9" />
+          <circle class="free-shipping__graph-progress" stroke-dasharray="87.96459430051421 87.96459430051421" r="7" cx="9" cy="9" />
+        </svg>
+      </div>
+    {%- endif -%}
+
+    <span class="free-shipping__text free-shipping__text--success">{{ qualified_message_html }}</span>
+
+    <span class="free-shipping__text free-shipping__text--default">
+      {{- display_message -}}
+    </span>
+
+    {%- if show_dual_promotion and promo_2_text != blank -%}
+      <span class="free-shipping__text free-shipping__text--dual-promos">
+        {{ promo_2_text | replace: '||amount||', left_to_spend }}
+      </span>
+    {%- endif -%}
+
+    {%- if show_progress_bar -%}
+      {%- liquid
+        # Prepare icons for both promotions
+        assign icon_1 = ''
+        assign icon_2 = ''
+        assign icon_style = ''
+        assign icon_style_2 = ''
+        assign icon_size = 30
+        assign icon_size_2 = 30
+      -%}
+
+      {%- if show_promo_1 and settings.free_shipping_icon_1 -%}
+        {%- liquid
+          assign icon_size = settings.free_shipping_icon_size_1 | default: 30
+          assign icon_image = settings.free_shipping_icon_image_1
+          capture icon_style
+            echo '--icon-size: ' | append: icon_size | append: 'px;'
+          endcapture
+        -%}
+
+        {%- capture icon_1 -%}
+          <div
+            class="icon__animated icon__animated--{{ section.id }}-{{ block.id }}{% if icon_image != blank %} icon__animated--image{% endif %}"
+          >
+            {%- liquid
+              if icon_image
+                assign icon_width = icon_size
+                assign icon_width_retina = icon_width | times: 2
+                assign icon_sizes = icon_width | append: 'px'
+                assign icon_widths = icon_width | append: ', ' | append: icon_width_retina
+
+                render 'image', image: icon_image, width: icon_width_retina, sizes: icon_sizes, widths: icon_widths
+              else
+                render 'icon', name: settings.free_shipping_icon_key_1
+              endif
+            -%}
+          </div>
+        {%- endcapture -%}
+      {%- endif -%}
+
+      {%- if show_promo_2 and settings.free_shipping_icon_2 -%}
+        {%- liquid
+          assign icon_size_2 = settings.free_shipping_icon_size_2 | default: 30
+          assign icon_image_2 = settings.free_shipping_icon_image_2
+          capture icon_style_2
+            echo '--icon-size: ' | append: icon_size_2 | append: 'px;'
+          endcapture
+        -%}
+
+        {%- capture icon_2 -%}
+          <div
+            class="icon__animated icon__animated--{{ section.id }}-{{ block.id }}{% if icon_image_2 != blank %} icon__animated--image{% endif %}"
+          >
+            {%- liquid
+              if icon_image_2
+                assign icon_width_2 = icon_size_2
+                assign icon_width_retina_2 = icon_width_2 | times: 2
+                assign icon_sizes_2 = icon_width_2 | append: 'px'
+                assign icon_widths_2 = icon_width_2 | append: ', ' | append: icon_width_retina_2
+
+                render 'image', image: icon_image_2, width: icon_width_retina_2, sizes: icon_sizes_2, widths: icon_widths_2
+              else
+                render 'icon', name: settings.free_shipping_icon_key_2
+              endif
+            -%}
+          </div>
+        {%- endcapture -%}
+      {%- endif -%}
+
+      {%- liquid
+        if swap_promos
+          assign icon_1_final = icon_2
+          assign icon_2_final = icon_1
+          assign icon_style_final_1 = icon_style_2
+          assign icon_style_final_2 = icon_style
+        else
+          assign icon_1_final = icon_1
+          assign icon_2_final = icon_2
+          assign icon_style_final_1 = icon_style
+          assign icon_style_final_2 = icon_style_2
+        endif
+
+        # Determine right icon size for progress bar positioning
+        assign right_size = 30
+        if show_dual_promotion and icon_size_2 != blank
+          assign right_size = icon_size_2
+        elsif icon_1 == '' and icon_size_2 != blank
+          # Secondary-only case: use secondary icon size
+          assign right_size = icon_size_2
+        elsif icon_size != blank
+          assign right_size = icon_size
+        endif
+        assign track_left_px = 15
+        assign track_right_px = right_size | minus: 1
+      -%}
+
+      <div
+        class="free-shipping__progress-holder{% if show_dual_promotion %} free-shipping__progress-holder--multiple{% endif %}"
+        style="--track-left: {{ track_left_px }}px; --track-right: {{ track_right_px }}px; --promo-center-fraction: {{ promo_fraction }};"
+      >
+        <div class="free-shipping__box free-shipping__box--left">&nbsp;</div>
+
+        {%- if show_dual_promotion and center_limit < active_limit -%}
+          <div
+            class="free-shipping__box free-shipping__box--center"
+            {% if icon_style_final_1 != '' %}
+              style="{{ icon_style_final_1 }}"
+            {% endif %}
+            data-promo-center
+          >
+            {%- if icon_1_final != '' -%}
+              {{ icon_1_final }}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- liquid
+          capture icon_styles
+            assign secondary_only_icon = false
+            if show_dual_promotion or icon_1_final == ''
+              assign secondary_only_icon = true
+            endif
+
+            echo 'style="'
+            if icon_style_final_2 != '' and secondary_only_icon
+              echo icon_style_final_2
+            elsif icon_style_final_1 != ''
+              echo icon_style_final_1
+            endif
+            echo '"'
+          endcapture
+
+          capture icon_markup
+            if show_dual_promotion
+              echo icon_2_final
+            elsif icon_1_final != ''
+              echo icon_1_final
+            elsif icon_2_final != ''
+              echo icon_2_final
+            endif
+          endcapture
+        -%}
+
+        <div
+          class="free-shipping__box free-shipping__box--right"
+          {{ icon_styles }}
+        >
+          {{ icon_markup }}
+        </div>
+
+        <progress
+          class="free-shipping__progress-bar"
+          data-progress-bar
+          value="{{ percent }}"
+          max="100"
+        ></progress>
+      </div>
+    {%- endif -%}
+
+    <div class="confetti">
+      {%- for i in (1..6) -%}
+        <span class="confetti__dot confetti__dot--{{ i }}"></span>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}

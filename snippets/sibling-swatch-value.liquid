@@ -1,0 +1,63 @@
+{%- doc -%}
+  Returns the CSS value for a sibling product's --swatch custom property.
+
+  Priority, highest to lowest:
+  1. Presidio+ color swatch that lists the sibling product (var(--handle) written by swatch-color-list.liquid)
+  2. Native Shopify swatch from the sibling product's option values, preferring the value named like the sibling color
+  3. CSS variable from swatches.css
+
+  @param {object} product - Sibling product
+  @param {string} color_name - Sibling color name
+  @param {boolean} [has_theme_color] - Whether a Presidio+ color swatch lists the sibling product. Default: false
+  @param {number} [image_width] - CDN image width for native swatch images. Default: 96
+
+  @example
+  {% capture swatch_value %}
+    {% render 'sibling-swatch-value',
+      product: sib_product,
+      color_name: sib_color,
+      has_theme_color: true,
+      image_width: 48
+    %}
+  {% endcapture %}
+{%- enddoc -%}
+{%- liquid
+  assign image_width = image_width | default: 96
+  assign color_handle = color_name | handle
+  assign native_swatch = null
+  assign native_swatch_matched = false
+
+  unless has_theme_color
+    for option in product.options_with_values
+      for value in option.values
+        if value.swatch.image == blank and value.swatch.color == blank
+          continue
+        endif
+
+        assign value_handle = value | handle
+        if value_handle == color_handle
+          assign native_swatch = value.swatch
+          assign native_swatch_matched = true
+          break
+        endif
+
+        if native_swatch == null
+          assign native_swatch = value.swatch
+        endif
+      endfor
+
+      if native_swatch_matched
+        break
+      endif
+    endfor
+  endunless
+-%}
+{%- if native_swatch.image -%}
+  url({{ native_swatch.image | image_url: width: image_width }})
+{%- elsif native_swatch.color -%}
+  {{ native_swatch.color }}
+{%- elsif color_handle != blank -%}
+  var(--{{ color_handle }})
+{%- else -%}
+  var(--swatch-default)
+{%- endif -%}

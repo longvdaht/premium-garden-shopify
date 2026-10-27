@@ -1,0 +1,102 @@
+{% comment %}
+  Renders product item in predictive search
+
+  Accepts:
+  - product: {Object} product (required)
+  - animation_delay: {Int} Animation delay
+  - animation_anchor: {String} Animation anchor
+
+  Usage:
+  {% render 'search-product-card', product: product, animation_delay: animation_delay, animation_anchor: animation_anchor %}
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = product.first_available_variant
+  assign featured_image = product.featured_media
+  assign second_image = product.media[1]
+  assign show_second_image = settings.image_hover_enable
+  assign animation_delay = animation_delay | default: 100
+  assign animation_anchor = animation_anchor | default: ''
+
+  assign hidden_product = false
+  if product.tags contains 'hide'
+    assign hidden_product = true
+  endif
+
+  assign product_double_class = ''
+  if second_image.preview_image and show_second_image
+    assign product_double_class = ' double__image'
+  else
+    assign show_second_image = false
+  endif
+
+  assign sizes = '(min-width: 1400px) calc((80vw - 100px) * 0.75 / 4), (min-width: 750px) calc(1100px * 0.75 / 3), 50px'
+-%}
+
+{%- unless hidden_product -%}
+  <div
+    class="predictive-search__grid-item product-card product-card grid-item"
+    role="option"
+    aria-selected="false"
+    data-aos="fade"
+    data-aos-delay="{{ animation_delay }}"
+    data-aos-anchor="{{ animation_anchor }}"
+  >
+    <a
+      href="{{ product.url }}"
+      class="product-card__link"
+      aria-label="{{ product.title | strip_html | escape }}"
+      data-product-link
+    >
+      <div class="product-card__image{{ product_double_class }}{% unless featured_image %} image--empty{% endunless %}{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}">
+        {%- if featured_image -%}
+          {%- liquid
+            capture featured_image
+              render 'image', image: product.featured_media.preview_image, aspect_ratio: aspect_ratio, sizes: sizes, widths: widths, loading: 'lazy', attributes: image_animations, cover: true
+            endcapture
+          -%}
+
+          <div class="product-card__bg">
+            {{ featured_image }}
+          </div>
+
+          {%- if show_second_image -%}
+            <div class="product-card__bg__under{% if product.media[1].media_type == 'video' or product.media[1].media_type == 'external_video' %} deferred-media{% endif %}">
+              {%- if product.media[1].media_type == 'video' or product.media[1].media_type == 'external_video' -%}
+                {%- liquid
+                  case product.media[1].media_type
+                    when 'video'
+                      echo product.media[1] | media_tag: image_size: '1024x1024', class: 'media-video', autoplay: true, loop: true, controls: false, preload: 'none', muted: true
+                    when 'external_video'
+                      if product.media[1].host == 'youtube'
+                        echo product.media[1] | external_video_url: autoplay: true, playsinline: true, loop: true, playlist: product.media[1].external_id, controls: false, mute: true, showinfo: false | external_video_tag: loading: 'lazy', data-host: product.media[1].host
+                      else
+                        echo product.media[1] | external_video_url: autoplay: true, playsinline: true, loop: true, controls: false, muted: true | external_video_tag: data-host: product.media[1].host
+                      endif
+                  endcase
+                -%}
+              {%- else -%}
+                {%- render 'image',
+                  image: product.media[1].preview_image,
+                  aspect_ratio: aspect_ratio,
+                  sizes: sizes,
+                  widths: widths,
+                  cover: true,
+                  loading: 'lazy'
+                -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      <div class="product-card__content grid-item__content {{ settings.product_grid_font_size }}">
+        <p class="product-card__title">
+          {{ product.title | strip_html }}
+        </p>
+
+        {%- render 'price', product: product -%}
+      </div>
+    </a>
+  </div>
+{%- endunless -%}

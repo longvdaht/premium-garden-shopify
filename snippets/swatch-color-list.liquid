@@ -1,0 +1,37 @@
+{%- liquid
+  capture swatches
+    assign theme_color = metaobjects[settings.theme_color].values
+    assign color_props_names = theme_color | where: 'name'
+
+    for color_props in color_props_names
+      assign theme_color_name = color_props.name | handle
+      assign theme_color_hex_code = color_props.hex_code
+      assign theme_color_image = color_props.image
+
+      if theme_color_hex_code != blank
+        echo '--'
+        echo theme_color_name
+        echo ': '
+        echo theme_color_hex_code
+        echo '; '
+      endif
+
+      if theme_color_image != blank
+        assign swatch_image = theme_color_image | image_url: width: 50
+        assign swatch_image_url = 'url(' | append: swatch_image | append: ')'
+
+        echo '--'
+        echo theme_color_name
+        echo ': '
+        echo swatch_image_url
+        echo '; '
+      endif
+    endfor
+  endcapture
+-%}
+
+{%- style -%}
+  .swatches {
+    {{ swatches }}
+  }
+{%- endstyle -%}

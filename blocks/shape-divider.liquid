@@ -1,0 +1,71 @@
+{%- render 'shape-dividers', mode: 'block', block: block -%}
+
+{% schema %}
+{
+  "name": "Shape divider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "target_section",
+      "label": "Target section",
+      "info": "This will be the section that connects to the straight side of the divider.",
+      "default": "below",
+      "options": [
+        {"value": "above", "label": "Section above"},
+        {"value": "below", "label": "Section below"}
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "target_color_scheme",
+      "label": "Target section color scheme",
+      "info": "Select the color scheme of the target section",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "default": "waves-medium",
+      "options": [
+        {"value": "waves-small", "label": "Waves small"},
+        {"value": "waves-medium", "label": "Waves medium"},
+        {"value": "waves-large", "label": "Waves large"},
+        {"value": "waves-abstract", "label": "Waves abstract"}
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "flip_horizontal",
+      "label": "Flip horizontal",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Desktop height",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Mobile height",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shape divider"
+    }
+  ]
+}
+{% endschema %}

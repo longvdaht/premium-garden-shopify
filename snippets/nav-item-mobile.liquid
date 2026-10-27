@@ -1,0 +1,132 @@
+{%- liquid
+  assign animation_name = 'drawer-items-fade'
+  assign animation_delay_step = 50
+  assign animation_delay_additional = 200
+  assign highlight_item = highlight_item | downcase | strip_html | escape
+  assign link_title_lowercase = link.title | downcase | strip_html | escape
+  assign expands = false
+  assign link_level = link_level | default: 0
+  assign link_level_next = link_level | plus: 1
+  assign forloop_index = forloop_index | default: 1
+
+  assign index = index | append: ''
+  assign image_count = image_count | default: 0
+  assign has_images = false
+  if image_count > 0
+    assign has_images = true
+  endif
+
+  if link.levels > 0 or has_images
+    assign expands = true
+    assign key = link.url | append: link.title | append: link.levels | append: unique | append: block.type | append: index | md5
+  endif
+
+  if secondary_menu
+    assign expands = false
+  endif
+-%}
+
+{%- capture link_markup -%}
+  {%- if link.url == "#" -%}
+    <span class="sliderow__title{% if secondary_menu %} sliderow__title--secondary{% endif %}{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}" data-sliderule-close="sliderule-{{ key }}">{{ link.title | strip_html | escape }}</span>
+  {%- else -%}
+    <a class="sliderow__title{% if secondary_menu %} sliderow__title--secondary{% endif %}{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}" href="{{ link.url }}">
+      <span>
+        {{ link.title | strip_html | escape }}
+
+        {%- if expands or link_level > 0 -%}
+          {%- render 'superscript', link_collection: link -%}
+        {%- endif -%}
+      </span>
+    </a>
+  {%- endif -%}
+{%- endcapture -%}
+
+<div class="sliderule__wrapper{% if secondary_menu %} sliderule__wrapper--secondary{% endif %}">
+  {%- if expands and block.type != 'menu-columns' -%}
+    <mobile-sliderule id="sliderule-{{ key }}">
+      <button
+        class="sliderow"
+        type="button"
+        aria-label="{{ link.title | strip_html | escape }}"
+        data-animates="{{ link_level }}"
+        data-animation="{{ animation_name }}"
+        data-animation-delay="{{ animation_delay | plus: animation_delay_additional }}"
+        data-sliderule-open="sliderule-{{ key }}"
+      >
+        <span class="sliderow__title{% if secondary_menu %} sliderow__title--secondary{% endif %}{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}">
+          <span>
+            {{ link.title | strip_html | escape }}
+
+            {%- if link_level > 0 -%}
+              {%- render 'superscript', link_collection: link -%}
+            {%- endif -%}
+          </span>
+
+          <span class="sliderule__chevron sliderule__chevron--right">
+            {%- render 'icon', name: 'caret-right' -%}
+            <span class="visually-hidden">{{ 'general.accessibility.show_menu' | t }}</span>
+          </span>
+        </span>
+      </button>
+
+      <div
+        class="mobile__menu__dropdown sliderule__panel"
+        data-sliderule="{{ link_level_next }}"
+        data-sliderule-links-count="{{ link.links.size }}"
+        data-sliderule-animation-default="{{ animation_delay_additional }}"
+        data-sliderule-animation-step="{{ animation_delay_step }}"
+        data-scroll-lock-scrollable
+      >
+        <div
+          class="sliderow sliderow--back"
+          data-animates="{{ link_level_next }}"
+          data-animation="{{ animation_name }}"
+          data-animation-delay="150"
+        >
+          <button class="sliderow__back-button" type="button" aria-label="{{ 'general.accessibility.exit_menu' | t }}" data-sliderule-close="sliderule-{{ key }}">
+            <span class="sliderule__chevron sliderule__chevron--left">
+              {%- render 'icon', name: 'caret-left' -%}
+              <span class="visually-hidden">{{ 'general.accessibility.exit_menu' | t }}</span>
+            </span>
+          </button>
+          {{ link_markup }}
+        </div>
+        <div class="sliderow__links" data-links>
+          {%- for link in link.links -%}
+            {%- assign index_recursive = index | append: 'x' | append: forloop.index -%}
+            {%- assign animation_delay = 50 | times: forloop.index -%}
+
+            {%- render 'nav-item-mobile',
+              link: link,
+              index: index_recursive,
+              forloop_index: forloop.index,
+              link_level: link_level_next,
+              highlight_item: highlight_item,
+              animation_delay: animation_delay,
+              unique: unique
+            -%}
+          {%- endfor -%}
+
+          {%- if has_images -%}
+            <div class="sliderule-grid">
+              {{ images_html }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </mobile-sliderule>
+  {%- else -%}
+    {% comment %} Single menu item, no nesting {% endcomment %}
+    <div
+      class="sliderow"
+      role="button"
+      aria-label="{{ link.title | strip_html | escape }}"
+      data-animates="{{ link_level }}"
+      data-animation="{{ animation_name }}"
+      data-animation-delay="{{ animation_delay | plus: animation_delay_additional }}"
+    >
+      {{ link_markup }}
+    </div>
+  {%- endif -%}
+</div>

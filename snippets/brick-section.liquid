@@ -1,0 +1,150 @@
+{%- doc -%}
+  Renders a wrapper "Brick section"
+
+  @param {section} section - The section object
+  @param {string} children - The children of the section
+  @param {boolean} children_full_width - Whether the children should be full width
+  @param {string} [badges] - Rendered Badges blocks, placed over the image column
+{%- enddoc -%}
+
+{%- liquid
+  assign image = section.settings.image
+  assign layout = section.settings.layout
+  assign width = section.settings.width
+  assign height = section.settings.height
+  assign mobile_height = section.settings.mobile_height
+  assign reverse_blocks = section.settings.reverse_blocks
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign show_placeholder = section.settings.show_placeholder
+  assign text_alignment = section.settings.text_alignment
+  assign children_full_width = children_full_width | default: false
+  assign unique = 'BrickSection--' | append: section.id
+
+  capture style
+    echo '--PT: ' | append: padding_top | append: 'px;'
+    echo '--PB: ' | append: padding_bottom | append: 'px;'
+  endcapture
+
+  capture sizes
+    unless settings.grid_override
+      assign width_normal = '1100px'
+      assign width_normal_wide = '80vw'
+
+      if settings.grid_style == 'compact'
+        assign layout_outer = '32px'
+        assign layout_outer_medium = '22px'
+        assign layout_outer_small = '16px'
+      elsif settings.grid_style == 'classic'
+        assign layout_outer = '50px'
+        assign layout_outer_medium = '30px'
+        assign layout_outer_small = '16px'
+      elsif settings.grid_style == 'tight'
+        assign layout_outer = '16px'
+        assign layout_outer_medium = '16px'
+        assign layout_outer_small = '16px'
+      elsif settings.grid_style == 'wide'
+        assign layout_outer = '80px'
+        assign layout_outer_medium = '60px'
+        assign layout_outer_small = '30px'
+      endif
+    else
+      assign width_normal = settings.page_width | times: settings.section_width_normal | divided_by: 100 | append: 'px'
+      assign width_normal_wide = width_normal
+
+      assign layout_outer = '50px'
+      assign layout_outer_medium = '30px'
+      assign layout_outer_small = '16px'
+
+      if settings.grid_gap_horizontal == 0
+        assign layout_outer = '32px'
+        assign layout_outer_medium = '22px'
+        assign layout_outer_small = '16px'
+      endif
+    endunless
+
+    if children != blank
+      if width == 'wrapper--full-padded'
+        echo '(min-width: 990px) calc(50vw - ' | append: layout_outer | append: ' * 2), (min-width: 750px) calc(50vw - ' | append: layout_outer_medium | append: ' * 2), calc(100vw - ' | append: layout_outer_small | append: ' * 2)'
+      elsif width == 'wrapper'
+        echo '(min-width: 1400px) calc(min(50vw, ' | append: width_normal_wide | append: ' / 2) - ' | append: layout_outer | append: ' * 2), (min-width: 750px) calc(min(50vw, ' | append: width_normal | append: ' / 2) - ' | append: layout_outer_medium | append: ' * 2), calc(100vw - ' | append: layout_outer_small | append: ' * 2)'
+      else
+        echo '(min-width: 750px) 50vw, 100vw'
+      endif
+    else
+      if width == 'wrapper--full-padded'
+        echo '(min-width: 990px) calc(100vw - ' | append: layout_outer | append: ' * 2), (min-width: 750px) calc(100vw - ' | append: layout_outer_medium | append: ' * 2), calc(100vw - ' | append: layout_outer_small | append: ' * 2)'
+      elsif width == 'wrapper'
+        echo '(min-width: 1400px) calc(min(100vw, ' | append: width_normal_wide | append: ') - ' | append: layout_outer | append: ' * 2), (min-width: 750px) calc(min(100vw, ' | append: width_normal | append: ') - ' | append: layout_outer_medium | append: ' * 2), calc(100vw - ' | append: layout_outer_small | append: ' * 2)'
+      else
+        echo '100vw'
+      endif
+    endif
+  endcapture
+-%}
+
+{%- capture section_media -%}
+  {%- liquid
+    assign image_desktop_height = height
+    assign image_mobile_height = mobile_height
+    assign image_aspect_ratio = ''
+  -%}
+
+  {%- if image != blank -%}
+    <div class="brick__block__image">
+      {%- render 'image-hero', aspect_ratio: image_aspect_ratio, image: image, sizes: sizes, desktop_height: image_desktop_height, mobile_height: image_mobile_height -%}
+    </div>
+  {%- endif -%}
+
+  {%- if image == blank and show_placeholder -%}
+    <div class="brick__block__image">
+      {%- render 'image-hero' sizes: sizes, desktop_height: height, mobile_height: mobile_height -%}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- render 'stylesheet', name: 'brick-section.css' -%}
+
+<section
+  id="{{ unique }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="brick-section"
+  class="brick-section section-padding {{ color_scheme }}{% if text_alignment != blank %} {{ text_alignment }}{% endif %}"
+  style="{{ style }}"
+  data-shape-divider-root
+>
+  <div class="brick__section{% if layout == 'is-reversed' %} brick__section--reversed{% endif %}{% if reverse_blocks %} brick__section--reversed-mobile{% endif %}{% if children contains 'data-collapsible' %} brick__section--accordion{% endif %} {{ width }} {{ height }} {{ mobile_height }}">
+    <div
+      class="brick__block brick__block--images"
+      {% if badges != blank %}
+        data-badge-host
+      {% endif %}
+    >
+      {%- if image != blank or show_placeholder -%}
+        {{ section_media }}
+      {%- elsif request.design_mode -%}
+        <div class="brick__section-missing-metafield-image">
+          {{ 'products.general.missing_metafield_image' | t }}
+        </div>
+      {%- endif -%}
+
+      {{ badges }}
+    </div>
+
+    {%- if children != blank -%}
+      <div class="brick__block brick__block--text">
+        <div
+          class="brick__block__text"
+          {% if children_full_width %}
+            style="--text-width: 100%;"
+          {% endif %}
+        >
+          <div class="brick-column-layout">
+            {{ children }}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>

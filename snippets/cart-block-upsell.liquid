@@ -1,0 +1,170 @@
+{%- doc -%}
+  Renders order product list or upsell products on Cart page and Cart drawer
+  Supports both fixed product list and AI-powered recommendations
+
+  @param {object} block - Block object (required)
+
+  @example
+  {% render 'cart-block-upsell', block: block %}
+{%- enddoc -%}
+
+{%- liquid
+  assign recommendation_type = block.settings.recommendation_type | default: 'fixed'
+  assign is_ai_recommendations = false
+  assign ai_intent = 'related'
+
+  if recommendation_type == 'ai' or recommendation_type == 'ai_complementary'
+    assign is_ai_recommendations = true
+    if recommendation_type == 'ai_complementary'
+      assign ai_intent = 'complementary'
+    endif
+  endif
+
+  assign product_count = block.settings.product_list.count
+  assign ai_limit = block.settings.ai_limit | default: 3
+  assign upsell_auto_open = block.settings.upsell_auto_open
+
+  assign onboarding_count = 3
+  assign is_onboarding = false
+  if product_count == 0 and request.design_mode and is_ai_recommendations == false
+    assign is_onboarding = true
+  endif
+-%}
+
+{%- unless is_ai_recommendations -%}
+  {%- capture product_list -%}
+    {%- if is_onboarding -%}
+      {%- for i in (1..onboarding_count) -%}
+        {%- render 'upsell-product',
+          upsell_product: blank,
+          unique_id: block.id,
+          color_scheme: block.settings.color_scheme,
+          button_type: block.settings.button_type,
+          button_size: block.settings.button_size,
+          button_style: block.settings.button_style,
+          is_compact: true,
+          show_available_upsell_only: true,
+          onboarding: true
+        -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for product in block.settings.product_list -%}
+        {%- render 'upsell-product',
+          upsell_product: product,
+          unique_id: block.id,
+          color_scheme: block.settings.color_scheme,
+          button_type: block.settings.button_type,
+          button_size: block.settings.button_size,
+          button_style: block.settings.button_style,
+          is_compact: true,
+          show_available_upsell_only: true
+        -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endcapture -%}
+{%- endunless -%}
+
+{%- liquid
+  assign should_render = false
+  if is_ai_recommendations
+    assign should_render = true
+  elsif request.design_mode
+    assign should_render = true
+  elsif product_count > 0 and product_list != blank
+    assign should_render = true
+  endif
+-%}
+
+{%- if should_render -%}
+  {%- if is_ai_recommendations -%}
+    <script src="{{ 'cart-upsell-recommendations.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- if block.settings.title == blank -%}
+    <div class="cart__widget cart__widget--headless cart__widget--products{% if is_ai_recommendations %} cart__widget--ai-recommendations{% endif %}">
+      <div class="cart__widget__content">
+        <div class="cart__widget__content__inner">
+          <div class="cart__widget__products">
+            {%- if is_ai_recommendations -%}
+              <cart-upsell-recommendations
+                class="{% if cart.item_count == 0 %}is-hidden{% endif %}"
+                data-block-id="{{ block.id }}"
+                data-limit="{{ ai_limit }}"
+                data-intent="{{ ai_intent }}"
+                data-color-scheme="{{ block.settings.color_scheme }}"
+                data-button-classes="{{ block.settings.button_size }} {{ block.settings.button_type }} {{ block.settings.button_style }}"
+                data-upsell-style="compact"
+                data-recommendations-container
+              >
+                {%- comment -%} Products loaded dynamically via JavaScript {%- endcomment -%}
+              </cart-upsell-recommendations>
+            {%- else -%}
+              {%- comment -%} Fixed product list {%- endcomment -%}
+              <upsell-block
+                data-upsell-block-id="{{ block.id }}"
+              >
+                {{- product_list -}}
+              </upsell-block>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <details
+      class="cart__widget cart__widget--products accordion{% if is_ai_recommendations %} cart__widget--ai-recommendations{% endif %}"
+      {% if is_ai_recommendations %}
+        {% if cart.item_count > 0 and upsell_auto_open %}
+          open="true"
+        {% endif %}
+      {% elsif upsell_auto_open and product_list != blank %}
+        open="true"
+      {% endif %}
+      data-collapsible
+    >
+      <summary class="cart__widget__title subheading" data-collapsible-trigger>
+        {{ block.settings.title }}
+
+        {%- render 'icon', name: 'caret-down' -%}
+      </summary>
+
+      <div
+        class="cart__widget__content"
+        {% if is_ai_recommendations %}
+          {% if cart.item_count > 0 and upsell_auto_open %}
+            style="height: auto;"
+          {% endif %}
+        {% elsif upsell_auto_open and product_list != blank %}
+          style="height: auto;"
+        {% endif %}
+        data-collapsible-body
+      >
+        <div class="cart__widget__content__inner" data-collapsible-content>
+          <div class="cart__widget__products">
+            {%- if is_ai_recommendations -%}
+              <cart-upsell-recommendations
+                class="{% if cart.item_count == 0 %}is-hidden{% endif %}"
+                data-block-id="{{ block.id }}"
+                data-limit="{{ ai_limit }}"
+                data-intent="{{ ai_intent }}"
+                data-color-scheme="{{ block.settings.color_scheme }}"
+                data-button-classes="{{ block.settings.button_size }} {{ block.settings.button_type }} {{ block.settings.button_style }}"
+                data-upsell-style="compact"
+                data-recommendations-container
+              >
+                {%- comment -%} Products loaded dynamically via JavaScript {%- endcomment -%}
+              </cart-upsell-recommendations>
+            {%- else -%}
+              {%- comment -%} Fixed product list {%- endcomment -%}
+              <upsell-block
+                data-upsell-block-id="{{ block.id }}"
+              >
+                {{- product_list -}}
+              </upsell-block>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </details>
+  {%- endif -%}
+{%- endif -%}

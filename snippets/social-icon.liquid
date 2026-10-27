@@ -1,0 +1,44 @@
+{%- comment -%}
+  Renders a social icon because render can't accept strings as variables
+
+  Accepts:
+  - filename: {String} name of icon
+
+  Usage:
+  {% render 'social-icon', social: 'facebook' %}
+{%- endcomment -%}
+
+{%- assign social_handle = social | handleize -%}
+{%- capture social_link -%}{{ social_handle }}_link{%- endcapture -%}
+
+{%- if settings[social_link] != blank -%}
+  <li>
+    <a
+      href="{{ settings[social_link] }}"
+      title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: social }}"
+      rel="noopener"
+      target="_blank"
+      class="social-link"
+    >
+      {%- case social_handle -%}
+        {%- when 'instagram' -%}
+          {%- render 'icon', name: 'instagram-logo' -%}
+        {%- when 'facebook' -%}
+          {%- render 'icon', name: 'facebook-logo' -%}
+        {%- when 'x' -%}
+          {%- render 'icon', name: 'x-logo' -%}
+        {%- when 'youtube' -%}
+          {%- render 'icon', name: 'youtube-logo' -%}
+        {%- when 'tiktok' -%}
+          {%- render 'icon', name: 'tiktok-logo' -%}
+        {%- when 'linkedin' -%}
+          {%- render 'icon', name: 'linkedin-logo' -%}
+        {%- when 'pinterest' -%}
+          {%- render 'icon', name: 'pinterest-logo' -%}
+        {%- when 'snapchat' -%}
+          {%- render 'icon', name: 'snapchat-logo' -%}
+      {%- endcase -%}
+      <span class="icon-fallback-text">{{ social }}</span>
+    </a>
+  </li>
+{%- endif -%}

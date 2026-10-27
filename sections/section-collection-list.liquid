@@ -1,0 +1,962 @@
+<!-- /sections/section-collection-list.liquid -->
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign unique = 'CollectionsList--' | append: section.id
+  assign subheading = section.settings.subheading
+  assign title = section.settings.title
+  assign description = section.settings.description
+  assign button_text = section.settings.button_text
+  capture button_classes
+    assign button_style = section.settings.button_style
+    if button_style == 'btn--text' and section.settings.show_arrow
+      assign button_style = button_style | append: ' btn--text-no-underline'
+    endif
+    echo 'btn ' | append: button_style | append: ' ' | append: section.settings.button_type | append: ' ' | append: section.settings.button_size
+  endcapture
+
+  assign has_content = false
+  if subheading != blank or title != blank or description != blank or button_text != blank
+    assign has_content = true
+  endif
+
+  assign aspect_ratio = 1 | divided_by: section.settings.aspect_ratio
+
+  assign grid_columns = section.settings.grid
+  assign limit_onboarding = grid_columns
+  assign layout = section.settings.layout
+  assign layout_mobile = section.settings.layout_mobile
+
+  assign has_slider = false
+  if layout == 'slider' or layout_mobile == 'slider'
+    assign has_slider = true
+  endif
+
+  assign scroller_id = unique | append: '-scroller'
+
+  capture grid_classes
+    echo 'grid'
+
+    if layout == 'slider'
+      echo ' grid--slider'
+    endif
+
+    if layout_mobile == 'slider'
+      echo ' grid--mobile-slider'
+    endif
+  endcapture
+
+  assign columns_desktop = grid_columns | plus: 0
+  assign columns_medium = 3
+  assign columns_small = 2
+  assign columns_mobile = layout_mobile | plus: 0
+
+  if columns_desktop == 2 or columns_desktop == 4
+    assign columns_medium = 2
+  endif
+
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign animation_anchor = unique
+-%}
+
+{%- render 'stylesheet', name: 'collection-cards.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+
+    --COLUMNS: {{ columns_desktop }};
+    --COLUMNS-MEDIUM: {{ columns_medium }};
+    --COLUMNS-SMALL: {{ columns_small }};
+    --COLUMNS-MOBILE: {{ columns_mobile }};
+
+    {%- if has_content -%}
+      --PT-MOBILE: max({{ section.settings.padding_top }}px, calc(var(--gap) * 2));
+    {%- endif -%}
+  }
+{%- endstyle -%}
+
+<section
+  id="{{ unique }}"
+  class="section-collection-list section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="list-collections"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+>
+  {%- if layout == 'slider' -%}
+    <grid-slider>
+  {%- endif -%}
+
+  <div class="grid-container{% if section.settings.layout == 'slider' and has_content %} grid-container--split{% endif %}">
+    {%- if has_content -%}
+      <div class="grid__heading-holder{% if layout == 'grid' %} text-center{% endif %}">
+        <div class="grid__heading-content">
+          {%- if subheading != blank or title != blank or description != blank -%}
+            <div class="grid__heading-text">
+              {%- if subheading != blank -%}
+                {%- assign animation_order = animation_order | plus: 1 -%}
+
+                <p
+                  class="grid__subheading subheading"
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                >
+                  {{ subheading }}
+                </p>
+              {%- endif -%}
+
+              {%- if title != blank -%}
+                {%- liquid
+                  assign animation_order = animation_order | plus: 1
+                  assign heading_tag = 'h2'
+
+                  unless section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+                    assign heading_tag = section.settings.heading_tag
+                  endunless
+                -%}
+
+                <{{ heading_tag }}
+                  class="grid__heading {{ section.settings.heading_font_size }}"
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                >
+                  {{- title -}}
+                </{{ heading_tag }}>
+              {%- endif -%}
+
+              {%- if description != blank -%}
+                {%- assign animation_order = animation_order | plus: 1 -%}
+                <div
+                  class="grid__description {{ section.settings.text_font_size }}"
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                >
+                  {{ description }}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if button_text != blank -%}
+            {%- assign animation_order = animation_order | plus: 1 -%}
+            <div
+              class="grid__heading-actions"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="{{ animation_order }}"
+            >
+              <a
+                class="{{ button_classes }}"
+                href="{{ section.settings.button_url }}"
+              >
+                <span>{{ button_text | escape }}</span>
+
+                {%- if section.settings.show_arrow -%}
+                  {%- render 'icon', name: 'caret-right' -%}
+                {%- endif -%}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if layout == 'slider' -%}
+          {%- assign animation_order = animation_order | plus: 1 -%}
+          <div
+            class="slider__arrows slider__arrows--inline"
+            data-aos="hero"
+            data-aos-anchor="{{ animation_anchor }}"
+            data-aos-order="{{ animation_order }}"
+          >
+            <button
+              type="button"
+              class="slider__button slider__button--prev"
+              data-button-arrow
+              data-button-prev
+              aria-label="{{ 'general.pagination.prev' | t }}"
+            >
+              {%- render 'icon', name: 'caret-left' -%}
+            </button>
+
+            <button
+              type="button"
+              class="slider__button slider__button--next"
+              data-button-arrow
+              data-button-next
+              aria-label="{{ 'general.pagination.next' | t }}"
+            >
+              {%- render 'icon', name: 'caret-right' -%}
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grid__items-holder">
+      <div class="grid-outer">
+        {%- liquid
+          capture collection_items
+            if content_section_blocks.size != 0
+              for block in content_section_blocks
+                assign animation_delay = forloop.index0 | times: 1
+                capture placeholder_index
+                  cycle 1, 2, 3, 5, 6
+                endcapture
+                render 'collection-grid-item', block: block, aspect_ratio: aspect_ratio, animation_delay: animation_delay, animation_anchor: animation_anchor, index: forloop.index, placeholder_index: placeholder_index
+              endfor
+            else
+              for i in (1..limit_onboarding)
+                assign animation_delay = forloop.index0 | times: 1
+                capture index
+                  cycle 1, 2, 3, 5, 6
+                endcapture
+                render 'collection-grid-item', block: block, aspect_ratio: aspect_ratio, animation_delay: animation_delay, animation_anchor: animation_anchor, index: index
+              endfor
+            endif
+          endcapture
+        -%}
+
+        <div
+          class="collection-list {{ grid_classes }}"
+          {% if has_slider %}
+            id="{{ scroller_id }}"
+            data-grid-slider
+            {% if request.design_mode %}
+              data-block-scroll
+            {% endif %}
+          {% endif %}
+        >
+          {{ collection_items }}
+        </div>
+
+        {%- if has_slider -%}
+          <slider-progress
+            for="{{ scroller_id }}"
+            {% if layout == 'slider' %}
+              data-desktop-slider
+            {% endif %}
+            {% if layout_mobile == 'slider' %}
+              data-mobile-slider
+            {% endif %}
+          >
+            <div class="slider-progress__container" data-slider-progress hidden>
+              <div class="slider-progress__track">
+                <div class="slider-progress__fill" data-slider-progress-fill style="--slider-progress: 0;"></div>
+              </div>
+              <div class="slider-progress__counter body-x-small" data-slider-counter aria-live="polite"></div>
+            </div>
+          </slider-progress>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if layout == 'slider' -%}
+    </grid-slider>
+  {%- endif -%}
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Collection list",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Collection list"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-medium",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "text_font_size",
+      "label": "Text size",
+      "info": "Applies only when content in Text field is set to Paragraph.",
+      "default": "body-large",
+      "options": [
+        {
+          "value": "body-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "body-small",
+          "label": "Small"
+        },
+        {
+          "value": "body-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "body-large",
+          "label": "Large"
+        },
+        {
+          "value": "body-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link",
+      "default": "/collections"
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "Color",
+      "default": "btn--primary",
+      "options": [
+        {
+          "value": "btn--black",
+          "label": "Black"
+        },
+        {
+          "value": "btn--white",
+          "label": "White"
+        },
+        {
+          "value": "btn--primary",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--secondary",
+          "label": "Secondary"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Size",
+      "default": "",
+      "options": [
+        {
+          "label": "Small",
+          "value": "btn--small"
+        },
+        {
+          "label": "Medium",
+          "value": ""
+        },
+        {
+          "label": "Large",
+          "value": "btn--large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "default": "btn--solid",
+      "options": [
+        {
+          "label": "Solid",
+          "value": "btn--solid"
+        },
+        {
+          "label": "Outline",
+          "value": "btn--outline"
+        },
+        {
+          "label": "Text",
+          "value": "btn--text"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio",
+      "min": 0.5,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Image aspect ratio",
+      "info": "Wide to tall",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "header",
+      "content": "Grid",
+      "info": "Applies only when layout is set to Grid"
+    },
+    {
+      "type": "range",
+      "id": "grid",
+      "label": "Collections per row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 collection per row"
+        },
+        {
+          "value": "2",
+          "label": "2 collections per row"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 12,
+      "settings": [
+        {
+          "label": "Collection",
+          "id": "collection",
+          "type": "collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "collection_image",
+          "label": "Image",
+          "info": "1400 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "label": "Text",
+          "id": "title",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Collection",
+      "name": "Collection list grid",
+      "settings": {
+        "layout": "grid",
+        "layout_mobile": "2"
+      },
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    },
+    {
+      "category": "Collection",
+      "name": "Collection list slider",
+      "settings": {
+        "layout": "slider",
+        "layout_mobile": "slider"
+      },
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

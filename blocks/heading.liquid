@@ -1,0 +1,106 @@
+{%- liquid
+  assign heading_tag = 'h2'
+  assign heading_auto = false
+
+  if block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+    assign heading_auto = true
+
+    comment
+      Theme blocks do not get section.index. Parents that capture content_for
+      (slideshow, image banner) promote via heading-auto-promote
+    endcomment
+    if template.name == 'index' and section.location == 'template' and section.index == 1
+      assign first_top = section.blocks | first
+      if first_top.id == block.id
+        assign heading_tag = 'h1'
+      endif
+    endif
+  else
+    assign heading_tag = block.settings.heading_tag
+  endif
+
+  assign heading_auto_suffix = ''
+  if heading_auto and heading_tag == 'h2'
+    assign heading_auto_suffix = ' data-heading-auto'
+  endif
+-%}
+<{{ heading_tag }}{{ heading_auto_suffix }}
+  class="hero__title {{ block.settings.heading_font_size }}"
+  style="--block-padding-bottom: {{ block.settings.padding_bottom }}px;"
+  data-aos="hero"
+  data-aos-order="auto"
+  data-aos-anchor="{{ section.id }}"
+  {{ block.shopify_attributes }}
+>
+  {{ block.settings.text }}
+</{{ heading_tag }}>
+
+{% schema %}
+{
+  "name": "Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Heading text"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-x-large",
+      "options": [
+        {"value": "heading-mini", "label": "Mini"},
+        {"value": "heading-x-small", "label": "Extra small"},
+        {"value": "heading-small", "label": "Small"},
+        {"value": "heading-medium", "label": "Medium"},
+        {"value": "heading-large", "label": "Large"},
+        {"value": "heading-x-large", "label": "Extra large"}
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {"value": "automatic", "label": "Automatic"},
+        {"value": "h1", "label": "H1"},
+        {"value": "h2", "label": "H2"},
+        {"value": "h3", "label": "H3"},
+        {"value": "h4", "label": "H4"},
+        {"value": "h5", "label": "H5"},
+        {"value": "h6", "label": "H6"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading",
+      "settings": {
+        "text": "Heading text"
+      }
+    }
+  ]
+}
+{% endschema %}

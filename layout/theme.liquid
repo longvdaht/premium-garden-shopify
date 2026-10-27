@@ -1,0 +1,43 @@
+<!doctype html>
+<html class="js supports-no-cookies no-touch" lang="{{ request.locale.iso_code }}">
+  <head>
+    {%- render 'head' -%}
+
+    {%- render 'shopify-actions' -%}
+
+    {{ content_for_header }}
+  </head>
+
+  <body
+    id="{{ page_title | handle }}"
+    class="template-{{ template.name | handle }}{% if settings.animations_enable %} aos-initialized{% endif %} grid-style--{{ settings.grid_style }}"
+  >
+    <a href="#MainContent" class="skip-link visually-hidden" data-skip-content>
+      {{- 'general.accessibility.skip_to_content' | t -}}
+    </a>
+
+    {%- render 'demo-switcher' -%}
+
+    <div class="header-group">
+      {% sections 'header-group' %}
+    </div>
+
+    <div class="overlay-group">
+      {% sections 'overlay-group' %}
+    </div>
+
+    <main id="MainContent" class="main-content" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    <div class="pre-footer-group">
+      {% sections 'pre-footer-group' %}
+    </div>
+
+    <footer class="footer-group">
+      {% sections 'footer-group' %}
+    </footer>
+
+    {%- render 'zoom-pswp' -%}
+  </body>
+</html>

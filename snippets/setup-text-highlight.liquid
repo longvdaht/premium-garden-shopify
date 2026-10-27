@@ -1,0 +1,39 @@
+{%- comment -%}
+  Sets up text highlight variables for use in sections
+  Outputs all three values separated by a delimiter that can be split in the parent
+
+  Accepts:
+  - title: {String} The title to process (required)
+  - heading_highlight_type: {String} The type of highlight (required)
+  - highlight_color: {String} The highlight color (optional)
+
+  Returns via echo (delimited string):
+  has_text_highlight|||text_highlight_wrapper_class|||modified_title
+
+  Usage:
+  {% capture highlight_data %}
+    {% render 'setup-text-highlight', title: title, heading_highlight_type: heading_highlight_type, highlight_color: highlight_color %}
+  {% endcapture %}
+  {% assign highlight_parts = highlight_data | split: '|||' %}
+  {% assign has_text_highlight = highlight_parts[0] %}
+  {% assign text_highlight_wrapper_class = highlight_parts[1] %}
+  {% assign title = highlight_parts[2] %}
+{%- endcomment -%}
+
+{%- render 'check-for-text-highlight',
+  title: title,
+  heading_highlight_type: heading_highlight_type,
+  get: 'has_text_highlight'
+-%}
+|||
+{%- render 'check-for-text-highlight',
+  title: title,
+  heading_highlight_type: heading_highlight_type,
+  get: 'text_highlight_wrapper_class'
+-%}
+|||
+{%- render 'title-text-highlights',
+  title: title,
+  heading_highlight_type: heading_highlight_type,
+  highlight_color: highlight_color
+-%}

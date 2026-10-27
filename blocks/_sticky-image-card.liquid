@@ -1,0 +1,70 @@
+<div
+  class="brick__section{% if section.settings.layout == 'is-reversed' %} brick__section--reversed{% endif %}{% if section.settings.reverse_blocks %} brick__section--reversed-mobile{% endif %} {{ section.settings.width }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="brick__block brick__block--images">
+    <div class="brick__block__image">
+      {%- render 'image-hero',
+        image_desktop: block.settings.image,
+        image_mobile: block.settings.image_mobile,
+        sizes: '(min-width: 750px) 50vw, 100vw',
+        desktop_height: 'image-height',
+        mobile_height: 'image-height--mobile',
+        aspect_ratio: section.settings.aspect_ratio,
+        aspect_ratio_mobile: section.settings.aspect_ratio_mobile
+      -%}
+    </div>
+  </div>
+
+  <div class="brick__block brick__block--text">
+    <div class="brick__block__text">
+      <div
+        class="hero__content hero__content--compact hero__content--no-padding"
+      >
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image card with text",
+  "tag": null,
+  "blocks": [{"type": "heading"}, {"type": "subheading"}, {"type": "text"}, {"type": "button"}],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "2000 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image",
+      "info": "1400 x 2000px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image card with text",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

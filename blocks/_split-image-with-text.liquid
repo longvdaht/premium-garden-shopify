@@ -1,0 +1,202 @@
+{%- doc -%}
+  One image column of the Split images with text section, with nested text and badge blocks.
+  Private: only the Split images with text section offers it. The <!--split-image--> markers
+  let the section keep only the first two columns, since theme blocks cannot be filtered
+  out of section.blocks by type.
+{%- enddoc -%}
+
+{%- liquid
+  assign desktop_height = section.settings.height
+  assign mobile_height = section.settings.mobile_height
+  assign flex_align_desktop = section.settings.flex_align_desktop
+  assign flex_align_mobile = section.settings.flex_align_mobile
+  assign overlay_opacity = section.settings.overlay_opacity | times: 0.01
+  assign show_text_background = section.settings.show_text_background
+  assign show_overlay_text = section.settings.show_overlay_text
+  assign overlay_color = section.settings.overlay_color
+  assign show_placeholder = section.settings.show_placeholder
+  assign selected_color_scheme = section.settings.color_scheme | strip
+  assign scheme_bg_color = settings.color_schemes[selected_color_scheme].settings.section_bg
+
+  assign desktop_image = block.settings.image
+  assign mobile_image = block.settings.mobile_image
+  assign image_link = block.settings.image_link
+
+  # Rendering conditions
+  assign is_blank = false
+  assign is_image_link = false
+  assign render_block_content = false
+  assign render_image = true
+  assign render_metafield_info = false
+  assign hide_block = false
+
+  if desktop_image == blank and mobile_image == blank
+    assign is_blank = true
+  endif
+
+  if image_link != blank
+    assign is_image_link = true
+  endif
+
+  if block.type != blank
+    assign render_block_content = true
+  endif
+
+  if is_blank and show_placeholder == false
+    assign render_image = false
+    assign render_metafield_info = true
+    assign render_block_content = false
+  endif
+
+  if render_metafield_info and request.design_mode == false
+    assign hide_block = true
+  endif
+
+  assign render_image_overlay = false
+  unless show_overlay_text or overlay_opacity == 0.0
+    assign render_image_overlay = true
+  endunless
+
+  assign hero_transparent = true
+  if show_text_background and scheme_bg_color.alpha != 0.0 or scheme_bg_color != blank
+    assign hero_transparent = false
+  endif
+
+  assign show_header_backdrop = false
+  if hero_transparent and show_overlay_text
+    assign show_header_backdrop = true
+  endif
+
+  capture rendered_blocks
+    content_for 'blocks'
+  endcapture
+
+  capture badge_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'badges'
+  endcapture
+
+  capture content_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'content'
+  endcapture
+-%}
+
+<!--split-image-->
+<div
+  class="brick__block{% if hide_block %} hidden brick__block--hidden{% endif %}{% if render_metafield_info %} brick__block--missing-metafield{% endif %}{% if is_blank and render_image %} brick__block--blank{% endif %}"
+  {% unless overlay_color.alpha == 0.0 or overlay_color == blank %}
+    style="--overlay-bg: {{ overlay_color }};"
+  {% endunless %}
+  {{ block.shopify_attributes }}
+>
+  <div class="brick__block__image frame" data-badge-host>
+    {%- if is_image_link -%}
+      <a class="frame__item" href="{{ image_link }}">
+    {%- else -%}
+      <div class="frame__item">
+    {%- endif -%}
+
+    {%- if render_image -%}
+      <div class="hero__split-image{% if is_blank %} hero__split-image--blank{% endif %}">
+        {%- render 'image-hero',
+          image_desktop: desktop_image,
+          image_mobile: mobile_image,
+          desktop_height: desktop_height,
+          mobile_height: mobile_height,
+          sizes: image_sizes
+        -%}
+      </div>
+    {%- endif -%}
+
+    {%- if render_metafield_info -%}
+      <div class="image__hero__missing-metafield-image">
+        {{ 'products.general.missing_metafield_image' | t }}
+      </div>
+    {%- endif -%}
+
+    {%- if render_image_overlay -%}
+      <div class="image-overlay" style="--overlay-opacity: {{ overlay_opacity }};"></div>
+    {%- endif -%}
+
+    {%- if is_image_link -%}
+      </a>
+    {%- else -%}
+      </div>
+    {%- endif -%}
+
+    {{ badge_blocks }}
+
+    {%- if render_block_content -%}
+      <div
+        class="hero__content__wrapper frame__item {{ flex_align_desktop }} {{ flex_align_mobile }}{% if show_header_backdrop %} backdrop--linear{% endif %}"
+        {% if show_header_backdrop %}
+          style="--header-overlay-color: var(--overlay-bg); --header-overlay-opacity: {{ overlay_opacity }};"
+        {% endif %}
+      >
+        {%- capture hero_content_style -%}
+          {%- unless hero_transparent -%}background: var(--bg); color: var(--text);{%- endunless -%}
+          {%- if overlay_opacity != 0.0 -%} --overlay-opacity: {{ overlay_opacity }};{%- endif -%}
+        {%- endcapture -%}
+
+        <div
+          class="hero__content{% if hero_transparent %} hero__content--transparent{% endif %}{% if show_overlay_text %} backdrop--radial{% endif %}"
+          {% if hero_content_style != blank %}
+            style="{{ hero_content_style }}"
+          {% endif %}
+        >
+          {{ content_blocks }}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+<!--/split-image-->
+
+{% schema %}
+{
+  "name": "Image",
+  "blocks": [
+    {"type": "heading"},
+    {"type": "subheading"},
+    {"type": "text"},
+    {"type": "button"},
+    {"type": "_badges"},
+    {"type": "@app"}
+  ],
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Match size to other slides. 3200 x 1200px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Match size to other slides. 1200 x 1600px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "url",
+      "id": "image_link",
+      "label": "Image link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,128 @@
+{%- doc -%}
+  Renders the placeholder media of a product card, with a sample badge and quick add button,
+  for empty product slots in the theme editor. The Stacked quick add style renders its own
+  placeholder in 'product-card-content', so the button here is left out.
+
+  @param {number} [index] - Position of the card in its grid, starting at 1. Picks the placeholder image and badge. Default: 1
+  @param {number} [aos_delay] - Animation delay of the placeholder image, in ms. Default: 0
+  @param {string} [aos_anchor] - Animation anchor of the placeholder image
+  @param {object} [block] - Parent theme block; available automatically when rendered from a block
+
+  @example
+  {% render 'product-card-media-onboarding', index: index, aos_delay: aos_delay, aos_anchor: aos_anchor %}
+{%- enddoc -%}
+
+{%- liquid
+  assign aos_delay = aos_delay | default: 0
+  assign index = index | default: 1
+  assign block_index = block.id | split: '-' | last | plus: 0 | default: 0
+  assign product_card_index = block_index
+  if block.id == blank
+    assign product_card_index = index | plus: 0 | default: 0
+  endif
+
+  assign badge_0 = 'products.product.new' | t
+  assign badge_1 = 'products.product.on_sale' | t
+  assign badge_2 = 'products.product.sold_out' | t
+  assign badge_3 = 'products.product.final_sale' | t
+  assign badge_4 = 'products.product.pre_order' | t
+  assign onboarding_badges = badge_0 | append: ',' | append: badge_1 | append: ',' | append: badge_2 | append: ',' | append: badge_3 | append: ',' | append: badge_4 | split: ','
+
+  assign badge = ''
+  assign sold_out = false
+  assign preorder = false
+  assign remainder = product_card_index | modulo: 12
+
+  case remainder
+    when 1, 5
+      if settings.show_automatic_new_badge
+        assign badge = onboarding_badges[0]
+        assign badge_class = 'badge-box--new'
+      endif
+    when 2, 7
+      if settings.sale_tags_enable
+        assign badge = onboarding_badges[1]
+        assign badge_class = 'badge-box--sale'
+      endif
+    when 8
+      if settings.show_sold_out_badge
+        assign badge = onboarding_badges[2]
+        assign badge_class = 'badge-box--sold'
+        assign sold_out = true
+      endif
+    when 4
+      if settings.sale_tags_enable
+        assign badge = onboarding_badges[3]
+        assign badge_class = 'badge-box--sale'
+      endif
+    when 0, 9
+      if settings.show_preorder_badge
+        assign badge = onboarding_badges[4]
+        assign badge_class = 'badge-box--preorder'
+        assign preorder = true
+      endif
+  endcase
+
+  assign placeholder_index = product_card_index | modulo: 6 | plus: 1
+-%}
+
+<div
+  class="product-card__image{% if settings.image_hover_enable %} double__image{% endif %}{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
+>
+  <a
+    class="product-card__link"
+    href="#"
+    aria-label="{{ 'home_page.onboarding.product_title' | t }}"
+  >
+    <div class="product-card__bg">
+      <div
+        class="svg-placeholder"
+        data-aos="img-in"
+        data-aos-delay="{{ aos_delay }}"
+        data-aos-anchor="{{ aos_anchor }}"
+      >
+        {{ placeholder_index | prepend: 'product-' | placeholder_svg_tag }}
+      </div>
+    </div>
+
+    {%- if settings.image_hover_enable -%}
+      <div class="product-card__bg__under color-scheme-3">
+        <div
+          class="svg-placeholder"
+          data-aos="img-in"
+          data-aos-delay="{{ aos_delay }}"
+          data-aos-anchor="{{ aos_anchor }}"
+        >
+          {{ placeholder_index | prepend: 'collection-' | placeholder_svg_tag }}
+        </div>
+      </div>
+    {%- endif -%}
+  </a>
+
+  {%- if badge != '' -%}
+    <div class="badge-box-container {{ settings.badge_alignment }}{% if settings.badge_font == 'subheading' %} subheading{% else %} {{ settings.badge_font_size }}{% endif %}">
+      <span class="badge-box {{ badge_class }}">
+        {{ badge }}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if settings.quickview_enable and settings.quick_add_style != 'stacked' and sold_out == false -%}
+    <div class="quick-add__holder">
+      <button
+        class="quick-add__button caps"
+        type="button"
+        aria-label="{{ 'products.general.quick_add' | t }}"
+      >
+        <span class="btn__text">
+          {%- if preorder -%}
+            {{ 'products.product.pre_order' | t }}
+          {%- else -%}
+            {{ 'products.general.quick_add' | t }}
+          {%- endif -%}
+        </span>
+        <span class="btn__bag">{% render 'icon', name: 'shopping-bag' %}</span>
+      </button>
+    </div>
+  {%- endif -%}
+</div>

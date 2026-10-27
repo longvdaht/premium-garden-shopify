@@ -1,0 +1,775 @@
+{%- doc -%}
+  Dependencies:
+  - CSS: logos.css
+  - JS:  logos-slider.js
+  - Snippets: image, no-blocks
+{%- enddoc -%}
+
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign logo_opacity_default = section.settings.logo_opacity | default: 100
+  assign logo_opacity = logo_opacity_default | times: 0.01
+  assign show_slider_text = false
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign enable_slider = section.settings.enable_heading_slider
+  assign unique = 'Logos--' | append: section.id
+  assign animation_anchor = unique
+  assign animation_order = 1
+  assign scroll_to_logo_label = 'general.accessibility.scroll_to_logo' | t
+  assign logo_blocks = content_section_blocks | where: 'type', 'logo-item'
+  assign logo_block_count = logo_blocks.size
+  assign remainder = content_section_blocks.size | modulo: 2
+
+  if remainder == 0
+    assign initial_index = content_section_blocks.size | divided_by: 2 | minus: 1
+  else
+    assign initial_index = content_section_blocks.size | minus: 1 | divided_by: 2
+  endif
+-%}
+
+{%- render 'stylesheet', name: 'section-logos.css' -%}
+
+<script src="{{ 'logos-slider.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+    --logo-opacity: {{ logo_opacity }};
+  }
+{%- endstyle -%}
+
+{%- if section.settings.title != blank -%}
+  {%- capture heading -%}
+    <p class="logos__title subheading"
+      data-aos="hero"
+      data-aos-anchor="{{ animation_anchor }}"
+      data-aos-order="{{ animation_order }}"
+    >
+      {{ section.settings.title }}
+    </p>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- for block in logo_blocks -%}
+  {%- capture slides -%}
+    {{ slides }}
+
+    {%- liquid
+      assign logo = block.settings.logo
+      assign logo_width = block.settings.logo_width
+      assign sizes = logo_width | append: 'px'
+      assign width = logo_width | times: 2
+      assign width_retina = logo_width | times: 2
+      assign widths = '100, 120, 140, 160, 180, 200, 240, 280, 320, 360, ' | append: logo_width | append: ', ' | append: width_retina
+      assign link = block.settings.link
+
+      if block.settings.text != blank and section.settings.enable_heading_slider
+        assign show_slider_text = true
+      endif
+    -%}
+
+    <swiper-slide
+      class="logos__slide"
+      data-index="{{ forloop.index0 }}"
+      {{ block.shopify_attributes }}
+    >
+      {%- if enable_slider -%}
+        <button
+          class="logos__slide__link"
+          type="button"
+          aria-label="{{ scroll_to_logo_label }}"
+        >
+      {%- endif -%}
+
+      {%- if link != blank and enable_slider == false -%}
+        <a class="logos__slide__link" href="{{ link }}" aria-label="{{ logo.alt | strip_html | escape }}">
+      {%- endif -%}
+
+      <div class="logos__logo">
+        {%- if logo != blank -%}
+          <div
+            class="logos__img"
+            style="width: {{ logo_width }}px; height: {{ logo_width | divided_by: logo.aspect_ratio }}px;"
+          >
+            {%- render 'image', image: logo, sizes: sizes, width: width, widths: widths, show_backfill: false -%}
+          </div>
+        {%- else -%}
+          <div class="logos__img svg-placeholder" style="width: {{ logo_width }}px; height: {{ logo_width }}px;">
+            {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if link != blank and enable_slider == false -%}
+        </a>
+      {%- endif -%}
+
+      {%- if enable_slider -%}
+        </button>
+      {%- endif -%}
+    </swiper-slide>
+  {%- endcapture -%}
+
+  {%- capture contents -%}
+    {{ contents }}
+
+    <swiper-slide
+      class="logos__slide"
+      data-index="{{ forloop.index0 }}"
+      {{ block.shopify_attributes }}
+    >
+      {%- if block.settings.text != blank -%}
+        {%- liquid
+          assign heading_tag = 'p'
+
+          if block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+            if forloop.index0 == initial_index
+              assign heading_tag = 'h2'
+
+              if template.name == 'index' and section.location == 'template' and section.index == 1
+                assign heading_tag = 'h1'
+              endif
+            endif
+          else
+            assign heading_tag = block.settings.heading_tag
+          endif
+        -%}
+        <{{ heading_tag }} class="logos__slide__text {{ block.settings.text_font_size }}">
+          {{- block.settings.text -}}
+        </{{ heading_tag }}>
+      {%- endif -%}
+    </swiper-slide>
+  {%- endcapture -%}
+{%- endfor -%}
+
+<logos-slider
+  id="{{ unique }}"
+  class="logos swiper section-padding{% if enable_slider %} logos-press{% endif %} {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="logos"
+  {% if shape_divider_blocks != blank %}
+    data-shape-divider-host
+  {% endif %}
+  {% if badge_blocks != blank %}
+    data-badge-host
+  {% endif %}
+>
+  <div class="logos__wrapper">
+    {{ heading }}
+
+    {%- if logo_block_count != 0 -%}
+      {%- assign animation_order = animation_order | plus: 1 -%}
+      <div
+        class="logos__slider__outer"
+        data-aos="hero"
+        data-aos-anchor="{{ animation_anchor }}"
+        data-aos-order="{{ animation_order }}"
+      >
+        <div
+          class="logos__slider"
+          {% if request.design_mode %}
+            data-block-scroll
+          {% endif %}
+        >
+          {%- liquid
+            assign initial_index = 0
+            assign remainder = content_section_blocks.size | modulo: 2
+            if remainder == 0
+              assign initial_index = content_section_blocks.size | divided_by: 2 | minus: 1
+            else
+              assign initial_index = content_section_blocks.size | minus: 1 | divided_by: 2
+            endif
+            assign autoplay = section.settings.autoplay
+            assign autoplay_delay = 0
+            if autoplay
+              assign autoplay_delay = section.settings.autoplay_delay | times: 1000
+            endif
+          -%}
+
+          <swiper-container
+            data-slider-logos
+            loop="false"
+            centered-slides="true"
+            slides-per-view="5"
+            effect="coverflow"
+            coverflow-effect-slide-shadows="false"
+            coverflow-effect-rotate="0"
+            initial-slide="{{ initial_index }}"
+            {%- if autoplay %}
+              autoplay="{{ autoplay }}"
+              autoplay-delay="{{ autoplay_delay }}"
+              autoplay-disable-on-interaction="false"
+            {%- endif -%}
+          >
+            {{ slides }}
+          </swiper-container>
+        </div>
+      </div>
+    {%- else -%}
+      {%- render 'no-blocks' -%}
+    {%- endif -%}
+
+    {%- if show_slider_text -%}
+      {%- assign animation_order = animation_order | plus: 1 -%}
+
+      <div
+        class="logos__slider-text wrapper"
+        data-aos="hero"
+        data-aos-anchor="{{ animation_anchor }}"
+        data-aos-order="{{ animation_order }}"
+      >
+        <swiper-container
+          data-slider-text
+          loop="false"
+          slides-per-view="1"
+          initial-slide="{{ initial_index }}"
+          effect="fade"
+          fade-effect-cross-fade="true"
+        >
+          {{- contents -}}
+        </swiper-container>
+      </div>
+    {%- endif -%}
+  </div>
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</logos-slider>
+
+{% schema %}
+{
+  "name": "Logos",
+  "max_blocks": 26,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_heading_slider",
+      "label": "Enable heading slider",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "logo_opacity",
+      "label": "Inactive logo opacity",
+      "unit": "%",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 4,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change slides every",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Subheading",
+      "default": "As seen in"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo-item",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo",
+          "info": "360 x 360px .svg recommended"
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "label": "Width",
+          "unit": "px",
+          "min": 100,
+          "max": 180,
+          "step": 10,
+          "default": 100
+        },
+        {
+          "type": "header",
+          "content": "Link",
+          "info": "Applies if 'enable heading slider' is disabled"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Header",
+          "default": "Include a brief quote from a brand that loves your products"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Header size",
+          "default": "body-x-large",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {"value": "automatic", "label": "Automatic"},
+            {"value": "h1", "label": "H1"},
+            {"value": "h2", "label": "H2"},
+            {"value": "h3", "label": "H3"},
+            {"value": "h4", "label": "H4"},
+            {"value": "h5", "label": "H5"},
+            {"value": "h6", "label": "H6"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logos",
+      "category": "Image",
+      "settings": {
+        "enable_heading_slider": false
+      },
+      "blocks": [
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        }
+      ]
+    },
+    {
+      "name": "Press",
+      "category": "Image",
+      "settings": {
+        "enable_heading_slider": true
+      },
+      "blocks": [
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        },
+        {
+          "type": "logo-item"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

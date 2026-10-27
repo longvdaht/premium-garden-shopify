@@ -1,0 +1,43 @@
+{% liquid
+  assign product = closest.product
+-%}
+
+{% capture children %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+{% render 'product-card-content', product: product, children: children, shopify_attributes: block.shopify_attributes %}
+
+{% schema %}
+{
+  "name": "Content",
+  "tag": null,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "_product-card-title"
+    },
+    {
+      "type": "_product-card-cutline"
+    },
+    {
+      "type": "_product-card-price"
+    },
+    {
+      "type": "_product-card-swatches"
+    },
+    {
+      "type": "_product-card-tags"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

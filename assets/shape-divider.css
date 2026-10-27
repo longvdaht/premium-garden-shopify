@@ -1,0 +1,70 @@
+[data-shape-divider-host] {
+  position: relative;
+  z-index: 0;
+}
+
+.shape-divider {
+  --divider-color: #FFF;
+  --divider-height: 80px;
+  --divider-height-mobile: 80px;
+  position: absolute;
+  inset-inline: 0;
+  z-index: 11;
+  display: block;
+  width: 100%;
+  color: var(--divider-color);
+  line-height: 0;
+  pointer-events: none;
+}
+
+.shape-divider__svg {
+  display: block;
+  width: 100%;
+  height: var(--divider-height);
+}
+@media only screen and (max-width: 749px) {
+  .shape-divider__svg {
+    height: var(--divider-height-mobile);
+  }
+}
+
+.shape-divider__svg path {
+  fill: currentcolor;
+}
+
+.shape-divider--gradient {
+  height: var(--divider-height);
+  background: var(--divider-color);
+  -webkit-mask-image: var(--divider-mask);
+          mask-image: var(--divider-mask);
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+}
+@media only screen and (max-width: 749px) {
+  .shape-divider--gradient {
+    height: var(--divider-height-mobile);
+  }
+}
+
+.shape-divider--bottom {
+  inset-block-end: 0;
+}
+
+.shape-divider--top {
+  inset-block-start: 0;
+}
+.shape-divider--top .shape-divider__svg {
+  transform: scaleY(-1);
+}
+
+.shape-divider--flip .shape-divider__svg {
+  transform: scaleX(-1);
+}
+
+.shape-divider--top.shape-divider--flip .shape-divider__svg {
+  transform: scale(-1, -1);
+}

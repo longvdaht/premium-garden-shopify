@@ -1,0 +1,47 @@
+<p
+  class="hero__subheading"
+  style="--block-padding-bottom: {{ block.settings.padding_bottom }}px;"
+  data-aos="hero"
+  data-aos-order="auto"
+  data-aos-anchor="{{ section.id }}"
+  {{ block.shopify_attributes }}
+>
+  {{ block.settings.subheading }}
+</p>
+
+{% schema %}
+{
+  "name": "Subheading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subheading",
+      "settings": {
+        "subheading": "Subheading"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,189 @@
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign anchor_links = anchor_links | default: false
+  assign unique = 'Sidebar--' | append: section.id
+  assign aside_html = ''
+  assign content_html = ''
+  assign menu = section.settings.menu
+  assign active_link_title = ''
+  assign first_element_flag = true
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign animation_anchor = unique
+  assign animation_order = 1
+-%}
+
+{%- render 'stylesheet', name: 'sidebar.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+
+    --link: var(--text);
+  }
+{%- endstyle -%}
+
+{%- if content_section_blocks.size != 0 -%}
+  {%- for block in content_section_blocks -%}
+    {%- liquid
+      assign title = block.settings.title
+      assign text = block.settings.text
+      assign content = block.settings.content
+      assign widget_id = 'Widget--' | append: section.id | append: '-' | append: block.id
+    -%}
+
+    {%- if anchor_links -%}
+      {%- capture aside_html -%}
+        {{- aside_html -}}
+
+        {%- if block.type == 'header' and title != blank -%}
+          <li>
+            <scroll-spy data-scroll-spy-container="#{{ widget_id }}">
+              <scroll-to-element>
+                <button type="button" class="widget__link{% if first_element_flag %} is-selected{% endif %}"
+                  data-scroll-to="#{{ widget_id }}"
+                  data-scroll-spy="#{{ widget_id }}"
+                  data-scroll-spy-desktop
+                  data-scroll-trigger-point="top"
+                  {{ block.shopify_attributes }}>
+                  {{- title -}}
+                </button>
+              </scroll-to-element>
+            </scroll-spy>
+          </li>
+          {%- assign first_element_flag = false -%}
+        {%- endif -%}
+      {%- endcapture -%}
+    {%- endif -%}
+
+    {%- capture content_html -%}
+      {{ content_html }}
+
+      {%- if block.type == 'header' and title != blank -%}
+        <h6 class="section-sidebar__title {{ section.settings.heading_font_size }}" id="{{ widget_id }}" {{ block.shopify_attributes }}>{{ title }}</h6>
+      {%- endif -%}
+
+      {%- if block.type == 'text' and text != blank -%}
+        <div class="section-sidebar__text rte" {{ block.shopify_attributes }}>{{ text }}</div>
+      {%- endif -%}
+
+      {%- if block.type == 'accordion' and title != blank and content != blank -%}
+        <details class="accordion" data-collapsible {{ block.shopify_attributes }}>
+          <summary class="accordion__title subheading" data-collapsible-trigger>
+            <span>{{ title }}</span>
+
+            {%- render 'icon', name: 'caret-down'-%}
+          </summary>
+
+          <div class="accordion__body rte" data-collapsible-body>
+            <div class="accordion__content" data-collapsible-content>
+              {{ content }}
+            </div>
+          </div>
+        </details>
+      {%- endif -%}
+    {%- endcapture -%}
+  {%- endfor -%}
+
+  {%- if menu != blank and linklists[menu].links.size > 0 and anchor_links == false -%}
+    {%- liquid
+      assign active_links = linklists[menu].links | where: 'active', true
+      assign active_link_title = active_links[0].title | default: linklists[menu].links[0].title
+    -%}
+
+    {%- for link in linklists[menu].links -%}
+      {%- capture aside_html -%}
+        {{ aside_html }}
+
+        <li class="@#@#{% if link.active %} is-active{% endif %}">
+          <a
+            href="{{ link.url }}"
+            class="#@#@{% if link.active %} is-selected{% endif %}"
+            {% if link.active %}
+              aria-current="true"
+            {% endif %}
+            data-value="{{ link.title }}"
+            data-popout-option
+          >
+            <span>{{- link.title -}}</span>
+          </a>
+        </li>
+      {%- endcapture -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if aside_html != '' and anchor_links -%}
+  <script src="{{ 'scroll-to-element.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'scroll-spy.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<section
+  id="{{ unique }}"
+  class="section-sidebar section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="sidebar"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+>
+  {%- if content_section_blocks.size != 0 -%}
+    <div class="{{ section.settings.width }}">
+      <div class="section-sidebar__body">
+        {%- if aside_html != '' -%}
+          <div
+            class="section-sidebar__aside{% if anchor_links %} desktop{% endif %}"
+            data-aos="hero"
+            data-aos-anchor="{{ animation_anchor }}"
+            data-aos-order="{{ animation_order }}"
+          >
+            <div class="section-sidebar__widget">
+              <ul class="widget__links widget__links--secondary{% unless anchor_links %} desktop{% endunless %}">
+                {{ aside_html | replace: '#@#@', 'widget__link' | replace: '@#@#', '' }}
+              </ul>
+
+              {%- unless anchor_links -%}
+                <popout-select class="select-popout mobile">
+                  <button
+                    type="button"
+                    class="select-popout__toggle"
+                    aria-expanded="false"
+                    aria-controls="{{ section.id }}-select-menu"
+                    aria-labelledby="{{ section.id }}-select-menu-label"
+                    data-popout-toggle
+                  >
+                    <span data-popout-toggle-text>{{ active_link_title }}</span>
+                    {%- render 'icon', name: 'caret-down' -%}
+                  </button>
+
+                  <ul
+                    id="{{ section.id }}-select-menu"
+                    class="select-popout__list"
+                    data-popout-list
+                    data-scroll-lock-scrollable
+                  >
+                    {{ aside_html | replace: '#@#@', 'select-popout__option' | replace: '@#@#', 'select-popout__item' }}
+                  </ul>
+                </popout-select>
+              {%- endunless -%}
+            </div>
+          </div>
+          {%- assign animation_order = animation_order | plus: 1 -%}
+        {%- endif -%}
+
+        <div
+          class="section-sidebar__content"
+          data-aos="hero"
+          data-aos-anchor="{{ animation_anchor }}"
+          data-aos-order="{{ animation_order }}"
+        >
+          <collapsible-elements single="true">
+            {{ content_html }}
+          </collapsible-elements>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    {%- render 'no-blocks' -%}
+  {%- endif -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</section>

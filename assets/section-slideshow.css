@@ -1,0 +1,79 @@
+.slideshow {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+  transition: min-height 0.5s linear;
+}
+.slideshow .hero__content__wrapper {
+  pointer-events: none;
+}
+.slideshow .hero__content__wrapper button,
+.slideshow .hero__content__wrapper a {
+  pointer-events: auto;
+}
+.slideshow .hero__content {
+  margin: var(--outer);
+}
+.slideshow swiper-container::part(pagination) {
+  width: -moz-max-content;
+  width: max-content;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.2s ease;
+}
+.slideshow swiper-container.pagination-hidden::part(pagination) {
+  opacity: 0;
+}
+.slideshow swiper-container.justify-pagination-left::part(pagination) {
+  left: var(--outer);
+  transform: translateX(0);
+}
+.slideshow swiper-container.justify-pagination-right::part(pagination) {
+  left: calc(100% - var(--outer));
+  transform: translateX(-100%);
+}
+.slideshow .hero__content--transparent {
+  padding: var(--outer) var(--outer) calc(var(--outer) - var(--line));
+  margin: 0;
+}
+.slideshow .shape-divider {
+  z-index: 20;
+}
+
+.swiper--zoom-out .image__fill > img {
+  will-change: opacity, transform;
+  transform: scale(1.2);
+  transition: transform 2s cubic-bezier(0.225, 0.64, 0.365, 1);
+}
+
+.swiper--zoom-out:has(.is-initialized) .swiper-slide-active .image__fill > img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.swiper--wipe:has(.is-initialized) swiper-slide {
+  transition: transform 0.5s 0s ease, opacity 0.5s 0.5s ease;
+}
+.swiper--wipe:has(.is-initialized) .swiper-slide-active,
+.swiper--wipe:has(.is-initialized) .swiper-slide-visible {
+  transition: transform 0.5s 0s ease, opacity 0.5s 0s ease;
+}
+.swiper--wipe:has(.is-initialized) .swiper-slide-active {
+  z-index: 2;
+}
+
+.swiper--wipe .swiper-slide-active .hero__image {
+  animation: carClipPathFromRight 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes carClipPathFromRight {
+  0% {
+    clip-path: polygon(100% 0, 100% 0%, 100% 100%, 100% 100%);
+    transform: translateX(2%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "align_text": "text-center",
+        "bg_color": "#f7f7f7"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,56 @@
+{%- doc -%}
+  Renders the text content of a product card: tags, title, tagline, price, and siblings or swatches.
+  With the "Stacked" quick add style, the quick add is rendered at the bottom of the content.
+
+  @param {object} product - The product object. When empty, renders placeholders
+  @param {string} [children] - Rendered theme blocks that replace the default content
+  @param {string} [shopify_attributes] - Theme editor attributes for the content wrapper
+  @param {number} [index] - Position of the card in its grid, starting at 1. Default: 1
+  @param {number} [block_index] - Index of the block the card is rendered in, used by tab collections. Default: 1
+
+  @example
+  {% render 'product-card-content', product: product, index: forloop.index %}
+{%- enddoc -%}
+
+{% liquid
+  assign children = children | default: ''
+  assign shopify_attributes = shopify_attributes | default: ''
+  assign current_variant = product.first_available_variant
+  assign product_url = product.url | within: collection
+  assign index = index | default: 1
+  assign block_index = block_index | default: 1
+%}
+
+<div
+  class="product-card__content grid-item__content {{ settings.product_grid_font_size }}"
+  style="--swatch-size: var(--swatch-size-filters);"
+  data-product-information
+  {{ shopify_attributes }}
+>
+  {% if children != blank %}
+    {{ children }}
+  {% else %}
+    {% render 'product-card-tags', product: product %}
+
+    {% render 'product-card-title', product: product %}
+
+    <div class="product-card__price__holder">
+      {% render 'product-card-cutline', product: product %}
+
+      <div class="product-card__price" data-product-price>
+        {%- render 'price', product: product -%}
+      </div>
+    </div>
+
+    {% render 'product-card-siblings-and-swatches',
+      product: product,
+      part: 'html',
+      index: index,
+      block_index: block_index
+    %}
+  {% endif %}
+
+  {%- if settings.quickview_enable and settings.quick_add_style == 'stacked' -%}
+    {% render 'product-card-quick-add-stacked', product: product, index: index, block_index: block_index %}
+  {%- endif -%}
+</div>

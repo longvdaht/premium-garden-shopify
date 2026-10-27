@@ -1,0 +1,60 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.Shopify || !window.Shopify.actions) return;
+
+    /**
+     * updateCart — add, update, or remove cart lines; set notes or discount codes.
+     *
+     * After the Storefront API mutation completes, theme:cart:refresh is dispatched
+     * so CartItems.getCart() fetches the api-cart-items section render and rebuilds
+     * the drawer/page UI — the same path the theme uses for its own cart operations.
+     *
+     * eventTarget routes auto-emitted shopify:cart:* events to the correct element:
+     *   - lines-update (add)   → product-form  (matches the theme's add-to-cart origin)
+     *   - lines-update (other) → cart-items    (update/remove originates from the drawer)
+     *   - discount-update      → first visible discount pill, or cart-items
+     *   - note-update          → cart note form element, or cart-items
+     */
+    Shopify.actions.updateCart.configure({
+      eventTarget: function (meta) {
+        if (meta.type === 'shopify:cart:discount-update') {
+          return document.querySelector('[data-discount-body]') || document.querySelector('cart-items');
+        }
+        if (meta.type === 'shopify:cart:note-update') {
+          return document.querySelector('[data-cart-form]') || document.querySelector('cart-items');
+        }
+        if (meta.type === 'shopify:cart:lines-update' && meta.action === 'add') {
+          return document.querySelector('product-form') || document.querySelector('cart-items');
+        }
+        return document.querySelector('cart-items');
+      },
+      handler: async function (defaultHandler) {
+        const result = await defaultHandler();
+        // Bridge into the theme's refresh path: CartItems listens for theme:cart:refresh,
+        // calls getCart(), and rebuilds the drawer via the api-cart-items section render.
+        document.dispatchEvent(new CustomEvent('theme:cart:refresh', { bubbles: true }));
+        // Expose source so components can opt into the double-render guard pattern.
+        return { ...result, detail: { source: 'shopify-actions' } };
+      },
+    });
+
+    /**
+     * openCart — surface the cart UI.
+     *
+     * Dispatches theme:cart-drawer:show on <cart-drawer> which CartDrawer.openCartDrawer()
+     * already listens for. Falls back to a /cart redirect for page-mode carts or when
+     * the drawer element is not present.
+     */
+    Shopify.actions.openCart.configure({
+      handler: function () {
+        var cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          cartDrawer.dispatchEvent(new CustomEvent('theme:cart-drawer:show', { bubbles: true }));
+        } else {
+          var root = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
+          window.location.href = root + 'cart';
+        }
+      },
+    });
+  });
+</script>

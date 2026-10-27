@@ -1,0 +1,35 @@
+{%- liquid
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+-%}
+
+<section class="page-404 {{ color_scheme }}" data-shape-divider-root>
+  {%- content_for 'blocks' -%}
+
+  <h2 class="page__heading">{{ 'general.404.title' | t }}</h2>
+  <p class="center text--404">{{ 'general.404.subtext_html' | t }}</p>
+
+  {%- render 'search-form' -%}
+</section>
+
+{% schema %}
+{
+  "name": "404",
+  "blocks": [
+    {
+      "type": "shape-divider"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+{%- doc -%}
+  Returns the CSS value for the --swatch custom property.
+
+  Priority, highest to lowest:
+  1. Metaobject color (settings.theme_color)
+  2. Native Shopify swatch (value.swatch.image / .color)
+  3. CSS variable from swatches.css, or from metaobject custom properties written by swatch-color-list.liquid
+
+  Sources 1 and 2 are inline values (a hex string or url()), so they bypass the CSS variable layer.
+  Source 3 is var(--handle). Both the built-in palette and the metaobject values live on .swatches.
+
+  @param {object} value - Option value. Must respond to the handle filter and may have a swatch.
+  @param {object} [product] - Product used to scope metaobject entries by product_list. Omitted entries apply globally.
+  @param {array} [metaobject_entries] - metaobjects[settings.theme_color].values filtered with where: 'name'. Priority 1 is skipped when empty.
+  @param {number} [image_width] - CDN image width for metaobject and native swatch images. Default: 96
+
+  @example
+  {% capture swatch_value %}
+    {% render 'swatch-style-value',
+      value: value,
+      product: product,
+      metaobject_entries: metaobject_color_entries,
+      image_width: 48
+    %}
+  {% endcapture %}
+{%- enddoc -%}
+{%- liquid
+  assign image_width = image_width | default: 96
+  assign value_handle = value | handle
+
+  assign mo_hex = null
+  assign mo_image_url = null
+
+  for entry in metaobject_entries
+    assign entry_handle = entry.name | handle
+    if entry_handle == value_handle
+      comment
+        Scope check: if the entry's product_list has entries, only apply
+        this metaobject color to products explicitly listed. If the list is
+        empty the entry is treated as global and applies to all products.
+        When no product is passed, apply globally.
+      endcomment
+      assign entry_products = entry.product_list.value
+      assign entry_applies = true
+      if entry_products != blank and product != null
+        assign entry_applies = entry_products | has: 'id', product.id
+      endif
+
+      if entry_applies
+        if entry.image != blank
+          assign mo_image_url = entry.image | image_url: width: image_width
+        endif
+        if entry.hex_code != blank
+          assign mo_hex = entry.hex_code
+        endif
+      endif
+      break
+    endif
+  endfor
+-%}
+{%- comment -%}
+  Priority 1 — metaobject (image beats hex within the same entry, matching
+  the behaviour of swatch-color-list.liquid which writes image last).
+{%- endcomment -%}
+{%- if mo_image_url != null -%}
+  url({{ mo_image_url }})
+{%- elsif mo_hex != null -%}
+  {{ mo_hex }}
+  {%- comment -%}
+    Priority 2 — native Shopify swatch (image beats color within the same value).
+    value.swatch.color is a hex string (e.g. #40e0d0) — output it directly.
+  {%- endcomment -%}
+{%- elsif value.swatch.image -%}
+  url({{ value.swatch.image | image_url: width: image_width }})
+{%- elsif value.swatch.color -%}
+  {{ value.swatch.color }}
+  {%- comment -%}
+    Priority 3 — CSS variable fallback (swatches.css and metaobject custom properties).
+  {%- endcomment -%}
+{%- else -%}
+  var(--{{ value_handle }})
+{%- endif -%}

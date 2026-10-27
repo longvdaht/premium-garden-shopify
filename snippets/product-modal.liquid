@@ -1,0 +1,179 @@
+{%- liquid
+  assign animation_name = 'drawer-items-fade'
+  assign animation_name_images = 'drawer-images-fade'
+  assign animation_delay = 200
+  assign animation_delay_increment = 50
+  assign unique = unique | default: section.id
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+
+  assign preorder = false
+  if product.metafields.theme.preorder.type == 'boolean' and product.metafields.theme.preorder.value == true
+    assign preorder = true
+  endif
+
+  assign product_tags = product.tags | join: ','
+  if product_tags contains '_preorder'
+    assign preorder = true
+  endif
+-%}
+
+<div data-api-content>
+  <product-info
+    id="ProductModal-{{ unique }}"
+    data-section-id="{{ section.id }}"
+    data-product-handle="{{ product.handle }}"
+    data-product-id="{{ product.id }}"
+    data-url="{{ product.url }}"
+    data-update-url="false"
+  >
+    {%- render 'stylesheet', name: 'product.css', blocking: true -%}
+    {%- render 'stylesheet', name: 'product-media.css', blocking: true -%}
+
+    <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-images-swiper.js' | asset_url }}" defer="defer"></script>
+
+    <product-images-swiper
+      class="product-quick-add__images product__images"
+      data-section-id="{{ section.id }}"
+      data-active-media="{{ section.id }}-{{ featured_media.id }}"
+    >
+      <div
+        class="product__slides"
+        data-animation="{{ animation_name_images }}"
+        data-animation-delay="{{ animation_delay }}"
+        {%- assign animation_delay = animation_delay | plus: animation_delay_increment -%}
+      >
+        {%- if product.media.size > 0 -%}
+          <div class="swiper">
+            <swiper-container
+              class="swiper-wrapper"
+              effect="fade"
+              fade-effect-cross-fade="true"
+              auto-height="true"
+              navigation="true"
+              navigation-prev-el=".product-quick-add__images .swiper-button-prev"
+              navigation-next-el=".product-quick-add__images .swiper-button-next"
+              {% if product.media.size <= 1 %}
+                allow-slide-next="false"
+                allow-slide-prev="false"
+              {% endif %}
+              keyboard="true"
+              grab-cursor="true"
+              loop="false"
+            >
+              {%- for media in product.media -%}
+                {%- render 'media',
+                  media: media,
+                  featured_media: featured_media,
+                  enable_video_looping: true,
+                  sectionkey: section.id,
+                  product_api: true,
+                  image_width: '365',
+                  loading: 'eager',
+                  cover: true,
+                  product_modal: true
+                -%}
+              {%- endfor -%}
+            </swiper-container>
+
+            {%- if product.media.size > 1 -%}
+              <button type="button" class="swiper-button-prev">
+                <span class="visually-hidden">{{ 'general.pagination.prev' | t }}</span>
+                {%- render 'icon', name: 'caret-left' -%}
+              </button>
+              <button type="button" class="swiper-button-next">
+                <span class="visually-hidden">{{ 'general.pagination.next' | t }}</span>
+                {%- render 'icon', name: 'caret-right' -%}
+              </button>
+            {%- endif -%}
+          </div>
+
+          {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
+          {%- if first_3d_model -%}
+            <button
+              class="btn btn--outline btn--black btn--ar product-quick-add__view-in-space"
+              data-shopify-xr
+              data-shopify-model3d-id="{{ first_3d_model.id }}"
+              data-shopify-title="{{ product.title | strip_html }}"
+              data-shopify-xr-hidden
+            >
+              {%- render 'icon', name: 'cube' -%}
+              <span class="product-quick-add__view-in-space-text">{{ 'products.general.view_space' | t }}</span>
+            </button>
+          {%- endif -%}
+        {%- else -%}
+          <div class="product__slides">
+            <div class="product__slide">
+              <div class="product__photo{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}">
+                {%- render 'image',
+                  image: product.featured_image,
+                  widths: '365, 550, 730, 1100, 1460',
+                  loading: 'eager',
+                  cover: true
+                -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </product-images-swiper>
+
+    <div class="product-quick-add__form">
+      <div class="product-quick-add__form__inner" data-form-wrapper>
+        {%- liquid
+          assign product_form_id = 'ProductFormModal-' | append: section.id | append: '-' | append: product.id
+
+          render 'product-title', product: product, is_title_linked: true, animation_name: animation_name, animation_delay: animation_delay
+          assign animation_delay = animation_delay | plus: animation_delay_increment
+
+          render 'product-price', product: product, unique: unique, animation_name: animation_name, animation_delay: animation_delay
+          assign animation_delay = animation_delay | plus: animation_delay_increment
+
+          render 'product-siblings', product: product, product_form_id: product_form_id, metafields: true, product_api: true, animation_name: animation_name, animation_delay: animation_delay
+          assign animation_delay = animation_delay | plus: animation_delay_increment
+
+          render 'product-variant-picker', product: product, product_form_id: product_form_id, unique: unique, current_variant: current_variant, enable_size_chart: false, animation_name: animation_name, animation_delay: animation_delay
+          assign animation_delay = animation_delay | plus: animation_delay_increment
+
+          render 'product-description', product: product, product_api: true, animation_name: animation_name, animation_delay: animation_delay
+          assign animation_delay = animation_delay | plus: animation_delay_increment
+        -%}
+
+        {%- comment -%}
+          Add a line item property called 'Preorder' to preorder products
+        {%- endcomment -%}
+        {%- if preorder -%}
+          <input
+            type="hidden"
+            name="properties[{{ 'products.product.sale_type' | t }}]"
+            value="{{ 'products.product.pre_order' | t }}"
+            form="{{ product_form_id }}"
+            data-product-preorder
+          >
+        {%- endif -%}
+
+        {%- if settings.show_gift_card_recipient and product.gift_card? -%}
+          <div
+            class="product__block block-padding"
+            {% if animation_name %}
+              data-animation="{{ animation_name }}"
+              data-animation-delay="{{ animation_delay }}"
+            {% endif %}
+          >
+            {%- render 'gift-card-recipient-form', product: product, form: form, product_form_id: product_form_id -%}
+          </div>
+        {%- endif -%}
+
+        {%- render 'product-buttons',
+          product: product,
+          unique: unique,
+          product_form_id: product_form_id,
+          animation_name: animation_name,
+          animation_delay: animation_delay,
+          quickview: true
+        -%}
+      </div>
+    </div>
+  </product-info>
+</div>

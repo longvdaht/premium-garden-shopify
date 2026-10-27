@@ -1,0 +1,86 @@
+{%- doc -%}
+  Renders one image frame for the Image with text and Overlapping images sections.
+
+  When a shape is enabled, square and portrait crops switch the frame to image height.
+  An uploaded SVG is applied as a CSS mask, using the Files CDN URL.
+  With no file, the image stays rectangular.
+
+  @param {string} sizes - Media conditions for the image
+  @param {string} desktop_height - Height class on desktop
+  @param {string} mobile_height - Height class at mobile widths
+  @param {image} [image] - Image to show. A blank image renders nothing unless show_when_blank is true
+  @param {string} [classes] - Classes on the wrapper. Default: 'brick__block__image'
+  @param {boolean} [show_when_blank] - Render the frame when image is blank. Default: false
+  @param {boolean} [shape_enable] - Clip the frame to a shape. Default: false
+  @param {string} [shape] - Shape id, matching an image__hero__frame--shape-* class, or 'svg'
+  @param {string} [crop] - 'none', 'square', or 'portrait'. Default: 'none'
+  @param {number} [aspect_ratio] - Frame ratio used when a shape crop does not set one
+  @param {image} [shape_svg] - Uploaded SVG mask. Used only when shape is 'svg'
+  @param {string} [loading] - 'eager' or 'lazy'. image-hero decides when this is omitted
+  @param {string} [fetchpriority] - 'auto', 'high', or 'low'
+  @param {boolean} [preload] - Emit a preload hint
+
+  @example
+  {% render 'section-double-image',
+    image: section.settings.image_1,
+    sizes: sizes,
+    desktop_height: desktop_height,
+    mobile_height: mobile_height,
+    shape_enable: section.settings.image_shape_enable,
+    shape: section.settings.image_shape,
+    crop: section.settings.image_crop,
+    shape_svg: section.settings.image_shape_svg
+  %}
+{%- enddoc -%}
+
+{%- liquid
+  assign classes = classes | default: 'brick__block__image'
+  assign frame_desktop_height = desktop_height
+  assign frame_mobile_height = mobile_height
+  assign frame_aspect_ratio = aspect_ratio
+  assign frame_modifier = ''
+  assign frame_style_vars = ''
+
+  if shape_enable
+    assign frame_modifier = 'image__hero__frame--shaped image__hero__frame--shape-' | append: shape
+
+    case crop
+      when 'square'
+        assign frame_aspect_ratio = 1
+        assign frame_desktop_height = 'image-height'
+        assign frame_mobile_height = 'image-height--mobile'
+        assign classes = classes | append: ' brick__block__image--cropped'
+      when 'portrait'
+        assign frame_aspect_ratio = 0.75
+        assign frame_desktop_height = 'image-height'
+        assign frame_mobile_height = 'image-height--mobile'
+        assign classes = classes | append: ' brick__block__image--cropped'
+    endcase
+
+    if shape == 'svg' and shape_svg != blank
+      assign shape_mask_filename = shape_svg.src | split: '/' | last | split: '?' | first
+      assign shape_mask_url = shape_mask_filename | file_url
+      unless shape_mask_url contains '://'
+        assign shape_mask_url = shape_mask_url | prepend: 'https:'
+      endunless
+      assign frame_style_vars = "--image-shape-mask: url('" | append: shape_mask_url | append: "');"
+    endif
+  endif
+-%}
+
+{%- if image != blank or show_when_blank -%}
+  <div class="{{ classes }}">
+    {%- render 'image-hero',
+      image: image,
+      sizes: sizes,
+      desktop_height: frame_desktop_height,
+      mobile_height: frame_mobile_height,
+      aspect_ratio: frame_aspect_ratio,
+      modifier: frame_modifier,
+      style_vars: frame_style_vars,
+      loading: loading,
+      fetchpriority: fetchpriority,
+      preload: preload
+    -%}
+  </div>
+{%- endif -%}

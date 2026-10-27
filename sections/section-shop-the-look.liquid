@@ -1,0 +1,876 @@
+<!-- /sections/section-look.liquid -->
+
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign unique = 'ShopTheLook--' | append: section.id
+  assign hotspots = ''
+  assign look_slider = ''
+  assign enable_aspect_ratio = section.settings.enable_aspect_ratio
+  assign image_aspect_ratio = 1 | divided_by: section.settings.image_aspect_ratio
+  assign image = section.settings.image
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign hotspot_color = section.settings.hotspot_color
+  assign hotspot_bg = section.settings.hotspot_bg
+  assign show_dots = section.settings.show_dots
+
+  capture button_classes
+    assign button_style = section.settings.button_style
+    if button_style == 'btn--text' and section.settings.show_arrow
+      assign button_style = button_style | append: ' btn--text-no-underline'
+    endif
+    echo 'btn ' | append: button_style | append: ' ' | append: section.settings.button_type | append: ' ' | append: section.settings.button_size
+  endcapture
+
+  unless enable_aspect_ratio
+    if image
+      assign image_aspect_ratio = image.aspect_ratio
+    else
+      assign image_aspect_ratio = 1
+    endif
+  endunless
+
+  assign scroll_to_product_label = 'general.accessibility.scroll_to_product' | t
+-%}
+
+{%- render 'stylesheet', name: 'section-shop-the-look.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+  }
+
+  {%- unless hotspot_bg.alpha == 0.0 or hotspot_bg == blank -%}
+    #{{ unique }} .hotspot { --bg: {{ hotspot_bg }}; }
+  {%- endunless -%}
+
+  {%- unless hotspot_color.alpha == 0.0 or hotspot_color == blank -%}
+    #{{ unique }} .hotspot__button { --icons: {{ hotspot_color }}; }
+  {%- endunless -%}
+
+  #{{ unique }} .look__image-container {
+    --aspect-ratio: {{ image.aspect_ratio }};
+  }
+{%- endstyle -%}
+
+<script src="{{ 'section-shop-the-look.js' | asset_url }}" defer="defer"></script>
+
+<section
+  id="{{ unique }}"
+  class="section-look section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="look"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+>
+  <div class="wrapper--full">
+    {%- if content_section_blocks.size != 0 -%}
+      {%- for block in content_section_blocks -%}
+        {%- capture style -%}
+          --hotspot-top: {{ block.settings.position_y }}%;
+          --hotspot-left: {{ block.settings.position_x }}%;
+        {%- endcapture -%}
+
+        {%- capture hotspots -%}
+          {{ hotspots }}
+
+          <button
+            type="button"
+            class="hotspot__button"
+            style="{{ style }}"
+            aria-label="{{ scroll_to_product_label }}"
+            data-slider-thumb="{{ forloop.index0 }}"
+          >
+            <span class="hotspot">
+              <span class="hotspot__icon"></span>
+            </span>
+          </button>
+        {%- endcapture -%}
+
+        {%- capture look_slider -%}
+          {{ look_slider }}
+
+          {%- assign product = all_products[block.settings.product] -%}
+
+          <div class="look__slide look__slide--{{ block.id }}" data-slide="{{ block.id }}" {{ block.shopify_attributes }}>
+            {%- render 'product-card', product: product, index: forloop.index -%}
+          </div>
+        {%- endcapture -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..2) -%}
+        {%- capture style -%}
+          --hotspot-top: {{ forloop.index | times: 30 }}%;
+          --hotspot-left: {{ forloop.index | times: 30 }}%;
+        {%- endcapture -%}
+
+        {%- capture hotspots -%}
+          {{ hotspots }}
+
+          <button type="button" class="hotspot__button" style="{{ style }}" aria-label="{{ scroll_to_product_label }}" data-slider-thumb="{{ forloop.index0 }}">
+            <span class="hotspot">
+              <span class="hotspot__icon"></span>
+            </span>
+          </button>
+        {%- endcapture -%}
+
+        {%- capture look_slider -%}
+          {{ look_slider }}
+
+          <div class="look__slide look__slide--{{ section.id }}-{{ i }}" data-slide="{{ section.id }}-{{ i }}">
+            {% render 'product-card', product: null, index: forloop.index %}
+          </div>
+        {%- endcapture -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    <look-component
+      class="look{% if section.settings.layout != '' %} {{ section.settings.layout }}{% endif %}"
+    >
+      <div class="look__image look__image--fullheight">
+        <div
+          class="look__image-container"
+          {% if badge_blocks != blank %}
+            data-badge-host
+          {% endif %}
+        >
+          {%- render 'image',
+            image: section.settings.image,
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            aspect_ratio: image_aspect_ratio,
+            modifier: 'look__image-bg',
+            placeholder: 'collection-1'
+          -%}
+
+          {%- if show_dots and hotspots != blank -%}
+            <div class="hotspots desktop">
+              {{ hotspots }}
+            </div>
+          {%- endif -%}
+
+          {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+        </div>
+
+        <div class="look__actions mobile">
+          <button
+            type="button"
+            class="{{ button_classes }}"
+            aria-label="{{ scroll_to_product_label }}"
+            data-slider-thumb="0"
+          >
+            {%- render 'icon', name: 'shopping-bag' -%}
+
+            <span>{{ 'general.shop_the_look.button' | t }}</span>
+
+            {%- if section.settings.show_arrow -%}
+              {%- render 'icon', name: 'caret-right' -%}
+            {%- endif -%}
+          </button>
+        </div>
+      </div>
+
+      <div class="look__aside" data-popup-container>
+        <div class="underlay mobile" data-popup-close></div>
+
+        <div class="look__content" data-popup-content data-scroll-lock-scrollable>
+          {%- if section.settings.title != blank -%}
+            <p class="look__title text-center subheading">
+              {{ section.settings.title }}
+            </p>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            {%- liquid
+              assign heading_tag = 'h2'
+
+              unless section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+                assign heading_tag = section.settings.heading_tag
+              endunless
+            -%}
+
+            <{{ heading_tag }} class="look__title text-center {{ section.settings.heading_font_size }}">
+              {{ section.settings.heading }}
+            </{{ heading_tag }}>
+          {%- endif -%}
+
+          <button
+            type="button"
+            data-popup-close
+            class="look__close mobile"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+          >
+            {%- render 'icon', name: 'x' -%}
+          </button>
+
+          <div
+            class="look__slider{% if section.settings.products_per_row == '2' and content_section_blocks.size != 1 %} look__slider--grid{% endif %}"
+            data-slider-mobile="{{ section.id }}"
+            data-arrow-position-middle
+            data-scroll-lock-scrollable
+            {% if request.design_mode %}
+              data-block-scroll
+            {% endif %}
+          >
+            {{ look_slider }}
+          </div>
+        </div>
+      </div>
+    </look-component>
+  </div>
+  {%- render 'shape-dividers', mode: 'host' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Shop the look",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "2000 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Image left, products right"
+        },
+        {
+          "value": "is-reversed",
+          "label": "Products left, image right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Subheading",
+      "default": "Shop the look"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-large",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "id": "show_dots",
+      "type": "checkbox",
+      "label": "Show dots",
+      "default": true,
+      "info": "Desktop only"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Button",
+      "info": "Applies on mobile only"
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "Color",
+      "default": "btn--primary",
+      "options": [
+        {
+          "value": "btn--black",
+          "label": "Black"
+        },
+        {
+          "value": "btn--white",
+          "label": "White"
+        },
+        {
+          "value": "btn--primary",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--secondary",
+          "label": "Secondary"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Size",
+      "default": "",
+      "options": [
+        {
+          "label": "Small",
+          "value": "btn--small"
+        },
+        {
+          "label": "Medium",
+          "value": ""
+        },
+        {
+          "label": "Large",
+          "value": "btn--large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "default": "btn--outline",
+      "options": [
+        {
+          "label": "Solid",
+          "value": "btn--solid"
+        },
+        {
+          "label": "Outline",
+          "value": "btn--outline"
+        },
+        {
+          "label": "Text",
+          "value": "btn--text"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "enable_aspect_ratio",
+      "type": "checkbox",
+      "label": "Set custom aspect ratio",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "min": 0.5,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": ":1",
+      "default": 1.0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_color",
+      "label": "Dot icon"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_bg",
+      "label": "Dot background"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 7,
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Product displayed in the photo"
+        },
+        {
+          "type": "header",
+          "content": "Hotspot position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Horizontal",
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Vertical",
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop the look",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "position_x": 14,
+            "position_y": 37
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "position_x": 45,
+            "position_y": 60
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "custom.pre_footer", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+<slide-data style="display:contents">
+  <div class="countdown-block" data-countdown-block {{ block.shopify_attributes }}>
+    {%- if block.settings.text != blank -%}
+      <div class="countdown-block__text">
+        {{ block.settings.text }}
+      </div>
+    {%- endif -%}
+
+    <div class="countdown-block__timer">
+      {%- render 'countdown-timer',
+        end_date: block.settings.end_date,
+        end_time: block.settings.end_time,
+        period: block.settings.period,
+        end_message: block.settings.end_message,
+        hide_on_complete: block.settings.hide_on_complete,
+        skip_assets: true
+      -%}
+    </div>
+  </div>
+</slide-data>
+
+{% schema %}
+{
+  "name": "Countdown timer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End date",
+      "placeholder": "2026-12-31",
+      "default": "2026-12-31",
+      "info": "Use format \"YYYY-MM-DD\". Expiration date is based on the [store primary timezone](/admin/settings/general)."
+    },
+    {
+      "type": "text",
+      "id": "end_time",
+      "label": "End time",
+      "default": "11:59",
+      "placeholder": "11:59",
+      "info": "Use 12-hour time convention in format \"HH:MM\""
+    },
+    {
+      "type": "radio",
+      "id": "period",
+      "label": "AM/PM",
+      "options": [
+        {"value": "am", "label": "AM"},
+        {"value": "pm", "label": "PM"}
+      ],
+      "default": "am"
+    },
+    {
+      "type": "richtext",
+      "id": "end_message",
+      "label": "End of timer message",
+      "default": "<p>Offer has expired</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_complete",
+      "label": "Hide block after end of timer",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Limited time offer</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown timer"
+    }
+  ]
+}
+{% endschema %}

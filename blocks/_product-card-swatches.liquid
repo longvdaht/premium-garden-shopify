@@ -1,0 +1,23 @@
+{% liquid
+  assign product = closest.product
+-%}
+
+{% render 'product-card-siblings-and-swatches',
+  product: product,
+  shopify_attributes: block.shopify_attributes,
+  part: 'html'
+%}
+
+{% schema %}
+{
+  "name": "Swatches",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Swatches",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

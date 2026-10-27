@@ -1,0 +1,367 @@
+.quick-add__holder {
+  --btn-text: var(--accent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 10px;
+  z-index: 10;
+  pointer-events: auto;
+  transform-origin: right bottom;
+}
+
+.no-touch .product-card .product-card__image:hover .quick-add__button {
+  visibility: unset;
+}
+@media only screen and (min-width: 750px) {
+  .no-touch body.is-focused .product-card .quick-add__button {
+    visibility: unset;
+    transition: none;
+  }
+  .no-touch .product-card .quick-add__holder {
+    opacity: 0;
+    animation: slideOutDown 0.25s ease;
+  }
+  .no-touch .product-card .quick-add__button {
+    visibility: hidden;
+    transition: visibility 0.5s;
+  }
+  .no-touch .product-card .quick-add__button.has-error {
+    animation: slideToggle 3s ease;
+    animation-fill-mode: forwards;
+  }
+  .no-touch .product-card .product-card__image:hover .quick-add__holder:not(.is-disabled) {
+    animation: slideInUp 0.25s ease;
+    animation-fill-mode: forwards;
+  }
+  .no-touch body.is-focused .product-card .quick-add__holder:focus-within,
+  .no-touch .product-card .quick-add__holder.is-visible,
+  .no-touch .product-card .quick-add__holder.has-error {
+    animation: slideInUp 0.25s ease;
+    animation-fill-mode: forwards;
+  }
+  .no-touch .product-card .quick-add__holder.is-disabled {
+    animation: slideOutDown 0.25s ease;
+  }
+  .no-touch .product-card .quick-add__holder.is-disabled .quick-add__button {
+    visibility: hidden;
+  }
+}
+@media only screen and (min-width: 750px) and (max-width: 989px) {
+  .no-touch .product-card .has-error > .quick-add__button {
+    visibility: unset;
+    display: block;
+    max-height: none;
+    padding: 15px;
+    opacity: 1;
+  }
+}
+
+.quick-add__holder.is-disabled {
+  pointer-events: none;
+}
+
+.quick-add__holder.has-error > form,
+.quick-add__holder.has-error .quick-add__button {
+  width: 100%;
+}
+
+.quick-add__holder.is-expanded.is-visible .quick-add__loader circle ~ circle {
+  animation-play-state: running;
+}
+.quick-add__holder.is-expanded.is-visible .quick-add__loader,
+.quick-add__holder.is-expanded.is-visible .quick-add__errors.is-visible {
+  display: block;
+  opacity: 1;
+}
+.quick-add__holder.is-expanded.is-visible .quick-add__value {
+  opacity: 0;
+}
+.quick-add__holder.is-expanded.is-visible .quick-add__errors.is-visible ~ .quick-add__values {
+  display: none;
+}
+
+.quick-add__holder.is-expanded .quick-add__values {
+  display: block;
+  transform-origin: right bottom;
+  animation: quickAddValuesIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.quick-add__holder.is-expanded .quick-add__value {
+  animation: quickAddValueIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(0.05s + var(--value-index, 0) * 0.05s);
+}
+.quick-add__holder.is-expanded .quick-add__button {
+  display: none;
+}
+
+.quick-add__values {
+  position: relative;
+  display: none;
+  flex: 0 1 100%;
+  width: 100%;
+  padding: 2px;
+  background: var(--COLOR-QUICK-ADD-BG);
+  color: var(--COLOR-QUICK-ADD-TEXT);
+  font-size: var(--font-body-small);
+  text-align: center;
+}
+.quick-add__values .quick-add__loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.quick-add__value {
+  min-width: 40px;
+  padding: 2px 5px;
+  margin: 2px;
+  transition: background 0.3s, transform 0.2s ease;
+}
+
+.quick-add__value:not(:disabled):active {
+  transform: scale(0.94);
+}
+
+@keyframes quickAddValuesIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+}
+@keyframes quickAddValueIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quick-add__holder.is-expanded .quick-add__values,
+  .quick-add__holder.is-expanded .quick-add__value {
+    animation: none;
+  }
+}
+.quick-add__value:not(:disabled):hover {
+  background: var(--COLOR-QUICK-ADD-BG-HOVER);
+}
+
+.quick-add__value:disabled {
+  text-decoration: line-through;
+  cursor: default;
+}
+
+.quick-add__errors {
+  flex: 0 1 100%;
+  display: none;
+  background-color: var(--COLOR-ERROR-BG);
+  color: var(--COLOR-ERROR);
+  text-align: center;
+}
+.quick-add__errors .errors {
+  padding: 10px;
+}
+.quick-add__errors .errors__close {
+  display: none;
+}
+
+.quick-add__button {
+  font-size: var(--font-body-x-small);
+  color: var(--COLOR-QUICK-ADD-TEXT);
+  background: var(--COLOR-QUICK-ADD-BG);
+}
+.quick-add__button.is-visible, .quick-add__button.is-loading, .quick-add__button.is-added {
+  visibility: unset !important;
+}
+.quick-add__button.is-disabled {
+  pointer-events: none;
+}
+@media only screen and (min-width: 750px) {
+  .quick-add__button {
+    position: relative;
+    display: flex;
+    width: auto;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: none;
+    text-decoration: none;
+    border-radius: var(--RADIUS-BUTTON);
+  }
+  .quick-add__button .btn__bag {
+    position: absolute;
+    margin: -5px 15px 3px auto;
+    display: block;
+    align-self: center;
+    width: 16px;
+    height: 16px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+  .quick-add__button .btn__text {
+    transition: padding 0.3s ease;
+  }
+  .quick-add__button:hover:not(.is-loading, .is-added) .btn__bag {
+    transform: none;
+  }
+  .quick-add__button:hover:not(.is-loading, .is-added) .btn__text {
+    padding-inline-end: 24px;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .quick-add__button {
+    --btn-size: 36px;
+    --btn-offset: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: var(--RADIUS);
+    background: var(--bg);
+    pointer-events: auto;
+    font-size: 0;
+    z-index: 1;
+  }
+  .quick-add__button::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--btn-offset) * -1);
+    left: calc(var(--btn-offset) * -1);
+    width: calc(var(--btn-size) + var(--btn-offset) * 2);
+    height: calc(var(--btn-size) + var(--btn-offset) * 2);
+    z-index: -1;
+    opacity: 0;
+  }
+  .has-error .quick-add__button {
+    width: auto;
+    right: var(--btn-offset);
+  }
+  .has-error .quick-add__button .btn__error {
+    font-size: var(--BTN-FONT-SIZE);
+  }
+  .quick-add__button .btn__text {
+    display: none;
+  }
+}
+
+.quick-add__button > span {
+  pointer-events: none;
+}
+
+.product-card--quick-add-stacked {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+.product-card--quick-add-stacked .product-card__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.look__slider swiper-slide.look__slide--quick-add-stacked {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+.look__slider swiper-slide.look__slide--quick-add-stacked > .product-card--quick-add-stacked {
+  flex: 1 1 auto;
+}
+
+.product-card.product-card--quick-add-stacked .product-card__content {
+  padding-bottom: calc(var(--inner) / 2);
+}
+@media only screen and (max-width: 749px) {
+  .product-card.product-card--quick-add-stacked .product-card__content {
+    padding-bottom: 12px;
+  }
+}
+
+.quick-add-stacked {
+  display: block;
+  margin-top: auto;
+  padding-top: var(--SPACING-TINY);
+}
+.quick-add-stacked .btn {
+  width: 100%;
+}
+.quick-add-stacked.is-open {
+  z-index: 4;
+}
+
+.quick-add-stacked__form {
+  display: grid;
+  gap: var(--SPACING-TINY);
+}
+
+.quick-add-stacked__holder.has-error .btn__text {
+  opacity: 1;
+  visibility: visible;
+}
+
+.quick-add-stacked__errors {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  font-size: var(--font-body-small);
+  text-align: left;
+  transition: opacity 0.5s ease, max-height 0.5s cubic-bezier(0, 0.75, 0.25, 1), visibility 0.5s;
+}
+.quick-add-stacked__errors.is-visible {
+  max-height: 300px;
+  opacity: 1;
+  visibility: visible;
+  transition-timing-function: cubic-bezier(0.5, 0.25, 0.75, 1);
+}
+.quick-add-stacked__errors .errors {
+  position: relative;
+  padding: 10px 30px 10px 10px;
+  margin-bottom: var(--SPACING-TINY);
+  border: 1px solid var(--COLOR-ERROR-BORDER);
+  border-radius: var(--RADIUS);
+  background-color: var(--COLOR-ERROR-BG);
+  color: var(--COLOR-ERROR);
+}
+.quick-add-stacked__errors .errors__close {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.quick-add-stacked__select {
+  display: block;
+}
+.quick-add-stacked__select .select-popout {
+  --BORDER-THICKNESS: var(--BTN-BORDER-THICKNESS, 1px);
+}
+.quick-add-stacked__select .select-popout__toggle {
+  --radius-open: var(--RADIUS-SELECT-OPEN-INLINE);
+  padding-block: var(--btn-top);
+}
+.quick-add-stacked__select .select-popout__list {
+  max-height: min(var(--max-height, 300px), 300px);
+}
+.quick-add-stacked__select .select-popout__option[aria-disabled=true] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.quick-add-stacked__fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.quick-add-stacked .quick-add-stacked__boxes {
+  display: block;
+}
+.quick-add-stacked .quick-add-stacked__boxes .radio__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--PRODUCT-CARD-JUSTIFY, flex-start);
+}

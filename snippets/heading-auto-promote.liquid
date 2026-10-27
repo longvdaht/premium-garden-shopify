@@ -1,0 +1,22 @@
+{%- doc -%}
+  Promotes the first automatic hero title to h1 when `promote` is true.
+  Theme blocks cannot see section.index, so the parent section/slide calls this
+  after capturing nested heading markup. Strips the heading-auto marker either way.
+
+  @param {string} content_blocks - Captured heading/block HTML
+  @param {boolean} [promote] - True when this is the first homepage template section (or first slide)
+
+  @example
+  {% render 'heading-auto-promote', content_blocks: content_blocks, promote: true %}
+{%- enddoc -%}
+
+{%- liquid
+  if promote
+    if content_blocks contains 'data-heading-auto'
+      assign content_blocks = content_blocks | replace_first: '<h2 data-heading-auto', '<h1'
+      assign content_blocks = content_blocks | replace_first: '</h2>', '</h1>'
+    endif
+  endif
+  assign content_blocks = content_blocks | replace: ' data-heading-auto', ''
+-%}
+{{ content_blocks }}

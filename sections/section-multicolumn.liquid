@@ -1,0 +1,2848 @@
+<!-- /sections/section-multicolumn.liquid -->
+
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign unique = 'SectionMulticolumn--' | append: section.id
+  assign animation_order = 0
+  assign animation_anchor = unique
+  assign heading = section.settings.title
+  assign description = section.settings.description
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign blocks_size = content_section_blocks.size
+  assign layout_mobile = section.settings.layout_mobile
+  assign column_count = blocks_size | at_least: 2
+  assign column_count_float = column_count | times: 1.000000
+  assign column_width = 100 | divided_by: column_count_float
+  assign one_third_blocks_only = false
+  assign one_third_block_count = 0
+
+  for block in content_section_blocks
+    if block.settings.column_width == 33
+      assign one_third_block_count = one_third_block_count | plus: 1
+    endif
+  endfor
+
+  if one_third_block_count == blocks_size
+    assign one_third_blocks_only = true
+  endif
+
+  assign columns_mobile = layout_mobile | plus: 0
+
+  if heading != blank or description != blank
+    assign has_content = true
+  endif
+
+  assign eager_images_limit = 3
+
+  capture layout_class
+    echo 'grid multicolumn'
+
+    if layout_mobile == 'slider'
+      echo ' grid--mobile-slider'
+    endif
+  endcapture
+-%}
+
+{%- render 'stylesheet', name: 'multicolumn.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+    --COLUMNS-MOBILE: {{ columns_mobile }};
+  }
+{%- endstyle -%}
+
+<div
+  id="{{ unique }}"
+  class="section-columns section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="columns"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+>
+  <div class="{{ section.settings.width }}">
+    {%- if has_content -%}
+      <div class="grid__heading-holder {{ section.settings.align_heading }}">
+        {%- if heading != blank -%}
+          {%- liquid
+            assign animation_order = animation_order | plus: 1
+            assign heading_tag = 'h2'
+
+            unless section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+              assign heading_tag = section.settings.heading_tag
+            endunless
+          -%}
+
+          <{{ heading_tag }}
+            class="grid__heading {{ section.settings.heading_font_size }}"
+            data-aos="hero"
+            data-aos-anchor="{{ animation_anchor }}"
+            data-aos-order="{{ animation_order }}"
+          >
+            {{- heading -}}
+          </{{ heading_tag }}>
+        {%- endif -%}
+
+        {%- if description -%}
+          {%- assign animation_order = animation_order | plus: 1 -%}
+
+          <div
+            class="grid__description"
+            data-aos="hero"
+            data-aos-anchor="{{ animation_anchor }}"
+            data-aos-order="{{ animation_order }}"
+          >
+            {{ description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if blocks_size > 0 -%}
+      {%- capture columns_content -%}
+        <div class="{{ layout_class }} {{ section.settings.align_columns }} {{ section.settings.align_text }}"
+          {% if request.design_mode %}
+            data-block-scroll
+          {% endif %}
+        >
+          {%- for block in content_section_blocks -%}
+            {%- liquid
+              assign animation_order = animation_order | plus: 1
+              assign column_width = block.settings.column_width | default: column_width
+              assign title = block.settings.title
+              assign text = block.settings.text
+              assign image = block.settings.image
+              assign image_aspect_ratio = block.settings.image_aspect_ratio | default: section.settings.image_aspect_ratio | default: 1
+              assign image_aspect_ratio_mobile = block.settings.mobile_image_aspect_ratio | default: section.settings.mobile_image_aspect_ratio | default: aspect_ratio
+              assign aspect_ratio = 1 | divided_by: image_aspect_ratio
+              assign aspect_ratio_mobile = 1 | divided_by: image_aspect_ratio_mobile
+              assign button_text = block.settings.button_text
+              assign icon_color = block.settings.icon_color
+              assign icon_size = block.settings.icon_size
+
+              if forloop.index > eager_images_limit
+                assign loading = 'lazy'
+              endif
+
+              if one_third_blocks_only
+                assign column_width = 33.333333
+              endif
+
+              assign column_width_multiplier = column_width | times: 0.01
+
+              capture button_classes
+                assign button_style = block.settings.button_style
+                if button_style == 'btn--text' and block.settings.show_arrow
+                  assign button_style = button_style | append: ' btn--text-no-underline'
+                endif
+                echo 'btn ' | append: button_style | append: ' ' | append: block.settings.button_type | append: ' ' | append: block.settings.button_size
+              endcapture
+
+              capture image_shape_class
+                case block.settings.image_shape
+                  when 'circle'
+                    echo ' column__image--circle'
+
+                  when 'rounded'
+                    echo ' column__image--rounded'
+
+                  when 'blob-one'
+                    echo ' column__image--blob-one'
+
+                  when 'blob-two'
+                    echo ' column__image--blob-two'
+
+                  when 'blob-three'
+                    echo ' column__image--blob-three'
+                endcase
+              endcapture
+
+              capture image_sizes
+                echo '(min-width: 990px) calc((100vw - 100px) * ' | append: column_width_multiplier | append: '), (min-width: 750px) calc((100vw - 60px) / 2), calc(100vw - 32px - 50px)'
+              endcapture
+
+              capture block_style
+                echo 'style="'
+                echo '--desktop-width: ' | append: column_width | append: '%;'
+
+                if icon_color.alpha != 0.0 and icon_color != blank
+                  echo ' --icons: ' | append: icon_color | append: ';'
+                endif
+
+                echo '"'
+              endcapture
+            -%}
+
+            {%- case block.type -%}
+              {%- when 'image' -%}
+                <div class="grid-item"
+                  {{ block_style }}
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="column__inner"
+                    data-aos="hero"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}">
+                    <div class="column__image{{ image_shape_class }}" data-column-image>
+                      {%- liquid
+                        capture column_image
+                          assign class_desktop = ''
+                          assign class_mobile = ''
+
+                          if aspect_ratio != aspect_ratio_mobile
+                            assign class_desktop = 'desktop'
+                            assign class_mobile = 'mobile'
+                          endif
+
+                          if image
+                            render 'image' image: image, sizes: image_sizes, aspect_ratio: aspect_ratio, loading: loading, modifier: class_desktop
+
+                            if aspect_ratio != aspect_ratio_mobile
+                              render 'image' image: image, sizes: image_sizes, aspect_ratio: aspect_ratio_mobile, loading: loading, modifier: class_mobile
+                            endif
+                          else
+                            render 'image' placeholder: 'image', aspect_ratio: aspect_ratio, modifier: class_desktop
+
+                            if aspect_ratio != aspect_ratio_mobile
+                              render 'image' placeholder: 'image', aspect_ratio: aspect_ratio_mobile, modifier: class_mobile
+                            endif
+                          endif
+                        endcapture
+                      -%}
+
+                      {%- if block.settings.button_url != blank and button_text == blank -%}
+                        <a href="{{ block.settings.button_url }}" aria-label="{{ image.alt | default: title | default: text | strip_html | escape }}">
+                          {{ column_image }}
+                        </a>
+                      {%- else -%}
+                        {{ column_image }}
+                      {%- endif -%}
+                    </div>
+
+                    {%- if title != blank or text != blank or button_text != blank -%}
+                      <div class="column__content grid-item__content">
+                        {%- if title != blank -%}
+                          {%- liquid
+                            assign heading_tag = 'h2'
+
+                            unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                              assign heading_tag = block.settings.heading_tag
+                            endunless
+                          -%}
+
+                          <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
+                            {{- title -}}
+                          </{{ heading_tag }}>
+                        {%- endif -%}
+
+                        {%- if text != blank -%}
+                          <div class="column__text rte {{ block.settings.text_font_size }}">
+                            {{- text -}}
+                          </div>
+                        {%- endif -%}
+
+                        {%- if button_text != blank -%}
+                          <div class="column__btn">
+                            <a href="{{ block.settings.button_url | default: '#!' }}" class="{{ button_classes }}" aria-label="{{ button_text }}">
+                              <span>{{ button_text }}</span>
+
+                              {%- if block.settings.show_arrow -%}
+                                {%- render 'icon', name: 'caret-right' -%}
+                              {%- endif -%}
+                            </a>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+
+              {%- when 'image-overlay' -%}
+                {%- liquid
+                  assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
+                  assign overlay_color = block.settings.overlay_color
+                  assign overlay_text_color = block.settings.color
+
+                  capture overlay_style
+                    echo '--overlay-opacity: ' | append: overlay_opacity | append: ';'
+                    echo ' --aspect-ratio: ' | append: aspect_ratio | append: ';'
+                    echo ' --aspect-ratio-mobile: ' | append: aspect_ratio_mobile | append: ';'
+
+                    if overlay_color.alpha != 0.0 and overlay_color != blank
+                      echo ' --overlay-bg: ' | append: overlay_color | append: ';'
+                    endif
+
+                    if overlay_text_color.alpha != 0.0 and overlay_text_color != blank
+                      echo ' --text: ' | append: overlay_text_color | append: ';'
+                      echo ' color: ' | append: overlay_text_color | append: ';'
+                    endif
+                  endcapture
+
+                  capture column_image
+                    assign class_desktop = ''
+                    assign class_mobile = ''
+
+                    if aspect_ratio != aspect_ratio_mobile
+                      assign class_desktop = 'desktop'
+                      assign class_mobile = 'mobile'
+                    endif
+
+                    if image
+                      render 'image' image: image, sizes: image_sizes, aspect_ratio: aspect_ratio, loading: loading, modifier: class_desktop, cover: true
+
+                      if aspect_ratio != aspect_ratio_mobile
+                        render 'image' image: image, sizes: image_sizes, aspect_ratio: aspect_ratio_mobile, loading: loading, modifier: class_mobile, cover: true
+                      endif
+                    else
+                      render 'image' placeholder: 'image', aspect_ratio: aspect_ratio, modifier: class_desktop, cover: true
+
+                      if aspect_ratio != aspect_ratio_mobile
+                        render 'image' placeholder: 'image', aspect_ratio: aspect_ratio_mobile, modifier: class_mobile, cover: true
+                      endif
+                    endif
+                  endcapture
+                -%}
+
+                <div class="grid-item" {{ block_style }} {{ block.shopify_attributes }}>
+                  <div class="column__inner"
+                    data-aos="hero"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}">
+                    <div class="column__image column__image--overlay frame" style="{{ overlay_style }}">
+                      <div class="frame__item">
+                        {%- if block.settings.button_url != blank and button_text == blank -%}
+                          <a href="{{ block.settings.button_url }}" aria-label="{{ image.alt | default: title | default: text | strip_html | escape }}">
+                            {{ column_image }}
+                          </a>
+                        {%- else -%}
+                          {{ column_image }}
+                        {%- endif -%}
+                      </div>
+
+                      {%- unless overlay_opacity == 0 -%}
+                        <div class="image-overlay"></div>
+                      {%- endunless -%}
+
+                      <div class="column__overlay frame__item {{ block.settings.flex_align }}">
+                        <div class="column__overlay__content">
+                          {%- if block.settings.show_stars -%}
+                            <div class="column__stars">
+                              <span class="visually-hidden">{{ 'general.accessibility.rating_stars' | t }}</span>
+                              <span aria-hidden="true">
+                                {%- for i in (1..5) -%}{%- render 'icon', name: 'star-full' -%}{%- endfor -%}
+                              </span>
+                            </div>
+                          {%- endif -%}
+
+                          {%- if title != blank -%}
+                            {%- liquid
+                              assign heading_tag = 'h2'
+
+                              unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                                assign heading_tag = block.settings.heading_tag
+                              endunless
+                            -%}
+
+                            <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
+                              {{- title -}}
+                            </{{ heading_tag }}>
+                          {%- endif -%}
+
+                          {%- if text != blank -%}
+                            <div class="column__text rte {{ block.settings.text_font_size }}">
+                              {{- text -}}
+                            </div>
+                          {%- endif -%}
+
+                          {%- if button_text != blank -%}
+                            <div class="column__btn">
+                              <a href="{{ block.settings.button_url | default: '#!' }}" class="{{ button_classes }}" aria-label="{{ button_text }}">
+                                <span>{{ button_text }}</span>
+
+                                {%- if block.settings.show_arrow -%}
+                                  {%- render 'icon', name: 'caret-right' -%}
+                                {%- endif -%}
+                              </a>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              {%- when 'icon' -%}
+                {%- capture icon_style -%}
+                  --icon-size: {{ icon_size }}px;
+
+                  {%- if title != blank -%}
+                    --icon-line-height: calc(1.2 * var(--font-{{ block.settings.heading_font_size | remove: '' }}));
+                  {%- elsif text != blank-%}
+                    --icon-line-height: calc(1.5 * var(--font-{{ block.settings.text_font_size | remove: '' }}));
+                  {%- endif -%}
+                {%- endcapture -%}
+
+                <div class="grid-item"
+                  {{ block_style }}
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="column__inner"
+                    data-aos="hero"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}">
+                    <div class="column__icon {{ block.settings.icon_alignment | default: section.settings.icon_alignment }}" style="{{ icon_style }}">
+                      <div class="icon__animated{% if image != blank %} icon__animated--image{% endif %}">
+                        {%- liquid
+                          if image
+                            assign icon_width = icon_size
+                            assign icon_width_retina = icon_width | times: 2
+                            assign icon_sizes = icon_width | append: 'px'
+                            assign icon_widths = icon_width | append: ', ' | append: icon_width_retina
+
+                            render 'image' image: image, width: icon_width_retina, sizes: icon_sizes, widths: icon_widths, loading: loading
+                          else
+                            render 'icon', name: block.settings.icon_key
+                          endif
+                        -%}
+                      </div>
+
+                      {%- if title != blank or text != blank -%}
+                        <div class="column__content">
+                          {%- if title != blank -%}
+                            {%- liquid
+                              assign heading_tag = 'h2'
+
+                              unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                                assign heading_tag = block.settings.heading_tag
+                              endunless
+                            -%}
+
+                            <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
+                              {{ title }}
+                            </{{ heading_tag }}>
+                          {%- endif -%}
+
+                          {%- if text != blank -%}
+                            <div class="column__text rte {{ block.settings.text_font_size }}">
+                              {{ text }}
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+
+              {%- when 'text' -%}
+                <div class="grid-item"
+                  {{ block_style }}
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="column__inner"
+                    data-aos="hero"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}">
+                    <div class="column__content grid-item__content">
+                      {%- if title != blank -%}
+                        {%- liquid
+                          assign heading_tag = 'h2'
+
+                          unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                            assign heading_tag = block.settings.heading_tag
+                          endunless
+                        -%}
+
+                        <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
+                          {{ title }}
+                        </{{ heading_tag }}>
+                      {%- endif -%}
+
+                      {%- if text != blank -%}
+                        <div class="column__text rte {{ block.settings.text_font_size }}">
+                          {{ text }}
+                        </div>
+                      {%- endif -%}
+
+                      {%- if button_text != blank -%}
+                        <div class="column__btn">
+                          <a href="{{ block.settings.button_url | default: '#!' }}" class="{{ button_classes }}" aria-label="{{ button_text }}">
+                            <span>{{ button_text }}</span>
+
+                            {%- if block.settings.show_arrow -%}
+                              {%- render 'icon', name: 'caret-right' -%}
+                            {%- endif -%}
+                          </a>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+
+              {%- when 'menu' -%}
+                {%- assign menu_linklist = block.settings.menu | default: 'main-menu' -%}
+
+                <div class="grid-item" {{ block_style }} {{ block.shopify_attributes }}>
+                  <div class="column__inner"
+                    data-aos="hero"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}">
+                    <div class="column__links font-heading">
+                      {%- for link in linklists[menu_linklist].links -%}
+                        <div class="column__links__item {{ block.settings.heading_font_size }}">
+                          <a href="{{ link.url }}">{{ link.title }}</a>
+                          {%- render 'superscript', link_collection: link -%}
+                        </div>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                </div>
+
+              {%- when 'product' -%}
+                {%- liquid
+                  capture product_attributes
+                    echo 'data-aos="hero" '
+                    echo 'data-aos-anchor="' | append: animation_anchor | append: '" '
+                    echo 'data-aos-order="' | append: animation_order | append: '" '
+                    echo block_style
+                    echo block.shopify_attributes
+                  endcapture
+
+                  assign product = all_products[block.settings.product]
+                  render 'product-card', product: product, index: forloop.index, attributes: product_attributes
+                -%}
+
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      {%- endcapture -%}
+
+      {{ columns_content }}
+    {%- endif -%}
+
+    {%- if blocks_size == 0 -%}
+      {%- render 'no-blocks' -%}
+    {%- endif -%}
+  </div>
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</div>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-medium",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "align_heading",
+      "label": "Heading",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "align_text",
+      "label": "Text",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full-padded",
+      "options": [
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "align_columns",
+      "label": "Columns",
+      "default": "flex-align-top",
+      "options": [
+        {
+          "value": "flex-align-top",
+          "label": "Top"
+        },
+        {
+          "value": "flex-align-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 item per row"
+        },
+        {
+          "value": "2",
+          "label": "2 items per row"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1400 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "image_aspect_ratio",
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1,
+          "unit": ":1",
+          "label": "Desktop aspect ratio",
+          "info": "Wide to tall",
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "mobile_image_aspect_ratio",
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1,
+          "unit": ":1",
+          "label": "Mobile aspect ratio",
+          "info": "Wide to tall",
+          "default": 1
+        },
+        {
+          "type": "select",
+          "id": "image_shape",
+          "label": "Image shape",
+          "options": [
+            {
+              "value": "normal",
+              "label": "Normal"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "rounded",
+              "label": "Rounded"
+            },
+            {
+              "value": "blob-one",
+              "label": "Blob one"
+            },
+            {
+              "value": "blob-two",
+              "label": "Blob two"
+            },
+            {
+              "value": "blob-three",
+              "label": "Blob three"
+            }
+          ],
+          "default": "normal",
+          "info": "1:1 aspect ratio recommended"
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Text",
+          "info": "Leave blank to link entire image"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--primary",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "Size",
+          "default": "",
+          "options": [
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--solid",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            },
+            {
+              "label": "Text",
+              "value": "btn--text"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "image-overlay",
+      "name": "Image with text overlay",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1400 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "image_aspect_ratio",
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1,
+          "unit": ":1",
+          "label": "Desktop aspect ratio",
+          "info": "Wide to tall",
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "mobile_image_aspect_ratio",
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1,
+          "unit": ":1",
+          "label": "Mobile aspect ratio",
+          "info": "Wide to tall",
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "Reviews"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stars",
+          "label": "Show stars",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Add a title or tagline"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Use this text to describe a product, highlight a collection, or share a customer review.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-small",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Text",
+          "info": "Leave blank to link entire image"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--white",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "Size",
+          "default": "",
+          "options": [
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--text",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            },
+            {
+              "label": "Text",
+              "value": "btn--text"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "flex_align",
+          "label": "Content position",
+          "default": "align--bottom-left",
+          "options": [
+            {
+              "value": "align--top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "align--top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "align--top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "align--middle-left",
+              "label": "Middle left"
+            },
+            {
+              "value": "align--middle-center",
+              "label": "Middle center"
+            },
+            {
+              "value": "align--middle-right",
+              "label": "Middle right"
+            },
+            {
+              "value": "align--bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "align--bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "align--bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay opacity",
+          "info": "Increase contrast for legible text.",
+          "unit": "%",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "default": 0
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay color",
+          "visible_if": "{{ block.settings.overlay_opacity > 0 }}"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "type": "header",
+          "content": "Icon"
+        },
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "select",
+          "id": "icon_alignment",
+          "label": "Placement",
+          "default": "icon--top",
+          "options": [
+            {
+              "value": "icon--top",
+              "label": "Top"
+            },
+            {
+              "value": "icon--left",
+              "label": "Left"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Color"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Title"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share details about your shipping policies, item returns, or customer service.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Add a title or tagline"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-medium",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Use this text to describe products, share details on availability and style, or as a space to display recent reviews or FAQs.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Text",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--primary",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "Size",
+          "default": "",
+          "options": [
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--solid",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            },
+            {
+              "label": "Text",
+              "value": "btn--text"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "This menu won't show dropdown items."
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column width",
+          "unit": "%",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 33,
+          "info": "Desktop only"
+        },
+        {
+          "label": "Product",
+          "id": "product",
+          "type": "product"
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multicolumn",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "image-overlay"
+        },
+        {
+          "type": "image-overlay"
+        },
+        {
+          "type": "image-overlay"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

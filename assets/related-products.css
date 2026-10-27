@@ -1,0 +1,22 @@
+related-products,
+recently-viewed {
+  display: block;
+}
+
+.related__products {
+  text-align: center;
+}
+.related__products .tab-content {
+  padding: 0;
+}
+.related__products .tab__title {
+  padding: 0 var(--grid-outer);
+  margin-bottom: var(--gap);
+}
+
+.recent__content a {
+  opacity: 1;
+  width: auto;
+  height: auto;
+  display: block;
+}

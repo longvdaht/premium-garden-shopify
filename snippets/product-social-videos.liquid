@@ -1,0 +1,241 @@
+{%- doc -%}
+  Renders a row of up to six product videos that open in a popup player.
+
+  @param {object} block - The social videos block
+
+  @example
+  {% render 'product-social-videos', block: block %}
+{%- enddoc -%}
+
+{%- liquid
+  assign heading = block.settings.heading
+  assign aspect_ratio = 1.0 | divided_by: block.settings.aspect_ratio
+  assign close_label = 'general.accessibility.close' | t
+  assign play_label = 'general.accessibility.play_video' | t
+  assign popup_id_base = 'SocialVideo--' | append: block.id | append: '-'
+  assign button_class = 'SocialVideos--' | append: block.id | append: '--button'
+  assign onboarding_count = 6
+
+  assign video_indexes = ''
+  for i in (1..6)
+    assign video_key = 'video_' | append: i
+    if block.settings[video_key] != blank
+      assign video_indexes = video_indexes | append: i | append: ','
+    endif
+  endfor
+  assign video_indexes = video_indexes | split: ','
+
+  assign show_onboarding = false
+  if video_indexes == empty and request.design_mode
+    assign show_onboarding = true
+  endif
+-%}
+
+{%- if video_indexes != empty or show_onboarding -%}
+  {%- render 'stylesheet', name: 'product-social-videos.css' -%}
+  {%- render 'stylesheet', name: 'section-social-videos.css' -%}
+  {%- render 'stylesheet', name: 'modal.css', async: true -%}
+
+  {%- unless show_onboarding -%}
+    <script src="{{ 'video-background.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-social-videos.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+
+  <product-social-videos
+    class="product__block product-social-videos block-padding {{ block.settings.text_alignment }}"
+    style="--block-padding-bottom: {{ block.settings.padding_bottom }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {%- if heading != blank -%}
+      <p class="product-social-videos__heading subheading {{ block.settings.text_font_size }}">
+        {{- heading | escape -}}
+      </p>
+    {%- endif -%}
+
+    <div class="swiper">
+      <swiper-container
+        slides-per-view="auto"
+        space-between="12px"
+        free-mode="true"
+        grab-cursor="true"
+        navigation="true"
+        navigation-prev-el=".{{ button_class }}.swiper-button-prev"
+        navigation-next-el=".{{ button_class }}.swiper-button-next"
+        {% if block.settings.text_alignment == 'text-center' %}
+          center-insufficient-slides="true"
+        {% endif %}
+      >
+        {%- if show_onboarding -%}
+          {%- for i in (1..onboarding_count) -%}
+            <swiper-slide class="product-social-videos__item">
+              <div class="product-social-videos__card">
+                {%- render 'image', image: null, aspect_ratio: aspect_ratio, placeholder: 'product-1' -%}
+              </div>
+            </swiper-slide>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for video_index in video_indexes -%}
+            {%- liquid
+              assign video_key = 'video_' | append: video_index
+              assign video = block.settings[video_key]
+              assign popup_id = popup_id_base | append: forloop.index
+              assign popup_prev_id = null
+              assign popup_next_id = null
+              assign card_label = play_label
+              assign card_image_scale = video.preview_image.aspect_ratio | divided_by: aspect_ratio | at_least: 1 | round: 3
+              assign card_image_width = card_image_scale | times: 125 | ceil
+              assign card_image_sizes = '(max-width: 451px) calc((100vw - 80px) / 3 * ' | append: card_image_scale | append: '), ' | append: card_image_width | append: 'px'
+
+              if video.alt != blank
+                assign card_label = play_label | append: ': ' | append: video.alt
+              endif
+
+              unless forloop.first
+                assign popup_prev_id = popup_id_base | append: forloop.index0
+              endunless
+
+              unless forloop.last
+                assign next_index = forloop.index | plus: 1
+                assign popup_next_id = popup_id_base | append: next_index
+              endunless
+            -%}
+
+            <swiper-slide class="product-social-videos__item">
+              <popup-component id="{{ popup_id }}" class="social-video__modal social-video__modal--video-only">
+                <button
+                  class="product-social-videos__card"
+                  type="button"
+                  aria-label="{{ card_label | escape }}"
+                  data-popup-open
+                  data-social-video-card
+                >
+                  {%- render 'image',
+                    image: video.preview_image,
+                    alt: video.alt,
+                    aspect_ratio: aspect_ratio,
+                    sizes: card_image_sizes,
+                    widths: '180, 270, 360, 540, 720, 1080, 1440',
+                    placeholder: 'product-1'
+                  -%}
+
+                  <div class="product-social-videos__video video__player">
+                    <template>
+                      {{ video | video_tag: image_size: '360x', muted: true, controls: false }}
+                    </template>
+                  </div>
+                </button>
+
+                <dialog class="dialog modal__overlay" aria-hidden="true" inert data-scroll-lock-required>
+                  <form method="dialog">
+                    <button class="visually-hidden" aria-label="{{ close_label }}"></button>
+                  </form>
+
+                  <button
+                    type="button"
+                    class="modal__close modal__nav-button desktop"
+                    data-popup-close
+                    aria-label="{{ close_label }}"
+                  >
+                    {%- render 'icon', name: 'x' -%}
+                  </button>
+
+                  <div class="modal__body" style="--video-aspect-ratio: {{ video.aspect_ratio }};">
+                    <button
+                      type="button"
+                      class="modal__close modal__nav-button mobile"
+                      data-popup-close
+                      aria-label="{{ close_label }}"
+                    >
+                      {%- render 'icon', name: 'x' -%}
+                    </button>
+
+                    <button
+                      type="button"
+                      class="modal__prev modal__nav-button desktop"
+                      data-popup-prev="{{ popup_prev_id }}"
+                      aria-label="{{ 'general.pagination.prev' | t }}"
+                      {% if forloop.first %}
+                        disabled
+                      {% endif %}
+                    >
+                      {%- render 'icon', name: 'caret-left' -%}
+                    </button>
+
+                    <button
+                      type="button"
+                      class="modal__next modal__nav-button desktop"
+                      data-popup-next="{{ popup_next_id }}"
+                      aria-label="{{ 'general.pagination.next' | t }}"
+                      {% if forloop.last %}
+                        disabled
+                      {% endif %}
+                    >
+                      {%- render 'icon', name: 'caret-right' -%}
+                    </button>
+
+                    <div class="modal__inner grid grid--1" data-scroll-lock-scrollable>
+                      <div class="social-video__media">
+                        <div
+                          class="video-background image-height image-height--mobile"
+                          style="--aspect-ratio: {{ video.aspect_ratio }};"
+                        >
+                          <div class="video__poster">
+                            {%- render 'image',
+                              image: video.preview_image,
+                              alt: video.alt,
+                              aspect_ratio: video.aspect_ratio,
+                              sizes: '(min-width: 750px) 680px, calc(100vw - 32px)',
+                              loading: 'lazy',
+                              placeholder: 'product-1'
+                            -%}
+                          </div>
+
+                          <video-background
+                            class="video__player is-loading"
+                            data-video-player
+                            data-video-id="{{ popup_id }}-video"
+                          >
+                            <template data-video-template>
+                              {{
+                                video
+                                | video_tag:
+                                  autoplay: true,
+                                  image_size: '1085x',
+                                  loop: true,
+                                  muted: true,
+                                  controls: false
+                              }}
+
+                              <div class="social-video__button" data-video-hover-pause>
+                                {%- render 'icon', name: 'pause' -%}
+                              </div>
+                            </template>
+                          </video-background>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </dialog>
+              </popup-component>
+            </swiper-slide>
+          {%- endfor -%}
+        {%- endif -%}
+      </swiper-container>
+
+      <button
+        type="button"
+        class="{{ button_class }} swiper-button-prev"
+        aria-label="{{ 'general.accessibility.previous_slide' | t }}"
+      >
+        {%- render 'icon', name: 'caret-left' -%}
+      </button>
+      <button
+        type="button"
+        class="{{ button_class }} swiper-button-next"
+        aria-label="{{ 'general.accessibility.next_slide' | t }}"
+      >
+        {%- render 'icon', name: 'caret-right' -%}
+      </button>
+    </div>
+  </product-social-videos>
+{%- endif -%}

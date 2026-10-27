@@ -1,0 +1,130 @@
+{%- doc -%}
+  Renders "collection tag" labels on a product card.
+
+  Source: a shop metaobject (type from `settings.theme_collection_tags`,
+  default `collection_tags`). Each entry defines the tag data: { label, link, background,
+  text_color, product_list }. The snippet iterates all entries and renders those that
+  whose `product_list` contains the current product.
+
+  When the product is empty, placeholder tags ("Tag 1", "Tag 2", ...) are rendered instead.
+
+  @param {object} product - The product object
+  @param {string} [placement] - Rendering context. Pass `'block'` when rendered from the reorderable theme block wrapper, `'product'` when rendered as a product page block. Leave empty for the legacy section-block path
+  @param {string} [block_style] - Optional style attribute for the product page block padding
+  @param {string} [shopify_attributes] - Optional theme editor attributes
+
+  @example
+  {% render 'product-card-tags', product: product, placement: 'product', block_style: block_style, shopify_attributes: block.shopify_attributes %}
+{%- enddoc -%}
+
+{%- liquid
+  assign shopify_attributes = shopify_attributes | default: ''
+  assign placement = placement | default: ''
+
+  if settings.show_product_card_tags == false and placement != 'product'
+    break
+  endif
+
+  assign tags_max = settings.product_card_tags_max | default: 3
+
+  assign placement_class = ''
+  case placement
+    when 'block'
+      assign placement_class = 'product-card__tags--block'
+    when 'product'
+      assign placement_class = 'product__block product-card__tags--product block-padding'
+  endcase
+
+  assign is_onboarding = false
+  if product == empty
+    assign is_onboarding = true
+  endif
+-%}
+
+{%- if is_onboarding -%}
+  <ul
+    class="product-card__tags {{ placement_class }} {{ settings.product_card_tags_font_size }}"
+    {{ block_style }}
+    {{ shopify_attributes }}
+  >
+    {%- for i in (1..tags_max) -%}
+      <li class="product-card__tags-item">
+        <span class="product-card__tag">Tag {{ i }}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- else -%}
+  {%- liquid
+    if settings.theme_collection_tags == blank
+      break
+    endif
+
+    assign tag_entries = metaobjects[settings.theme_collection_tags].values
+    if tag_entries.size == 0
+      break
+    endif
+
+    assign tags_shown = 0
+  -%}
+
+  {%- capture tags_html -%}
+    {%- for entry in tag_entries -%}
+      {%- if tags_shown >= tags_max -%}
+        {%- break -%}
+      {%- endif -%}
+
+      {%- assign entry_products = entry.product_list.value -%}
+      {%- assign entry_has_product = entry_products | has: 'id', product.id -%}
+      {%- assign entry_label = entry.label.value -%}
+
+      {%- if entry_has_product and entry_label != blank -%}
+        {%- liquid
+          assign entry_href = entry.link.value
+          assign entry_bg = entry.background.value
+          assign entry_text_color = entry.text_color.value
+
+          capture entry_style
+            if entry_bg != blank
+              echo '--tag-bg:' | append: entry_bg | append: ';'
+            endif
+            if entry_text_color != blank
+              echo '--tag-text:' | append: entry_text_color | append: ';'
+            endif
+          endcapture
+
+          assign tags_shown = tags_shown | plus: 1
+        -%}
+
+        <li class="product-card__tags-item">
+          {%- if entry_href != blank -%}
+            <a
+              class="product-card__tag"
+              href="{{ entry_href }}"
+              {% if entry_style != blank %}style="{{ entry_style }}"{% endif %}
+              data-prevent-card-link
+            >
+              {{- entry_label | escape -}}
+            </a>
+          {%- else -%}
+            <span
+              class="product-card__tag"
+              {% if entry_style != blank %}style="{{ entry_style }}"{% endif %}
+            >
+              {{- entry_label | escape -}}
+            </span>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if tags_shown > 0 -%}
+    <ul
+      class="product-card__tags {{ placement_class }} {{ settings.product_card_tags_font_size }}"
+      {{ block_style }}
+      {{ shopify_attributes }}
+    >
+      {{- tags_html -}}
+    </ul>
+  {%- endif -%}
+{%- endif -%}

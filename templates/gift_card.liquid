@@ -1,0 +1,291 @@
+{% layout none %}
+
+<!doctype html>
+<html class="js no-touch supports-no-cookies" lang="{{ request.locale.iso_code }}">
+  <head>
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {%- assign formatted_balance = gift_card.balance | money_without_trailing_zeros | strip_html -%}
+    <title>{{ 'gift_cards.issued.title' | t: value: formatted_balance, shop: shop.name }}</title>
+    <meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- unless settings.type_header_font.system? and settings.type_base_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+
+    {{ content_for_header }}
+
+    {%- liquid
+      assign scheme = settings.color_schemes | first
+
+      assign heading_font = settings.type_header_font
+      assign base_font = settings.type_base_font
+      assign base_font_bold = base_font | font_modify: 'weight', 'bolder'
+
+      assign heading_font_uppercase = 'none'
+      if settings.type_header_uppercase
+        assign heading_font_uppercase = 'uppercase'
+      endif
+    -%}
+
+    {% style %}
+      {{ base_font | font_face: font_display: 'swap' }}
+      {{ heading_font | font_face: font_display: 'swap' }}
+
+      {% if base_font_bold %}
+        {{ base_font_bold | font_face: font_display: 'swap' }}
+      {% endif %}
+
+      :root {
+        --COLOR-BG: {{ scheme.settings.bg }};
+        --COLOR-BG-GRADIENT: {{ scheme.settings.bg_gradient | default: scheme.settings.bg }};
+        --COLOR-TEXT: {{ scheme.settings.text }};
+        --COLOR-TEXT-LIGHT: {{ scheme.settings.text | color_mix: scheme.settings.bg, 70 }};
+        --COLOR-LINK: {{ scheme.settings.links }};
+        --COLOR-LINK-HOVER: {{ scheme.settings.links | color_modify: 'alpha', hover_opacity }};
+        --COLOR-BORDER: {{ scheme.settings.border | color_to_rgb }};
+        --COLOR-BORDER-HAIRLINE: {{ scheme.settings.bg | color_darken: 3 }};
+
+        --bg: var(--COLOR-BG-GRADIENT, var(--COLOR-BG));
+        --text: var(--COLOR-TEXT);
+        --text-light: var(--COLOR-TEXT-LIGHT);
+        --link: var(--COLOR-LINK);
+        --link-hover: var(--COLOR-LINK-HOVER);
+        --border: var(--COLOR-BORDER);
+        --border-hairline: var(--COLOR-BORDER-HAIRLINE);
+        --BORDER-THICKNESS: {{ settings.border_thickness | default: 1 }}px;
+
+        --FONT-SIZE-BASE: {{ settings.base_font_size | append: 'px' }};
+
+        --FONT-BODY-X-SMALL: {{ settings.body_x_small | append: 'px' }};
+        --FONT-BODY-SMALL: {{ settings.body_small | append: 'px' }};
+        --FONT-BODY-MEDIUM: {{ settings.body_medium | append: 'px' }};
+        --FONT-BODY-LARGE: {{ settings.body_large | append: 'px' }};
+        --FONT-BODY-X-LARGE: {{ settings.body_x_large | append: 'px' }};
+
+        --FONT-BODY-X-SMALL-MOBILE: {{ settings.body_x_small_mobile | append: 'px' }};
+        --FONT-BODY-SMALL-MOBILE: {{ settings.body_small_mobile | append: 'px' }};
+        --FONT-BODY-MEDIUM-MOBILE: {{ settings.body_medium_mobile | append: 'px' }};
+        --FONT-BODY-LARGE-MOBILE: {{ settings.body_large_mobile | append: 'px' }};
+        --FONT-BODY-X-LARGE-MOBILE: {{ settings.body_x_large_mobile | append: 'px' }};
+
+        --FONT-HEADING-MINI: {{ settings.heading_mini | append: 'px' }};
+        --FONT-HEADING-X-SMALL: {{ settings.heading_x_small | append: 'px' }};
+        --FONT-HEADING-SMALL: {{ settings.heading_small | append: 'px' }};
+        --FONT-HEADING-MEDIUM: {{ settings.heading_medium | append: 'px' }};
+        --FONT-HEADING-LARGE: {{ settings.heading_large | append: 'px' }};
+        --FONT-HEADING-X-LARGE: {{ settings.heading_x_large | append: 'px' }};
+
+        --FONT-HEADING-MINI-MOBILE: {{ settings.heading_mini_mobile | append: 'px' }};
+        --FONT-HEADING-X-SMALL-MOBILE: {{ settings.heading_x_small_mobile | append: 'px' }};
+        --FONT-HEADING-SMALL-MOBILE: {{ settings.heading_small_mobile | append: 'px' }};
+        --FONT-HEADING-MEDIUM-MOBILE: {{ settings.heading_medium_mobile | append: 'px' }};
+        --FONT-HEADING-LARGE-MOBILE: {{ settings.heading_large_mobile | append: 'px' }};
+        --FONT-HEADING-X-LARGE-MOBILE: {{ settings.heading_x_large_mobile | append: 'px' }};
+
+        --FONT-STACK-BODY: {{ base_font.family }}, {{ base_font.fallback_families }};
+        --FONT-STYLE-BODY: {{ base_font.style }};
+        --FONT-WEIGHT-BODY: {{ base_font.weight }};
+        --FONT-WEIGHT-BODY-BOLD: {{ base_font_bold.weight | default: 700 }};
+
+        --LETTER-SPACING-BODY: {{ settings.body_letter_spacing | divided_by: 1000.0 | append: 'em' }};
+
+        --FONT-STACK-HEADING: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+        --FONT-WEIGHT-HEADING: {{ heading_font.weight }};
+        --FONT-STYLE-HEADING: {{ heading_font.style }};
+
+        --FONT-UPPERCASE-HEADING: {{ heading_font_uppercase }};
+        --LETTER-SPACING-HEADING: {{ settings.heading_letter_spacing | divided_by: 1000.0 | append: 'em' }};
+      }
+    {% endstyle %}
+
+    {%- unless settings.type_base_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_base_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+    {%- unless settings.type_header_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+    {{ 'template-gift-card.css' | asset_url | stylesheet_tag }}
+  </head>
+
+  <body class="template-{{ template | replace: '/', '-' | split: '.' }}">
+    <div class="container">
+      <header id="header" class="gift-card__header">
+        <div class="h2">
+          <a href="{{ shop.url }}" title="{{ shop.name }}" class="gift-card__logo">
+            {%- if settings.logo != blank -%}
+              {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+              {{ settings.logo | image_url: width: 570 | image_tag: class: 'gift-card__image', alt: logo_alt }}
+            {%- else %}
+              <a href="{{ shop.url }}">
+                {{ shop.name | escape }}
+              </a>
+            {%- endif %}
+          </a>
+        </div>
+        <div class="shop-url">{{ shop.url }}</div>
+      </header>
+
+      <div class="main-content">
+        <div class="page text-center">
+          <h2>{{ page.title }}</h2>
+
+          <main class="gift-card" role="main">
+            <div class="gift-card__border{% if gift_card.expired or gift_card.enabled != true %} disabled{% endif %}">
+              <div class="gift-card__content">
+                <div class="gift-card__top">
+                  <h2 class="h3 gift-card__title">{{ 'gift_cards.issued.subtext' | t }}</h2>
+
+                  {%- unless gift_card.enabled -%}
+                    <span class="gift-card__tag">{{ 'gift_cards.issued.disabled' | t }}</span>
+                  {%- endunless -%}
+
+                  {%- assign gift_card_expiry_date = gift_card.expires_on | date: '%d/%m/%y' -%}
+
+                  {%- if gift_card.expired and gift_card.enabled -%}
+                    <span class="gift-card__tag">
+                      {{- 'gift_cards.issued.expired' | t: expiry: gift_card_expiry_date -}}
+                    </span>
+                  {%- endif -%}
+
+                  {%- if gift_card.expired == false and gift_card.expires_on and gift_card.enabled -%}
+                    <span class="gift-card__tag gift-card__tag--active">
+                      {{- 'gift_cards.issued.active' | t: expiry: gift_card_expiry_date -}}
+                    </span>
+                  {%- endif -%}
+                </div>
+
+                <div class="gift-card__wrap">
+                  <img
+                    class="gift-card__image"
+                    src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
+                    alt="Gift card illustration"
+                    height="{{ 570 | divided_by: 1.5 }}"
+                    width="570"
+                    loading="eager"
+                  >
+
+                  {%- assign initial_value_size = formatted_balance | size -%}
+
+                  <div class="h1 gift-card__amount{% if initial_value_size > 6 %} gift-card__amount--medium{% endif %}">
+                    {%- if gift_card.balance != gift_card.initial_value -%}
+                      <span class="gift-card__tooltip">
+                        <span class="gift-card__tooltip__label">
+                          {{- gift_card_balance }}
+                          <small>left</small>
+                        </span>
+                      </span>
+                    {%- endif -%}
+
+                    <h2>{{ formatted_balance }}</h2>
+                  </div>
+
+                  {%- assign code_size = gift_card.code | format_code | size -%}
+                  <div
+                    class="gift-card__code{% if code_size <= 25 %} gift-card__code--large{% elsif code_size > 25 and code_size <= 30 %} gift-card__code--medium{% else %} gift-card__code--small{% endif %}"
+                  >
+                    <div class="gift-card__code__inner">
+                      <p id="gift-card-code" class="gift-card__code__text">{{ gift_card.code | format_code }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="gift-card__instructions">{{ 'gift_cards.issued.redeem' | t }}</p>
+
+                <div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
+                {%- if gift_card.pass_url -%}
+                  <a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet no-print">
+                    <img
+                      src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+                      width="120"
+                      height="40"
+                      alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}"
+                      loading="lazy"
+                    >
+                  </a>
+                {%- endif -%}
+
+                <div class="gift-card__buttons text-center no-print">
+                  <span class="gift-card__copy-success form__message" role="status"></span>
+                  <template>
+                    <span class="svg-wrapper">
+                      {%- render 'icon', name: 'check' -%}
+                    </span>
+                    {{ 'gift_cards.issued.copy_code_success' | t }}
+                  </template>
+                  <button class="btn gift-card__copy-button">{{ 'gift_cards.issued.copy_code' | t }}</button>
+                </div>
+
+                <div class="gift-card__actions text-center">
+                  <a
+                    href="{{ shop.url }}"
+                    class="btn"
+                    target="_blank"
+                    rel="noopener"
+                    aria-describedby="a11y-new-window-message"
+                  >
+                    {{ 'gift_cards.issued.shop_link' | t }}
+                  </a>
+                  &nbsp;
+
+                  <a href="#" class="gift-card__action-link" onclick="window.print();">
+                    <i class="gift-card__action-link__print"></i>{{ 'gift_cards.issued.print' | t }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    {%- if gift_card.pass_url -%}
+      <footer role="contentinfo" class="gift-card__footer">
+        <a href="{{ gift_card.pass_url }}">
+          <img
+            id="apple-wallet-badge"
+            src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+            loading="lazy"
+            width="120"
+            height="40"
+            alt="Add To Apple Wallet"
+          >
+        </a>
+      </footer>
+    {%- endif -%}
+  </body>
+</html>
+
+<script>
+  var string = { qrImageAlt: {{ 'gift_cards.issued.qr_image_alt' | t | json }} };
+  document.addEventListener('DOMContentLoaded', function() {
+   new QRCode( document.querySelector('.gift-card__qr-code'), {
+    text: document.querySelector('.gift-card__qr-code').dataset.identifier,
+    width: 72,
+    height: 72,
+    imageAltText: string.qrImageAlt
+    });
+  });
+  var template = document.getElementsByTagName("template")[0];
+  var clonedTemplate = template.content.cloneNode(true);
+  var isMessageDisplayed = false
+  document
+  .querySelector('.gift-card__copy-button')
+  .addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('gift-card-code').innerText).then(function () {
+      if (!isMessageDisplayed) {
+        document.querySelector('.gift-card__copy-success').appendChild(clonedTemplate);
+        isMessageDisplayed = true
+      }
+    });
+  });
+</script>

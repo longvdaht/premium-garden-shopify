@@ -1,0 +1,356 @@
+{% comment %}
+  Renders footer with predefined styles and settings.
+
+  Usage:
+  {% render 'footer' %}
+{% endcomment %}
+
+{%- liquid
+  assign footer_style = footer_style | default: ''
+  assign blocks_size = section.blocks.size
+  assign logo = section.settings.logo
+  assign background_image = section.settings.background_image
+  assign inline_blocks = ''
+  assign inline_blocks_placeholder = '####inline-blocks@@@@'
+  assign selected_color_scheme = section.settings.color_scheme | strip
+  assign color_scheme = 'color-' | append: selected_color_scheme
+  assign border_color = section.settings.border_color
+  assign bg_color = section.settings.bg_color
+  assign bg_color_exist = false
+  assign one_third_block_count = 0
+  assign blocks_code = ''
+  assign blocks_width = 0
+  assign newsletter_block = ''
+-%}
+
+{%- style -%}
+  .site-footer-wrapper {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+    {%- if background_image == blank -%}
+      {%- unless bg_color == 'rgba(0,0,0,0)' or bg_color == blank -%}
+        {% assign bg_color_exist = true %}
+        --bg-custom: {{ bg_color }};
+      {%- endunless -%}
+    {%- endif -%}
+  }
+
+  {% unless border_color == 'rgba(0,0,0,0)' or border_color == blank %}
+    .shopify-section-group-footer-group { --border: {{ border_color }}; }
+    .shopify-section-group-footer-group .field { --border: {{ border_color }}; }
+  {% endunless %}
+{%- endstyle -%}
+
+<footer
+  class="site-footer-wrapper{% if footer_style == 'floating' %} site-footer-wrapper--floating{% endif %}{% if background_image != blank or bg_color_exist %} site-footer-wrapper--bg{% endif %} section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="footer"
+>
+  <div class="wrapper--full-padded">
+    {%- if background_image != blank -%}
+      {%- render 'image-hero',
+        image_desktop: background_image,
+        sizes: '(min-width: 990px) calc(100vw - 100px), (min-width: 750px) calc(100vw - 60px), calc(100vw - 32px)',
+        loading: 'lazy',
+        preload: false,
+        fetchpriority: 'auto',
+        modifier: 'footer__image image-square'
+      -%}
+    {%- endif -%}
+
+    <div class="site-footer">
+      {%- if logo -%}
+        {%- liquid
+          assign logo_width = section.settings.logo_image_width
+          assign logo_width_px = logo_width | append: 'px'
+          assign logo_width_2x = logo_width | times: 2
+          assign logo_width_3x = logo_width | times: 3
+          assign logo_widths = logo_width | append: ',' | append: logo_width_2x | append: ',' | append: logo_width_3x
+          assign logo_alt = logo.alt | default: shop.name | strip_html | escape
+        -%}
+        <div class="footer__logo__wrapper">
+          <a
+            href="{{ routes.root_url }}"
+            class="footer__logo"
+            style="width: {{ logo_width_px }};"
+            aria-label="{{ 'general.accessibility.footer_logo' | t }}"
+          >
+            {%- render 'image',
+              image: logo,
+              width: logo_width_2x,
+              widths: logo_widths,
+              sizes: logo_width_px,
+              alt: logo_alt
+            -%}
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <collapsible-elements>
+          <div class="footer__blocks">
+            {%- for block in section.blocks -%}
+              {%- capture blocks_code -%}
+                {{ blocks_code }}
+
+                {%- liquid
+                  assign block_type = block.type
+                  assign title = block.settings.title
+                  assign text = block.settings.text
+                  assign show_social_links = block.settings.show_social_links
+                  assign enable_accordion = block.settings.enable_accordion
+                  assign column_width = block.settings.column_width
+                  assign blocks_width = blocks_width | plus: block.settings.column_width
+                  if block.settings.column_width == 33
+                    assign one_third_block_count = one_third_block_count | plus: 1
+                  endif
+
+                  capture block_style
+                    echo '--desktop-width: ' | append: column_width | append: '%;'
+                  endcapture
+
+                  if block_type == 'linklist' or block_type == 'social' or block_type == 'text'
+                    if block_type == 'linklist'
+                      assign linklist = linklists[block.settings.linklist]
+                      assign title = title | default: linklist.title
+                    endif
+
+                    if enable_accordion and title != blank
+                      assign enable_accordion = true
+                    else
+                      assign enable_accordion = false
+                    endif
+                  endif
+                -%}
+
+                {%- case block_type -%}
+                  {%- when 'linklist' -%}
+                    <details class="footer__block footer__block--menu{% if enable_accordion %} accordion{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }} data-collapsible desktop="false" mobile="{{ enable_accordion }}">
+                      <summary class="{% if title != blank %}h3 footer__block__title {{ block.settings.heading_font_size }}{% if enable_accordion %} accordion__title{% endif %}{% else %}hidden{% endif %}" data-collapsible-trigger>
+                        {%- if title != blank -%}
+                          {{ title | escape }}
+                        {%- else -%}
+                          &nbsp;
+                        {%- endif -%}
+
+                        {%- render 'icon', name: 'caret-down' -%}
+                      </summary>
+
+                      {%- if linklist != blank -%}
+                        <div data-collapsible-body>
+                          <ul class="footer__quicklinks unstyled{% if enable_accordion %} accordion__content{% endif %}" data-collapsible-content>
+                            {%- for link in linklist.links -%}
+                              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- endif -%}
+                    </details>
+
+                  {%- when 'page' -%}
+                    {%- assign page = pages[block.settings.page] -%}
+
+                    {%- if page == blank or page.empty? -%}
+                      <details class="footer__block footer__block--page{% if enable_accordion %} accordion{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }} data-collapsible desktop="false" mobile="{{ enable_accordion }}">
+                        <summary class="h3 footer__block__title {{ block.settings.heading_font_size }}{% if enable_accordion %} accordion__title{% endif %}" data-collapsible-trigger>
+                          {%- if title != blank -%}
+                            {{ title }}
+                          {%- else -%}
+                            {{ shop.name }}
+                          {%- endif -%}
+
+                          {%- render 'icon', name: 'caret-down' -%}
+                        </summary>
+
+                        <div data-collapsible-body>
+                          <div class="rte{% if enable_accordion %} accordion__content{% endif %}" data-collapsible-content>{{ 'home_page.onboarding.no_content' | t }}</div>
+                        </div>
+                      </details>
+                    {%- else -%}
+                      <details class="footer__block footer__block--page{% if enable_accordion %} accordion{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }} data-collapsible desktop="false" mobile="{{ enable_accordion }}">
+                        <summary class="h3 footer__block__title {{ block.settings.heading_font_size }}{% if enable_accordion %} accordion__title{% endif %}" data-collapsible-trigger>
+                          {%- if title != blank -%}
+                            {{ title }}
+                          {%- else -%}
+                            {{ page.title | escape }}
+                          {%- endif -%}
+
+                          {%- render 'icon', name: 'caret-down' -%}
+                        </summary>
+
+                        <div data-collapsible-body>
+                          <div class="rte{% if enable_accordion %} accordion__content{% endif %}" data-collapsible-content>{{ page.content }}</div>
+                        </div>
+                      </details>
+                    {%- endif -%}
+
+                  {%- when 'social' -%}
+                    <details class="footer__block footer__block--social{% if enable_accordion %} accordion{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }} data-collapsible desktop="false" mobile="{{ enable_accordion }}">
+                      <summary class="{% if title != blank %}h3 footer__block__title {{ block.settings.heading_font_size }}{% if enable_accordion %} accordion__title{% endif %}{% else %}hidden{% endif %}" data-collapsible-trigger>
+                        {%- if title != blank -%}
+                          {{ title | escape }}
+                        {%- else -%}
+                          &nbsp;
+                        {%- endif -%}
+
+                        {%- render 'icon', name: 'caret-down' -%}
+                      </summary>
+
+                      <div data-collapsible-body>
+                        <div class="{% if enable_accordion %} accordion__content{% endif %}" data-collapsible-content>
+                          {%- if text != blank -%}
+                            <div class="rte footer__social__text">{{ text }}</div>
+                          {%- endif -%}
+
+                          {%- render 'social-icons' enable_follow_on_shop: block.settings.enable_follow_on_shop -%}
+                        </div>
+                      </div>
+                    </details>
+
+                  {%- when 'text' -%}
+                    <details class="footer__block footer__block--text{% if enable_accordion %} accordion{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }} data-collapsible desktop="false" mobile="{{ enable_accordion }}">
+                      <summary class="{% if title != blank %}h3 footer__block__title {{ block.settings.heading_font_size }}{% if enable_accordion %} accordion__title{% endif %}{% else %}hidden{% endif %}" data-collapsible-trigger>
+                        {%- if title != blank -%}
+                          {{ title | escape }}
+                        {%- else -%}
+                          &nbsp;
+                        {%- endif -%}
+
+                        {%- render 'icon', name: 'caret-down' -%}
+                      </summary>
+
+                      <div data-collapsible-body>
+                        <div class="{% if enable_accordion %}accordion__content{% endif %}" data-collapsible-content>
+                          {%- if block.settings.image -%}
+                            {%- liquid
+                              assign image_width = block.settings.image_width
+                              assign image_width_x15 = image_width | times: 1.5
+                              assign image_width_x2 = image_width | times: 2
+                              assign sizes = image_width | append: 'px'
+                              assign widths = image_width | append: ', ' | append: image_width_x15 | append: ', ' | append: image_width_x2
+                            -%}
+                            <div class="footer__block__image" style="width: {{ image_width }}px;">
+                              {%- render 'image' image: block.settings.image, width: image_width_x2, sizes: sizes, widths: widths -%}
+                            </div>
+                          {%- endif -%}
+
+                          {%- if text != blank -%}
+                            <div class="rte">{{ text }}</div>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    </details>
+
+                  {%- when 'newsletter' -%}
+                    {%- capture newsletter_block -%}
+                      {%- liquid
+                        assign selected_color_scheme_newsletter = block.settings.color_scheme | strip
+                        assign newsletter_position_footer = false
+                        if footer_style == 'floating'
+                          assign newsletter_position_footer = true
+                        endif
+                      -%}
+
+                      <div class="footer__newsletter__wrapper{% if footer_style == 'floating' %} color-{{ selected_color_scheme_newsletter }}{% endif %}"
+                        {% if footer_style == 'floating' %}
+                          style="--bg-light: {{ settings.color_schemes[selected_color_scheme_newsletter].settings.bg_light }};"
+                          {{ block.shopify_attributes }}
+                        {% endif %}
+                      >
+                        {%- if title != blank or text != blank -%}
+                          <div class="footer__newsletter__content">
+                            {%- if title != blank -%}
+                              <h2 class="footer__block__title footer__newsletter__heading {{ block.settings.heading_font_size }}">{{ title }}</h2>
+                            {%- endif -%}
+
+                            {%- if text != blank -%}
+                              <div class="rte footer__newsletter__text">{{ text }}</div>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+
+                        <div class="footer__newsletter__aside">
+                          {%- render 'newsletter-form' block: block, footer: newsletter_position_footer -%}
+
+                          {%- if show_social_links -%}
+                            {%- render 'social-icons' modifier: 'socials--newsletter' -%}
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endcapture -%}
+
+                    {%- if footer_style != 'floating' and newsletter_block != '' -%}
+                      <div class="footer__block footer__block--newsletter" style="{{ block_style }}" {{ block.shopify_attributes }}>
+                        {{ newsletter_block }}
+                      </div>
+                    {%- endif -%}
+
+                  {%- when 'divider' -%}
+                    <div class="footer__block footer__block--divider{{ inline_blocks_placeholder }}" style="{{ block_style }}">
+                      {%- render 'divider' block: block -%}
+                    </div>
+                {%- endcase -%}
+              {%- endcapture -%}
+            {%- endfor -%}
+
+            {%- liquid
+              if blocks_width <= 100
+                assign inline_blocks = ' footer__block--divider--inline'
+              endif
+
+              if one_third_block_count == blocks_size
+                echo blocks_code | replace: inline_blocks_placeholder, inline_blocks | replace: '--desktop-width: 33%;', '--desktop-width: 33.333333%;'
+              else
+                echo blocks_code | replace: inline_blocks_placeholder, inline_blocks
+              endif
+            -%}
+          </div>
+        </collapsible-elements>
+      {%- endif -%}
+
+      {%- if footer_style == 'floating' and newsletter_block != '' -%}
+        <div class="footer__newsletter__container">
+          {{ newsletter_block }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if footer_style == 'floating' -%}
+      <div class="footer__bar">
+        <ul class="supporting-menu">
+          <li>
+            <a href="{{ shop.secure_url }}"
+              >&copy; {{ shop.name }}
+              {{ 'now' | date: '%Y' -}}
+            </a>
+          </li>
+
+          {% for link in linklists[section.settings.supporting_menu_linklist].links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+
+          <!-- The following lines fix Lighthouse security warnings on the Shopify link. -->
+          {%- liquid
+            assign powered_by_link_html = powered_by_link
+            if powered_by_link_html contains 'rel="'
+              assign powered_link_rel_text = powered_by_link_html | split: 'rel="'
+              assign powered_link_rel_text = powered_link_rel_text[1] | split: '"' | first
+              assign powered_link_rel = 'rel="' | append: powered_link_rel_text | append: '"'
+              assign powered_by_link_html = powered_by_link_html | replace_first: powered_link_rel, ''
+            endif
+            if powered_by_link_html contains '<a '
+              assign powered_by_link_html = powered_by_link_html | replace: '<a ', '<a rel="noopener" '
+            endif
+            assign powered_by_link = powered_by_link_html
+          -%}
+
+          <!-- Remove the following line to delete 'Powered by Shopify' from your footer -->
+          <li data-powered-link>{{ powered_by_link }}</li>
+          <!-- Do not delete below this line -->
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+</footer>

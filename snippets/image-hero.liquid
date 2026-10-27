@@ -1,0 +1,226 @@
+{%- doc -%}
+  Renders a hero image that supports parallax and separate desktop/mobile art direction.
+  Height comes from the aspect ratio; if aspect_ratio is false or nil the image keeps its
+  natural height and is not cropped.
+
+  @param {object} image - The image object
+  @param {object} [image_desktop] - Overrides `image` at desktop widths
+  @param {object} [image_mobile] - Overrides `image` at mobile widths
+  @param {string} [desktop_height] - Height class on desktop, for example 'image-height' or 'screen-height-three-quarters'
+  @param {string} [mobile_height] - Height class at mobile widths
+  @param {number} [aspect_ratio] - Image aspect ratio. Defaults to the desktop image's own ratio, then 2.63
+  @param {number} [aspect_ratio_mobile] - Image aspect ratio at mobile widths. Defaults to the mobile image's own ratio, then aspect_ratio
+  @param {string} [sizes] - Media conditions for the sizes attribute. Default: '100vw'
+  @param {string} [widths] - Comma-separated srcset widths. Defaults to the hero ladder
+  @param {number} [width] - Default image width. Defaults to the image's own width, capped at 5760
+  @param {string} [modifier] - Extra classes on the image container
+  @param {string} [style_vars] - Extra CSS custom properties appended to the container inline style, for example '--image-shape-mask: url(data:image/svg+xml;base64,...);'
+  @param {string} [attributes] - Extra attributes on the image container
+  @param {string} [alt] - Overrides the image's alt text
+  @param {string} [loading] - 'eager' or 'lazy'. Derived from section position when omitted; hero images are usually above the fold
+  @param {string} [fetchpriority] - 'auto', 'high' or 'low'. Default: 'auto'. Use 'high' on the LCP element only
+  @param {boolean} [preload] - Emit a preload hint. Only the LCP image should set this
+  @param {boolean} [priority] - LCP image only. Sets loading 'eager', fetchpriority 'high' and preload true, overriding those three params. Default: false
+  @param {number} [animation_delay] - Animation delay in ms for the AOS system
+  @param {boolean} [show_backfill] - Render the backfill behind the image. Default: true
+  @param {boolean} [parallax_disable] - Prevent the parallax animation. Default: false
+
+  @example
+  {% render 'image-hero', image: section.settings.image, image_mobile: section.settings.image_mobile, aspect_ratio: 1.7, priority: true %}
+{%- enddoc -%}
+
+{%- liquid
+  assign animation_delay = animation_delay | default: false
+  assign image = image_mobile | default: image_desktop | default: image
+  assign image_desktop = image_desktop | default: image
+  assign image_mobile = image_mobile | default: null
+  assign aspect_ratio = aspect_ratio | default: image_desktop.aspect_ratio | default: 2.63
+  assign aspect_ratio_mobile = aspect_ratio_mobile | default: image_mobile.aspect_ratio | default: aspect_ratio
+  assign image_width = image.width | at_most: 5760 | default: 5760
+  assign width = width | default: image_width
+  assign sizes = sizes | default: '100vw'
+  assign modifier = modifier | default: ''
+  assign style_vars = style_vars | default: ''
+  assign widths_default = '180, 360, 540, 720, 900, 1080, 1296, 1440, 1800, 2100, 2450, 2880, 3600, 4400, 4900, 5760'
+  assign widths = widths | default: widths_default
+  assign default_image_label = 'general.accessibility.slide_image' | t
+  assign alt = alt | default: image.alt | default: default_image_label
+  assign alt = alt | escape
+  assign preload = preload | default: null
+  assign fetchpriority = fetchpriority | default: 'auto'
+  assign parallax_enable = settings.parallax_enable
+  assign prevent_parallax = parallax_disable | default: false
+  assign is_mixed_picture = false
+  assign wrapper_tag = 'div'
+
+  if prevent_parallax
+    assign parallax_enable = false
+  endif
+
+  if parallax_enable
+    assign wrapper_tag = 'parallax-hero'
+  endif
+
+  if priority
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+    assign preload = true
+  else
+    comment
+      Set loading="eager" to the first 2 sections images
+      Set loading="lazy" to the rest by default
+    endcomment
+
+    if section.location == 'template' and section.index < 3
+      unless loading == 'lazy'
+        assign loading = 'eager'
+      endunless
+    else
+      assign loading = 'lazy'
+    endif
+  endif
+
+  if show_backfill == null
+    assign show_backfill = true
+  endif
+
+  capture wrapper_classes
+    echo 'image__hero__frame'
+
+    if desktop_height != blank
+      echo ' ' | append: desktop_height
+    endif
+
+    if mobile_height != blank
+      echo ' ' | append: mobile_height
+    endif
+
+    if modifier != blank
+      echo ' ' | append: modifier
+    endif
+  endcapture
+
+  capture wrapper_attributes
+    echo 'style="'
+    echo '--aspect-ratio: ' | append: aspect_ratio | append: ';'
+    echo '--aspect-ratio-mobile: ' | append: aspect_ratio_mobile | append: ';'
+
+    if style_vars != blank
+      echo style_vars
+    endif
+
+    echo '"'
+
+    if parallax_enable
+      echo ' data-parallax-wrapper'
+    endif
+
+    if attributes != blank
+      echo ' ' | append: attributes
+    endif
+  endcapture
+
+  if image_desktop and image_mobile
+    assign is_mixed_picture = true
+    assign unique = section.id | append: image.id | md5
+    assign id = 'Picture-' | append: unique
+
+    capture srcset_desktop
+      render 'image-srcset', image: image_desktop, widths: widths, desktop: true
+    endcapture
+
+    capture srcset_mobile
+      render 'image-srcset', image: image_mobile, widths: widths, mobile: true
+    endcapture
+  elsif image
+    capture srcset
+      render 'image-srcset', image: image, widths: widths
+    endcapture
+  endif
+
+  assign focal_point_default = image.presentation.focal_point
+  capture focal_point_desktop
+    if image_desktop
+      echo image_desktop.presentation.focal_point
+    else
+      echo focal_point_default
+    endif
+  endcapture
+
+  capture focal_point_mobile
+    if image_mobile
+      echo image_mobile.presentation.focal_point
+    else
+      echo focal_point_default
+    endif
+  endcapture
+-%}
+
+{%- capture aos_animation -%}
+  {%- if animation_delay -%}
+    data-aos="img-in"
+    data-aos-delay="{{ animation_delay | times: 150 }}"
+  {%- endif -%}
+{%- endcapture -%}
+
+<{{ wrapper_tag }} class="{{ wrapper_classes }}" {{ wrapper_attributes }}>
+  <div class="image__hero__pane" {{ aos_animation }}>
+    <div
+      class="image__hero__scale image__fill lazy-image{% if show_backfill %} lazy-image--backfill{% endif %} is-loading"
+      {% if parallax_enable %}
+        data-parallax-img
+      {% endif %}
+    >
+      {%- if is_mixed_picture -%}
+        {%- style -%}
+          @media (min-width: 750px) {
+            #{{ id }} { --focal-point: {{ focal_point_desktop }}; }
+          }
+          @media (max-width: 749px) {
+            #{{ id }} { --focal-point: {{ focal_point_mobile }}; }
+          }
+        {%- endstyle -%}
+
+        <picture id="{{ id }}">
+          <source media="(min-width: 750px)" sizes="{{ sizes }}" srcset="{{ srcset_desktop }}">
+          <source media="(max-width: 749px)" sizes="{{ sizes }}" srcset="{{ srcset_mobile }}">
+
+          {{
+            image
+            | image_url: width: image.width
+            | image_tag:
+              loading: loading,
+              fetchpriority: fetchpriority,
+              preload: preload,
+              alt: alt,
+              sizes: sizes,
+              srcset: srcset_mobile,
+              class: 'is-loading',
+              style: 'object-position: var(--focal-point, center)'
+          }}
+        </picture>
+      {%- elsif image contains 'blank.svg' or image == blank -%}
+        <img
+          src="{{ 'blank.svg' | asset_url }}"
+          loading="{{ loading }}"
+          fetchpriority="{{ fetchpriority }}"
+          class="is-loading"
+          alt="{{ alt }}"
+        >
+      {%- else -%}
+        {{
+          image
+          | image_url: width: width
+          | image_tag:
+            loading: loading,
+            fetchpriority: fetchpriority,
+            preload: preload,
+            srcset: srcset,
+            sizes: sizes,
+            alt: alt,
+            class: 'is-loading'
+        }}
+      {%- endif -%}
+    </div>
+  </div>
+</{{ wrapper_tag }}>

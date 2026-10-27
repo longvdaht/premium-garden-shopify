@@ -1,0 +1,53 @@
+{%- doc -%}
+  Renders Badges blocks where they belong: over the media, not inside the text content.
+
+  Split mode (theme blocks): theme blocks report "@theme" for block.type and expose no
+  settings, so a parent cannot pick badges out of section.blocks. The Badges block wraps its
+  own output in <!--badge--> markers instead, and the parent renders each part separately.
+
+  Host mode: for sections whose Badges are local section blocks (type "badges"). Renders
+  every block passed in; place the call inside the element marked data-badge-host.
+
+  @param {string} [source] - Split mode: captured output of {% content_for 'blocks' %}
+  @param {string} [part] - Split mode: "badges" for the badge markup, anything else for the rest
+  @param {string} [mode] - "host" to render the section's local Badges blocks
+  @param {object[]} [blocks] - Host mode: section.blocks filtered to type "badges"
+
+  @example
+  {%- capture badge_blocks -%}
+    {%- render 'badge-blocks', source: content_blocks, part: 'badges' -%}
+  {%- endcapture -%}
+
+  @example
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+{%- enddoc -%}
+
+{%- liquid
+  if mode == 'host'
+    for host_badge in blocks
+      render 'badge', block: host_badge
+    endfor
+  else
+    assign chunks = source | split: '<!--badge-->'
+    assign output = ''
+
+    for chunk in chunks
+      if forloop.first
+        unless part == 'badges'
+          assign output = output | append: chunk
+        endunless
+        continue
+      endif
+
+      assign pieces = chunk | split: '<!--/badge-->'
+
+      if part == 'badges'
+        assign output = output | append: pieces.first
+      elsif pieces.size > 1
+        assign output = output | append: pieces.last
+      endif
+    endfor
+
+    echo output
+  endif
+-%}

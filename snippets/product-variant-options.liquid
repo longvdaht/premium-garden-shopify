@@ -1,0 +1,90 @@
+{%- doc -%}
+  Renders the values of a product variant option, as boxes or as a dropdown list.
+
+  When any box of the option has descriptive text, all its boxes get the same height.
+
+  @param {object} product - The product object
+  @param {string} product_form_id - Id of the product form the inputs belong to
+  @param {object} option - The product option
+  @param {string} picker_type - Type of picker to display: 'button' or 'dropdown'
+  @param {boolean} [has_variant_option_image] - Whether to render stacked variant images
+  @param {object[]} [metaobject_color_entries] - metaobjects[settings.theme_color].values filtered with `| where: 'name'`. Computed once in product-variant-picker and passed through. The swatch priority resolver uses it to output actual inline values for metaobject colors
+  @param {string} [input_id] - Id of the hidden dropdown input. No caller passes it, so the input renders with an empty id
+
+  @example
+  {% render 'product-variant-options',
+    product: product,
+    product_form_id: product_form_id,
+    option: option,
+    picker_type: picker_type,
+    has_variant_option_image: has_variant_option_image,
+    metaobject_color_entries: metaobject_color_entries
+  %}
+{%- enddoc -%}
+
+{%- liquid
+  assign uniq_id = 'Product-' | append: product.id | append: '-' | append: product.handle
+
+  assign has_descriptions = false
+  if picker_type == 'button' and has_variant_option_image != true
+    for value in option.values
+      assign description_metafield = value.variant.metafields.theme.variant_description
+      assign description = description_metafield.value | strip
+      if description_metafield.type == 'single_line_text_field' and description != blank
+        assign has_descriptions = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{%- if picker_type == 'dropdown' -%}
+  <ul
+    id="{{ uniq_id }}-select-{{ option.name | handle }}"
+    class="select-popout__list"
+    data-popout-list
+    data-scroll-lock-scrollable
+  >
+{%- else -%}
+  <div class="radio__buttons{% if has_descriptions %} radio__buttons--descriptions{% endif %}" data-variant-buttons>
+{%- endif -%}
+
+{%- for value in option.values -%}
+  {% render 'product-variant-option',
+    product: product,
+    product_form_id: product_form_id,
+    index: forloop.index0,
+    value: value,
+    option: option,
+    picker_type: picker_type,
+    has_variant_option_image: has_variant_option_image,
+    metaobject_color_entries: metaobject_color_entries
+  %}
+{%- endfor -%}
+{%- if picker_type == 'dropdown' -%}
+  </ul>
+  {%- liquid
+    assign selected_option_value_id = ''
+    assign selected_option_product_url = ''
+    for val in option.values
+      if val.selected
+        assign selected_option_value_id = val.id
+        assign selected_option_product_url = val.product_url
+        break
+      endif
+    endfor
+  -%}
+  <input
+    form="{{ product_form_id }}"
+    type="hidden"
+    name="options[{{ option.name | escape }}]-{{ uniq_id }}"
+    id="{{ input_id }}"
+    value="{{ option.selected_value | escape }}"
+    data-popout-input
+    data-index="option{{ option.position }}"
+    data-option-value-id="{{ selected_option_value_id }}"
+    data-product-url="{{ selected_option_product_url }}"
+  >
+{%- else -%}
+  </div>
+{%- endif -%}

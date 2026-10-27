@@ -1,0 +1,15 @@
+{
+  "name": "Collection",
+  "sections": {
+    "main": {
+      "type": "collection"
+    },
+    "hero": {
+      "type": "collection-image-with-title"
+    }
+  },
+  "order": [
+    "hero",
+    "main"
+  ]
+}

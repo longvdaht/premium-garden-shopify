@@ -1,0 +1,366 @@
+{%- doc -%}
+  Renders the header announcement bar as a slider or scrolling text from its message blocks.
+{%- enddoc -%}
+
+{%- liquid
+  assign layout = block.settings.layout | default: 'marquee'
+  assign padding_top = block.settings.padding_top | default: 0
+  assign padding_bottom = block.settings.padding_bottom | default: 0
+  assign color_scheme = 'color-' | append: block.settings.color_scheme
+  assign border_color = block.settings.border_color
+  assign text_font_size = block.settings.text_font_size | default: 'body-small'
+  assign show_arrows = block.settings.show_arrows | default: false
+  assign text_align = block.settings.text_alignment | default: 'center'
+  assign justify_content = 'flex-start'
+  if text_align == 'center'
+    assign justify_content = 'center'
+  endif
+
+  assign announcement_height = 'max(calc(var(--font-' | append: text_font_size | append: ') * var(--line-height-normal)), 36px)'
+-%}
+
+{%- capture bar_markup -%}
+  {% content_for 'blocks' %}
+{%- endcapture -%}
+
+{%- capture style -%}
+  --PT: {{ padding_top }}px;
+  --PB: {{ padding_bottom }}px;
+  --ticker-direction: {{ block.settings.direction | default: 'ticker-rtl' }};
+  --text-size: var(--font-{{ text_font_size }});
+  --text-align: {{ text_align }};
+  --justify-content: {{ justify_content }};
+  --announcement-min-height: {{ announcement_height }};
+
+  {%- unless border_color == 'rgba(0,0,0,0)' or border_color == blank -%}
+    --header-border: inset 0 0 0 var(--BORDER-THICKNESS) {{ border_color }};
+  {%- endunless -%}
+{%- endcapture -%}
+
+{%- if bar_markup == blank -%}
+  {%- style -%}
+    :root {
+      --ANNOUNCEMENT-HEIGHT-DESKTOP: 0px;
+      --ANNOUNCEMENT-HEIGHT-MOBILE: 0px;
+    }
+  {%- endstyle -%}
+{%- else -%}
+  {%- style -%}
+    :root {
+      --ANNOUNCEMENT-HEIGHT-DESKTOP: {{ announcement_height }};
+      --ANNOUNCEMENT-HEIGHT-MOBILE: {{ announcement_height }};
+    }
+  {%- endstyle -%}
+
+  {%- render 'stylesheet', name: 'section-announcement.css' -%}
+  <script src="{{ 'ticker.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'announcement.js' | asset_url }}" defer="defer"></script>
+
+  {%- if bar_markup contains 'data-countdown-block' -%}
+    {%- render 'stylesheet', name: 'countdown-timer.css', inline: true -%}
+    <script src="{{ 'countdown-timer.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  <div
+    id="Announcement--{{ block.id }}"
+    class="announcement__wrapper announcement__wrapper--top{% if block.settings.use_nav_font %} announcement__wrapper--nav-font{% endif %} {{ color_scheme }}"
+    data-announcement-wrapper
+    data-section-id="{{ section.id }}"
+    data-section-type="announcement"
+    style="{{ style }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="announcement__bar announcement__bar--error section-padding">
+      <div class="announcement__message">
+        <div class="announcement__text {{ text_font_size }}">
+          <div class="announcement__main">{{ 'general.ie11_support_message' | t }}</div>
+        </div>
+      </div>
+    </div>
+
+    <announcement-bar
+      class="announcement__bar-outer section-padding"
+      style="--padding-scrolling: {{ block.settings.message_spacing }}px;"
+    >
+      {%- assign slide_open = '<slide-data style="display:contents">' -%}
+      {%- assign slide_close = '</slide-data>' -%}
+
+      {%- assign slide_fragments = bar_markup | split: slide_open -%}
+
+      {%- if layout == 'slider' -%}
+        <div class="announcement__bar-holder announcement__bar-holder--slider{% if show_arrows %} announcement__bar-holder--arrows{% endif %}">
+          <div class="announcement__slider swiper">
+            <swiper-container
+              class="swiper-wrapper"
+              init="false"
+              loop="true"
+              grab-cursor="true"
+              {%- if show_arrows %}
+                navigation="true"
+                navigation-prev-el=".{{ block.id }}--button.swiper-button-prev"
+                navigation-next-el=".{{ block.id }}--button.swiper-button-next"
+              {% endif -%}
+              autoplay="true"
+              autoplay-delay="{{ block.settings.slider_speed | times: 1000 }}"
+              autoplay-disable-on-interaction="false"
+              effect="fade"
+              fade-effect-cross-fade="true"
+            >
+              {%- for fragment in slide_fragments -%}
+                {%- unless forloop.first -%}
+                  {%- assign slide_content = fragment | split: slide_close | first -%}
+                  {%- assign device_class = '' -%}
+                  {%- if slide_content contains 'data-device="mobile"' -%}
+                    {%- assign device_class = ' mobile' -%}
+                  {%- elsif slide_content contains 'data-device="desktop"' -%}
+                    {%- assign device_class = ' desktop' -%}
+                  {%- endif -%}
+                  <swiper-slide class="announcement__slide announcement__bar{{ device_class }}">
+                    <ticker-bar>
+                      <div class="announcement__message">
+                        <div data-ticker-scale class="announcement__scale ticker--unloaded">
+                          <div data-ticker-text class="announcement__text">
+                            {{ slide_content }}
+                          </div>
+                        </div>
+                      </div>
+                    </ticker-bar>
+                  </swiper-slide>
+                {%- endunless -%}
+              {%- endfor -%}
+            </swiper-container>
+
+            {% if show_arrows %}
+              {%- style -%}
+                .{{ block.id }}--button.swiper-button-next,
+                .{{ block.id }}--button.swiper-button-prev {
+                  color: var(--text);
+                }
+
+                .{{ block.id }}--button.swiper-button-next:after,
+                .{{ block.id }}--button.swiper-button-prev:after {
+                  font-size: 0
+                }
+              {%- endstyle -%}
+
+              <button
+                type="button"
+                class="{{ block.id }}--button swiper-button-prev"
+                aria-label="{{ 'general.accessibility.previous_slide' | t }}"
+              >
+                {%- render 'icon', name: 'caret-left' -%}
+              </button>
+              <button
+                type="button"
+                class="{{ block.id }}--button swiper-button-next"
+                aria-label="{{ 'general.accessibility.next_slide' | t }}"
+              >
+                {%- render 'icon', name: 'caret-right' -%}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if layout == 'marquee' -%}
+        <div class="announcement__bar-holder announcement__bar-holder--marquee">
+          <div class="announcement__bar">
+            <ticker-bar
+              autoplay
+              speed="{{ 100.0 | divided_by: block.settings.marquee_speed | times: 1.63 }}"
+            >
+              <div class="announcement__message">
+                <div data-ticker-scale class="announcement__scale ticker--unloaded">
+                  <div data-ticker-text class="announcement__text">
+                    {%- for fragment in slide_fragments -%}
+                      {%- unless forloop.first -%}
+                        {%- assign slide_content = fragment | split: slide_close | first -%}
+                        {%- assign device_class = '' -%}
+                        {%- if slide_content contains 'data-device="mobile"' -%}
+                          {%- assign device_class = ' mobile' -%}
+                        {%- elsif slide_content contains 'data-device="desktop"' -%}
+                          {%- assign device_class = ' desktop' -%}
+                        {%- endif -%}
+                        <div class="announcement__slide{{ device_class }}">
+                          {{ slide_content }}
+                        </div>
+                      {%- endunless -%}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+            </ticker-bar>
+          </div>
+        </div>
+      {%- endif -%}
+    </announcement-bar>
+  </div>
+
+  {%- if request.design_mode -%}
+    <script defer>
+      document.addEventListener('shopify:block:select', (event) => {
+        event.target
+          .closest('announcement-bar')
+          ?.dispatchEvent(new CustomEvent('theme:block:select', {detail: event.detail}));
+      });
+      document.addEventListener('shopify:block:deselect', (event) => {
+        event.target
+          .closest('announcement-bar')
+          ?.dispatchEvent(new CustomEvent('theme:block:deselect', {detail: event.detail}));
+      });
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {"value": "slider", "label": "Slider"},
+        {"value": "marquee", "label": "Scrolling text"}
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "paragraph",
+      "content": "Applies only if Layout is set to Slider"
+    },
+    {
+      "type": "range",
+      "id": "slider_speed",
+      "label": "Autoplay speed",
+      "unit": "sec",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"}
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Scrolling text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Applies only if Layout is set to Scrolling text"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Autoplay speed",
+      "unit": "%",
+      "min": 50,
+      "max": 300,
+      "step": 25,
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "message_spacing",
+      "label": "Space between messages",
+      "default": 10,
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "text_font_size",
+      "label": "Text size",
+      "info": "Automatically generated by the base size. Applies only when content in Text field is set to Paragraph.",
+      "default": "body-small",
+      "options": [
+        {"value": "body-x-small", "label": "Extra small"},
+        {"value": "body-small", "label": "Small"},
+        {"value": "body-medium", "label": "Medium"},
+        {"value": "body-large", "label": "Large"},
+        {"value": "body-x-large", "label": "Extra large"}
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "use_nav_font",
+      "label": "Use header navigation font",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {"type": "_announcement-text"},
+    {"type": "_announcement-message"},
+    {"type": "_announcement-code"},
+    {"type": "_announcement-countdown"}
+  ]
+}
+{% endschema %}

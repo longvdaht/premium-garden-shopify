@@ -1,0 +1,27 @@
+.look-banner {
+  contain: paint;
+  background: var(--bg);
+}
+
+.look-banner__wrapper {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.look-banner__head {
+  padding-block-end: var(--inner);
+  width: 100%;
+  color: var(--text);
+}
+.wrapper--full .look-banner__head {
+  padding: 0 var(--outer);
+}
+
+.look-banner__hero {
+  position: relative;
+}
+
+.look-banner__image {
+  contain: paint;
+}

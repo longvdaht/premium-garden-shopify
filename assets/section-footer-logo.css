@@ -1,0 +1,16 @@
+.footer-logo__link {
+  display: block;
+}
+.footer-logo__link .image-wrapper {
+  width: 100%;
+}
+.footer-logo__link img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.footer-logo__link .svg-placeholder {
+  display: block;
+  height: auto;
+  aspect-ratio: 6/1;
+}

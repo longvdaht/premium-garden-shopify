@@ -1,0 +1,41 @@
+{% comment %}
+  Renders discount on Cart page and Cart drawer
+
+  Accepts:
+  - block: {Object} Block object (required)
+
+  Usage:
+  {% render 'cart-block-discount', block: block %}
+{% endcomment %}
+
+<div class="cart-discount">
+  <label for="cart-discount" class="visually-hidden">{{ 'cart.general.discount_code' | t }}</label>
+
+  <div class="cart-discount__inner flex">
+    <input
+      type="text"
+      id="cart-discount"
+      class="cart__field"
+      placeholder="{{ 'cart.general.discount_code' | t }}"
+      aria-label="{{ 'cart.general.discount_code' | t }}"
+      data-discount-input
+    >
+
+    <button
+      type="button"
+      class="btn btn--primary btn--solid"
+      aria-label="{{ 'cart.general.apply' | t }}"
+      data-apply-discount
+    >
+      <span>{{ 'cart.general.apply' | t }}</span>
+    </button>
+  </div>
+
+  <p
+    class="cart__errors__content cart__errors__content--discount hidden"
+    data-discount-error-message
+    role="alert"
+  ></p>
+
+  <input type="hidden" name="discount" value="" data-discount-field>
+</div>

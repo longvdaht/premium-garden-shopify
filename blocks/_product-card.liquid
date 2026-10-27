@@ -1,0 +1,46 @@
+{% liquid
+  assign product = closest.product
+
+  capture unique_id
+    echo 'product-card--' | append: section.id | append: '-' | append: product.id
+  endcapture
+-%}
+
+{% capture children %}
+  {% content_for 'blocks', closest.product: product %}
+{% endcapture %}
+
+{% render 'product-card',
+  children: children,
+  product: product,
+  unique_id: unique_id,
+  shopify_attributes: block.shopify_attributes
+%}
+
+{% schema %}
+{
+  "name": "Product card",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_product-card-media"
+    },
+    {
+      "type": "_product-card-content"
+    },
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product card",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

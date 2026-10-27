@@ -1,0 +1,251 @@
+{%- liquid
+  assign unique = 'StickyImageCards--' | append: section.id
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign layout_mobile = section.settings.layout_mobile
+  assign layout_mobile_class = 'brick__wrapper--default'
+
+  assign animation_anchor = unique
+  assign animation_order = 0
+
+  if layout_mobile == 'slider'
+    assign layout_mobile_class = 'brick__wrapper--slider'
+  elsif layout_mobile == '2'
+    assign layout_mobile_class = 'brick__wrapper--grid'
+  endif
+
+  capture style
+    echo '--PT: ' | append: section.settings.padding_top | append: 'px;'
+    echo '--PB: ' | append: section.settings.padding_bottom | append: 'px;'
+  endcapture
+-%}
+
+{%- render 'stylesheet', name: 'section-sticky-image-cards.css' -%}
+
+<section
+  id="{{ unique }}"
+  data-section-id="{{ section.id }}"
+  class="section-sticky-image-cards section-padding {{ section.settings.text_alignment }} {{ color_scheme }} {{ section.settings.width }}"
+  style="{{ style }}"
+  data-shape-divider-root
+>
+  <div class="brick__wrapper {{ layout_mobile_class }}">
+    {%- if section.blocks.size != 0 -%}
+      {%- capture content_blocks -%}
+        {%- content_for 'blocks' -%}
+      {%- endcapture -%}
+
+      {%- liquid
+        assign promote_homepage_h1 = false
+        if template.name == 'index' and section.location == 'template' and section.index == 1
+          assign promote_homepage_h1 = true
+        endif
+      -%}
+
+      {%- render 'heading-auto-promote', content_blocks: content_blocks, promote: promote_homepage_h1 -%}
+    {%- else -%}
+      {%- render 'no-blocks' -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sticky image cards",
+  "class": "section-overlay-header section-floating",
+  "blocks": [
+    {
+      "type": "_sticky-image-card"
+    },
+    {
+      "type": "shape-divider"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Image left, text right"
+        },
+        {
+          "value": "is-reversed",
+          "label": "Text left, image right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio",
+      "min": 0.8,
+      "max": 2,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Image aspect ratio",
+      "info": "Wide to tall",
+      "default": 1.5
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full",
+      "options": [
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio_mobile",
+      "min": 0.8,
+      "max": 2,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Image aspect ratio",
+      "info": "Wide to tall",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_blocks",
+      "label": "Reverse block placement",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 item per row"
+        },
+        {
+          "value": "2",
+          "label": "2 items per row"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky image cards",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "_sticky-image-card",
+          "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "text"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        },
+        {
+          "type": "_sticky-image-card",
+          "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "text"
+            },
+            {
+              "type": "button"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

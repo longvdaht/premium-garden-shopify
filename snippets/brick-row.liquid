@@ -1,0 +1,66 @@
+{%- doc -%}
+  Renders block content for all blocks that extend the "brick-row" block.
+
+  @param {string} children - The DOM content of the brick-row block.
+  @param {object} settings - The settings of the brick-row block.
+  @param {string} shopify_attributes - String with Shopify attributes for the editor.
+  @param {string} [class] - Optional classes for the brick-row block.
+  @param {string} [style] - Optional inline styles for the brick-row block.
+
+  @example
+  {% render 'brick-row', children: children, settings: block.settings, shopify_attributes: block.shopify_attributes %}
+{%- enddoc -%}
+
+{%- liquid
+  capture block_classes
+    unless settings.inherit_color_scheme
+      echo ' color-' | append: settings.color_scheme
+    endunless
+
+    if class != blank
+      echo ' ' | append: class
+    endif
+  endcapture
+
+  capture block_styles
+    echo 'padding-bottom: ' | append: settings.padding_bottom | append: 'px; '
+    if style != blank
+      echo style | append: ' '
+    endif
+  endcapture
+
+  capture layout_classes
+    echo ' brick-row-layout'
+    if settings.stacked_on_mobile
+      echo ' brick-row-layout--column-mobile'
+    endif
+  endcapture
+
+  capture layout_styles
+    assign horizontal_alignment = settings.horizontal_alignment | default: 'flex-start'
+    assign horizontal_alignment_mobile = settings.horizontal_alignment_mobile | default: 'center'
+    assign vertical_alignment = settings.vertical_alignment | default: 'center'
+    assign vertical_alignment_mobile = settings.vertical_alignment_mobile | default: 'center'
+
+    if settings.items_count != blank
+      echo '--items-count: ' | append: settings.items_count | append: '; '
+    endif
+
+    echo '--brick-width: calc(100% / var(--items-count) - var(--brick-gap) / var(--items-count) * (var(--items-count) - 1)); '
+    echo '--brick-gap: ' | append: settings.gap | append: 'px; '
+    echo '--horizontal-alignment: ' | append: horizontal_alignment | append: '; '
+    echo '--horizontal-alignment-mobile: ' | append: horizontal_alignment_mobile | append: '; '
+    echo '--vertical-alignment: ' | append: vertical_alignment | append: ';'
+    echo '--vertical-alignment-mobile: ' | append: vertical_alignment_mobile | append: '; '
+  endcapture
+-%}
+
+<div
+  class="brick-row{{ block_classes }}"
+  style="{{ block_styles }}"
+  {{ shopify_attributes }}
+>
+  <div class="brick-row-layout brick-content{{ layout_classes }}" style="{{ layout_styles }}">
+    {{- children -}}
+  </div>
+</div>

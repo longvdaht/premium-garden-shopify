@@ -1,0 +1,363 @@
+{%- liquid
+  capture rendered_blocks
+    content_for 'blocks'
+  endcapture
+
+  capture badge_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'badges'
+  endcapture
+
+  capture content_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'content'
+  endcapture
+-%}
+
+{%- render 'slideshow', content_blocks: content_blocks, badges: badge_blocks -%}
+
+{% schema %}
+{
+  "name": "Testimonial slider",
+  "class": "section-overlay-header section-floating",
+  "blocks": [
+    {
+      "type": "_slide-testimonial"
+    },
+    {"type": "_badges"},
+    {
+      "type": "shape-divider"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "transition",
+      "label": "Transition style",
+      "default": "slide",
+      "options": [
+        {
+          "label": "Slide",
+          "value": "slide"
+        },
+        {
+          "label": "Fade",
+          "value": "fade"
+        },
+        {
+          "label": "Zoom out",
+          "value": "zoom-out"
+        },
+        {
+          "label": "Wipe",
+          "value": "wipe"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 4,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change slides every",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full",
+      "options": [
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "screen-height-three-quarters",
+      "options": [
+        {
+          "value": "image-height",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero ",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Height",
+      "default": "screen-height-three-quarters--mobile",
+      "options": [
+        {
+          "value": "image-height--mobile",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full--mobile",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters--mobile",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds--mobile",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half--mobile",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third--mobile",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero--mobile",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero--mobile",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero--mobile",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero--mobile",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial slider",
+      "category": "Image",
+      "settings": {
+        "height": "screen-height-two-thirds"
+      },
+      "blocks": [
+        {
+          "type": "_slide-testimonial",
+          "settings": {
+            "flex_align_desktop": "align--middle-center-desktop",
+            "content_width": 100,
+            "flex_align_mobile": "align--middle-center-mobile",
+            "show_text_background": false,
+            "overlay_opacity": 0,
+            "show_overlay_text": false
+          },
+          "blocks": [
+            {
+              "type": "subheading",
+              "settings": {
+                "subheading": "From our customers",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "reviews",
+              "settings": {
+                "text": "",
+                "text_font_size": "body-small",
+                "stars": 5,
+                "style": "stacked",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Love this company and their products!",
+                "heading_font_size": "heading-x-large",
+                "padding_bottom": 0
+              }
+            },
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Great customer service too.",
+                "heading_font_size": "heading-x-large",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>John Tardis</p>",
+                "text_font_size": "body-large",
+                "padding_bottom": 16
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide-testimonial",
+          "settings": {
+            "flex_align_desktop": "align--middle-center-desktop",
+            "content_width": 100,
+            "flex_align_mobile": "align--middle-center-mobile",
+            "show_text_background": false,
+            "overlay_opacity": 0,
+            "show_overlay_text": false
+          },
+          "blocks": [
+            {
+              "type": "subheading",
+              "settings": {
+                "subheading": "From our customers",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "reviews",
+              "settings": {
+                "text": "",
+                "text_font_size": "body-small",
+                "stars": 5,
+                "style": "stacked",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Love this company and their products!",
+                "heading_font_size": "heading-x-large",
+                "padding_bottom": 0
+              }
+            },
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Great customer service too.",
+                "heading_font_size": "heading-x-large",
+                "padding_bottom": 16
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>John Tardis</p>",
+                "text_font_size": "body-large",
+                "padding_bottom": 16
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

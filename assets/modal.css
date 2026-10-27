@@ -1,0 +1,109 @@
+popup-component {
+  display: block;
+}
+
+.modal__inner {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--inner);
+}
+
+.modal__text {
+  text-align: center;
+  color: var(--text);
+}
+
+.modal__overlay {
+  --underlay-bg: rgb(0 0 0 / 50%);
+  display: flex;
+  z-index: 4000;
+}
+
+.modal__body {
+  border-radius: var(--RADIUS);
+  background: var(--bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 100;
+  max-width: 1000px;
+  max-height: 90%;
+  width: 50vw;
+  margin: auto;
+  overflow-y: auto;
+}
+.modal__body .newsletter-form {
+  margin: 0 auto;
+}
+
+.modal__close {
+  --icon: var(--text);
+  --icon-size: 100%;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 20;
+  padding: 0;
+  cursor: pointer;
+}
+.modal__close .icon {
+  pointer-events: none;
+  transition: transform 0.3s;
+}
+
+@media only screen and (max-width: 749px) {
+  .modal__body {
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal__text {
+    width: 100%;
+  }
+}
+.modal__heading {
+  margin: 1rem 0;
+}
+
+.modal__nav-button {
+  --icon-size: 14px;
+  z-index: 20;
+  border: none;
+  border-radius: var(--RADIUS);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  width: var(--nav-btn-size);
+  height: var(--nav-btn-size);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.modal__nav-button:hover {
+  opacity: 0.85;
+}
+.modal__nav-button[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.modal__nav-button.modal__close {
+  --icon-size: 24px;
+}
+
+.modal__close.desktop {
+  position: absolute;
+  top: var(--outer, 20px);
+  right: var(--outer, 20px);
+}
+
+.modal__prev,
+.modal__next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}

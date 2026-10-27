@@ -1,0 +1,150 @@
+{%- doc -%}
+  Renders one value of a product variant option, as a swatch, a box or a dropdown item.
+
+  A box shows descriptive text below the value when the variant has a single line text metafield
+  "theme.variant_description".
+
+  @param {object} product - The product object
+  @param {string} product_form_id - Id of the product form the input belongs to
+  @param {number} index - Index of the value in its option, starting at 0
+  @param {object} value - The product option value
+  @param {object} option - The product option
+  @param {string} picker_type - Type of picker to display: 'swatch', 'button' or 'dropdown'
+  @param {boolean} [has_variant_option_image] - Whether to render stacked variant images
+  @param {boolean} [is_selected] - Highlights the dropdown item as the selected one. No caller passes it, so the selected item is not highlighted
+  @param {object[]} [metaobject_color_entries] - metaobjects[settings.theme_color].values filtered with `| where: 'name'`. Computed once in product-variant-picker and passed through. The swatch priority resolver uses it to output actual inline values for metaobject colors
+  @param {section} [section] - Parent section; available automatically when rendered from a section
+
+  @example
+  {% render 'product-variant-option',
+    product: product,
+    product_form_id: product_form_id,
+    index: index,
+    value: value,
+    option: option,
+    picker_type: picker_type
+  %}
+{%- enddoc -%}
+
+{%- liquid
+  assign value_escaped = value | escape
+  assign option_disabled = true
+  if value.available
+    assign option_disabled = false
+  endif
+-%}
+
+{%- capture input_id -%}
+  {{ section.id }}-{{ option.position }}-{{ index -}}-{{ product.id }}
+{%- endcapture -%}
+
+{%- capture input_name -%}
+  {{ option.name }}-{{ option.position }}
+{%- endcapture -%}
+
+{%- capture input_dataset -%}
+  data-product-url="{{ value.product_url }}"
+  data-option-value-id="{{ value.id }}"
+{%- endcapture -%}
+
+{%- capture label_unavailable -%}
+  <span class="visually-hidden label-unavailable">
+    {{- 'products.product.variant_sold_out_or_unavailable' | t -}}
+  </span>
+{%- endcapture -%}
+
+{%- if picker_type == 'swatch' -%}
+  {%- capture help_text -%}
+    <span class="visually-hidden">{{ value_escaped }}</span>
+    {{ label_unavailable }}
+  {%- endcapture -%}
+  {% render 'swatch-input',
+    id: input_id,
+    name: input_name,
+    value: value,
+    swatch: value.swatch,
+    product: product,
+    metaobject_color_entries: metaobject_color_entries,
+    product_form_id: product_form_id,
+    checked: value.selected,
+    visually_disabled: option_disabled,
+    help_text: help_text,
+    additional_props: input_dataset
+  %}
+{%- elsif picker_type == 'button' -%}
+  {%- liquid
+    assign variant_description = ''
+    assign description_metafield = value.variant.metafields.theme.variant_description
+    if description_metafield.type == 'single_line_text_field'
+      assign variant_description = description_metafield.value | strip
+    endif
+  -%}
+
+  <span
+    class="radio__button"
+    {% if has_variant_option_image %}
+      data-variant-option-image
+    {% endif %}
+  >
+    <input
+      type="radio"
+      id="{{ input_id }}"
+      name="{{ input_name | escape }}"
+      value="{{ value_escaped }}"
+      form="{{ product_form_id }}"
+      {% if value.selected %}
+        checked
+      {% endif %}
+      {% if option_disabled %}
+        class="disabled"
+      {% endif %}
+      {{ input_dataset }}
+    >
+    <label for="{{ input_id }}">
+      {%- if has_variant_option_image -%}
+        <div class="option-image">
+          {%- assign variant_option_image = value.variant.featured_media.preview_image -%}
+          {%- if variant_option_image != blank -%}
+            {%- capture srcset -%}
+              {%- render 'image-srcset', image: variant_option_image, widths: '60, 90, 120, 150, 180' -%}
+            {%- endcapture -%}
+            {{ variant_option_image | image_url: height: 60 | image_tag: sizes: '60px', srcset: srcset, alt: value }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'svg-placeholder' }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <span class="option-title{% if has_variant_option_image %} body-medium{% endif %}">{{ value }}</span>
+      {%- if variant_description != blank -%}
+        <span class="option-description">{{ variant_description | escape }}</span>
+      {%- endif -%}
+      {{ label_unavailable }}
+    </label>
+  </span>
+{%- elsif picker_type == 'dropdown' -%}
+  <li
+    class="select-popout__item{% if is_selected %} is-active{% endif %}"
+    id="{{ input_id }}"
+    value="{{ value_escaped }}"
+    {% if value.selected %}
+      selected="selected"
+    {% endif %}
+    {{ input_dataset }}
+  >
+    <a
+      class="select-popout__option{% unless value.available %} unavailable{% endunless %}"
+      href="#"
+      {% if value.selected %}
+        aria-current="true"
+      {% endif %}
+      data-value="{{ value_escaped }}"
+      data-popout-option
+      data-select-soldout=" - {{ 'products.product.sold_out' | t }}"
+      data-select-unavailable=" - {{ 'products.product.unavailable' | t }}"
+    >
+      <span>
+        {{ value }}
+      </span>
+    </a>
+  </li>
+{%- endif -%}

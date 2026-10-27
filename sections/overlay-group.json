@@ -1,0 +1,57 @@
+{
+  "type": "aside",
+  "name": "Overlay",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "blocks": {
+        "cart-message": {
+          "type": "cart-message"
+        },
+        "title": {
+          "type": "title"
+        },
+        "cart-promotions": {
+          "type": "cart-promotions"
+        },
+        "mini-product-upsell": {
+          "type": "mini-product-upsell"
+        },
+        "products": {
+          "type": "products"
+        },
+        "horizontal-product-upsell": {
+          "type": "horizontal-product-upsell"
+        },
+        "discount": {
+          "type": "discount"
+        },
+        "gift-note": {
+          "type": "gift-note",
+          "disabled": true
+        },
+        "reviews": {
+          "type": "reviews"
+        },
+        "checkout-buttons": {
+          "type": "checkout-buttons"
+        }
+      },
+      "block_order": [
+        "cart-message",
+        "title",
+        "cart-promotions",
+        "mini-product-upsell",
+        "products",
+        "horizontal-product-upsell",
+        "discount",
+        "gift-note",
+        "reviews",
+        "checkout-buttons"
+      ]
+    }
+  },
+  "order": [
+    "cart-drawer"
+  ]
+}

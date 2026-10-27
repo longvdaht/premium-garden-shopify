@@ -1,0 +1,19 @@
+{% liquid
+  assign product = closest.product
+-%}
+
+{% render 'product-card-cutline', product: product, shopify_attributes: block.shopify_attributes %}
+
+{% schema %}
+{
+  "name": "Cutline",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Cutline",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

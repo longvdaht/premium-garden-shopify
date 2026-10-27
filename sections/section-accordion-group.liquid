@@ -1,0 +1,1179 @@
+<!-- /sections/section-accordion-group.liquid -->
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign columns = section.settings.columns
+  assign unique = 'SectionAccordionGroup--' | append: section.id
+  assign animation_anchor = unique
+  assign animation_order = 0
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign accordion_h1_used = false
+-%}
+
+{%- render 'stylesheet', name: 'section-accordion-group.css' -%}
+{%- render 'stylesheet', name: 'collapsible.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+
+    --accordion-columns: {{ columns }};
+  }
+{%- endstyle -%}
+
+<div
+  id="{{ unique }}"
+  class="accordion-group section-padding {{ color_scheme }}"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+>
+  {%- if content_section_blocks.size != 0 -%}
+    <div
+      class="{{ section.settings.width }}"
+      data-section-id="{{ section.id }}"
+      data-section-type="faq"
+    >
+      <collapsible-elements single="true">
+        <div class="accordion-group__items">
+          {%- for block in content_section_blocks -%}
+            {%- liquid
+              assign title = block.settings.title
+              assign content = block.settings.content
+              assign default_open = block.settings.default_open
+            -%}
+
+            {%- if block.type == 'heading' and title != blank -%}
+              {%- liquid
+                assign animation_order = animation_order | plus: 1
+                assign heading_tag = 'h2'
+
+                if section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+                  if template.name == 'index' and section.location == 'template' and section.index == 1 and accordion_h1_used == false
+                    assign heading_tag = 'h1'
+                    assign accordion_h1_used = true
+                  endif
+                else
+                  assign heading_tag = section.settings.heading_tag
+                endif
+              -%}
+
+              <{{ heading_tag }}
+                class="accordion__heading {{ section.settings.heading_font_size }}"
+                data-aos="hero"
+                data-aos-anchor="{{ animation_anchor }}"
+                data-aos-order="{{ animation_order }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ title }}
+              </{{ heading_tag }}>
+            {%- endif -%}
+
+            {%- if block.type == 'question' and title != blank and content != blank -%}
+              {%- if title != blank -%}
+                {%- assign animation_order = animation_order | plus: 1 -%}
+                <details
+                  class="accordion"
+                  data-collapsible
+                  {% if default_open %}
+                    open="true"
+                  {% endif %}
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <summary
+                    class="accordion__title font-heading {{ section.settings.question_font_size }}"
+                    data-collapsible-trigger
+                  >
+                    {%- if block.settings.show_icon -%}
+                      {%- liquid
+                        assign icon_size = block.settings.icon_size
+                        assign icon_color = block.settings.icon_color
+                        assign icon_image = block.settings.icon_image
+                        capture icon_style
+                          echo 'style="'
+                          echo '--icon-size: ' | append: icon_size | append: 'px;'
+                          if icon_color != blank and icon_color.alpha != 0.0
+                            echo ' --icons: ' | append: icon_color | append: ';'
+                          endif
+                          echo '"'
+                        endcapture
+                      -%}
+
+                      <div
+                        class="icon__animated icon__animated--{{ block.id }}{% if icon_image != blank %} icon__animated--image{% endif %}"
+                        {{ icon_style }}
+                      >
+                        {%- liquid
+                          if icon_image
+                            assign icon_width = icon_size
+                            assign icon_width_retina = icon_width | times: 2
+                            assign icon_sizes = icon_width | append: 'px'
+                            assign icon_widths = icon_width | append: ', ' | append: icon_width_retina
+
+                            render 'image', image: icon_image, width: icon_width_retina, sizes: icon_sizes, widths: icon_widths
+                          else
+                            render 'icon', name: block.settings.icon_key
+                          endif
+                        -%}
+                      </div>
+                    {%- endif -%}
+
+                    {{ title }}
+
+                    {%- render 'icon', name: 'caret-down' -%}
+                  </summary>
+
+                  <div
+                    class="accordion__body rte"
+                    {% if default_open != blank %}
+                      style="height: auto;"
+                    {% endif %}
+                    data-collapsible-body
+                  >
+                    <div class="accordion__content" data-collapsible-content>
+                      {{ content }}
+                    </div>
+                  </div>
+                </details>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </collapsible-elements>
+    </div>
+  {%- endif -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</div>
+
+{% schema %}
+{
+  "name": "Accordion group",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-medium",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {"value": "automatic", "label": "Automatic"},
+        {"value": "h1", "label": "H1"},
+        {"value": "h2", "label": "H2"},
+        {"value": "h3", "label": "H3"},
+        {"value": "h4", "label": "H4"},
+        {"value": "h5", "label": "H5"},
+        {"value": "h6", "label": "H6"}
+      ]
+    },
+    {
+      "type": "select",
+      "id": "question_font_size",
+      "label": "Question size",
+      "default": "heading-small",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper",
+      "options": [
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        },
+        {
+          "value": "wrapper--narrow",
+          "label": "Narrow"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "default": "1",
+      "options": [
+        {
+          "value": "1",
+          "label": "One"
+        },
+        {
+          "value": "2",
+          "label": "Two"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Heading",
+      "type": "heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "FAQ"
+        }
+      ]
+    },
+    {
+      "name": "Question",
+      "type": "question",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "default_open",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question",
+          "info": "Block will not be visible if left empty.",
+          "default": "Frequently asked question"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Answer",
+          "default": "<p>Share details about your shipping policies, item returns, or customer service.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Icon"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show icon",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion group",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "custom.pre_footer", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,106 @@
+@media only screen and (min-width: 750px) {
+  .section-sidebar__body {
+    display: flex;
+    margin: 0 calc(var(--gap) / 2 * -1);
+  }
+}
+
+.section-sidebar__aside {
+  position: relative;
+  z-index: 1;
+}
+.section-sidebar__aside:not(:last-child) {
+  margin-bottom: var(--gap);
+}
+@media only screen and (min-width: 750px) {
+  .section-sidebar__aside {
+    flex: 0 0 33.33%;
+    padding: 0 calc(var(--gap) / 2);
+  }
+  .section-sidebar__aside:not(:last-child) {
+    margin-bottom: 0;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .section-sidebar__widget {
+    position: sticky;
+    top: 0;
+    padding-top: calc(1rem - 6px);
+  }
+  .has-header-sticky .section-sidebar__widget {
+    top: var(--header-height, 80px);
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .section-sidebar__content {
+    flex: 1;
+    padding: 0 calc(var(--gap) / 2);
+  }
+}
+
+.section-sidebar__title {
+  padding: 1rem 0;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.accordion + .section-sidebar__title {
+  margin-top: var(--inner);
+}
+
+.widget__links {
+  margin: 0;
+  font-weight: var(--FONT-WEIGHT-BODY-BOLD, 700);
+  font-size: var(--font-body-small);
+  line-height: 17px;
+  list-style: none outside none;
+}
+
+.widget__link {
+  display: block;
+  color: var(--link);
+  transition: color 0.3s ease;
+  padding: 6px 0;
+  overflow-wrap: break-word;
+  line-height: inherit;
+  font-weight: inherit;
+}
+
+.widget__link:hover {
+  color: var(--link-hover);
+}
+
+.widget__links .submenu {
+  font-weight: var(--FONT-WEIGHT-BODY, 400);
+  padding: 4px 0 4px 15px;
+  border-left: 2px solid var(--border);
+}
+.widget__links .submenu li {
+  margin: 0;
+}
+
+.widget__links--secondary .widget__link {
+  display: inline-block;
+  position: relative;
+}
+.widget__links--secondary .widget__link::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentcolor;
+  opacity: 0;
+  transform: scaleX(0);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease-in, transform 0.25s ease-in, visibility 0.25s;
+}
+.widget__links--secondary .widget__link.is-selected::after {
+  opacity: 1;
+  visibility: visible;
+  transform: scaleX(1);
+}

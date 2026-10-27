@@ -1,0 +1,848 @@
+<!-- /sections/section-reviews.liquid -->
+
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign unique = 'Reviews--' | append: section.id
+  assign animation_anchor = unique
+  assign animation_order = 0
+  assign aspect_ratio = 1 | divided_by: section.settings.image_aspect_ratio
+  assign block_count = content_section_blocks.size | plus: 0
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign columns_desktop = block_count | at_most: 4
+  assign columns_medium = 3
+  assign show_featured_image = section.settings.show_featured_image
+  assign show_quotation_marks = section.settings.show_quotation_marks
+  assign heading_size = section.settings.heading_font_size
+  assign widths = '240, 256, 296, 320, 360, 480, 512, 592, 640, 720, 960, 1024, 1080, 1184, 1280'
+
+  if columns_desktop == 2 or columns_desktop == 4
+    assign columns_medium = 2
+  endif
+
+  if show_featured_image
+    assign columns_desktop = 2
+    assign columns_medium = 2
+  endif
+
+  assign top_divider_height = 0
+  assign top_divider_height_mobile = 0
+  if show_quotation_marks
+    for divider in shape_divider_blocks
+      if divider.settings.target_section == 'above'
+        case divider.settings.style
+          when 'waves-small'
+            assign wave_depth = 65
+          when 'waves-large'
+            assign wave_depth = 78
+          when 'waves-abstract'
+            assign wave_depth = 97
+          else
+            assign wave_depth = 90
+        endcase
+
+        assign divider_height = divider.settings.height | default: 80
+        assign divider_height_mobile = divider.settings.height_mobile | default: divider_height
+        assign top_divider_height = divider_height | times: wave_depth | divided_by: 120.0 | ceil
+        assign top_divider_height_mobile = divider_height_mobile | times: wave_depth | divided_by: 120.0 | ceil
+        break
+      endif
+    endfor
+  endif
+
+  capture section_classes
+    echo 'reviews '
+    echo section.settings.text_align
+
+    if show_featured_image
+      echo ' reviews--have-images'
+    else
+      echo ' reviews--no-images'
+    endif
+
+    if show_quotation_marks
+      echo ' reviews--quoted'
+    endif
+
+    if top_divider_height > 0
+      echo ' reviews--quotes-under-divider'
+    endif
+  endcapture
+
+  capture wrapper_classes
+    if show_featured_image
+      echo 'wrapper--full'
+    else
+      echo 'wrapper--full-padded'
+    endif
+  endcapture
+
+  capture sizes
+    if settings.block.size == 1
+      echo '(min-width: 750px) 50vw, calc(100vw - 82px)'
+    else
+      echo '(min-width: 750px) 25vw, calc(100vw - 82px)'
+    endif
+  endcapture
+-%}
+
+{%- render 'stylesheet', name: 'section-reviews.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+    --COLUMNS: {{ columns_desktop }};
+    --COLUMNS-MEDIUM: {{ columns_medium }};
+    {%- if top_divider_height > 0 %}
+      --DIVIDER-TOP: {{ top_divider_height }}px;
+      --DIVIDER-TOP-MOBILE: {{ top_divider_height_mobile }}px;
+    {%- endif %}
+  }
+{%- endstyle -%}
+
+<div
+  id="{{ unique }}"
+  class="{{ section_classes }} {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="reviews"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+>
+  <div class="{{ wrapper_classes }}">
+    {%- if content_section_blocks.size != 0 -%}
+      <grid-slider>
+        <div class="slider__arrows">
+          <button
+            type="button"
+            class="slider__button slider__button--prev"
+            data-button-arrow
+            data-button-prev
+          >
+            {{ 'general.pagination.prev' | t }}
+          </button>
+          <button
+            type="button"
+            class="slider__button slider__button--next"
+            data-button-arrow
+            data-button-next
+          >
+            {{ 'general.pagination.next' | t }}
+          </button>
+        </div>
+
+        <div
+          class="reviews__grid grid grid--slider section-padding"
+          data-grid-slider
+          {% if request.design_mode %}
+            data-block-scroll
+          {% endif %}
+        >
+          {%- for block in content_section_blocks -%}
+            {%- liquid
+              assign block_title = block.settings.title
+              assign review = block.settings.review_content
+              assign featured_image = block.settings.featured_image
+              assign bio_image = block.settings.bio_image
+              assign bio_image_width = block.settings.bio_image_width
+              assign bio_image_render_width = bio_image_width | times: 2
+              assign bio_image_sizes = bio_image_width | append: 'px'
+              assign card_bg_color = block.settings.card_bg_color
+              assign card_background = false
+              assign subheading = block.settings.subheading
+              assign review_url = block.settings.review_url
+              assign animation_order = animation_order | plus: 1
+
+              assign review_block_classes = 'review'
+              if show_featured_image
+                assign review_block_classes = review_block_classes | append: ' review--has-image'
+              endif
+              unless card_bg_color.alpha == 0.0 or card_bg_color == blank
+                assign card_background = true
+                assign review_block_classes = review_block_classes | append: ' review--has-card-bg'
+              endunless
+
+              if forloop.index > 2
+                assign loading = 'lazy'
+              endif
+            -%}
+
+            <div class="reviews__grid-item" data-grid-item data-slider-progress-item {{ block.shopify_attributes }}>
+              {%- if review_url != blank -%}
+                <a href="{{ review_url }}" class="{{ review_block_classes }}" rel="noopener" target="_blank">
+              {%- else -%}
+                <div class="{{ review_block_classes }}">
+              {%- endif -%}
+
+              {%- if show_featured_image -%}
+                <div class="review__image">
+                  {%- capture attributes -%}
+                    data-aos="img-in"
+                    data-aos-anchor="{{ animation_anchor }}"
+                    data-aos-order="{{ animation_order }}"
+                  {%- endcapture -%}
+
+                  {%- if featured_image -%}
+                    {%- render 'image',
+                      image: featured_image,
+                      sizes: sizes,
+                      widths: widths,
+                      attributes: attributes,
+                      aspect_ratio: aspect_ratio,
+                      loading: loading
+                    -%}
+                  {%- else -%}
+                    <div class="image-wrapper" style="--aspect-ratio: {{ aspect_ratio }};" {{ attributes }}>
+                      {{ 'image' | placeholder_svg_tag: 'svg-placeholder' }}
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              <div class="review__card"{% if card_background %} style="--card-bg: {{ card_bg_color }};"{% endif %}>
+                <div
+                  class="review__content"
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                >
+                  {%- if review != blank -%}
+                    {%- liquid
+                      capture quotes_styles
+                        assign heading_size_stripped = heading_size | remove: ''
+                        echo 'font-size: calc(var(--font-' | append: heading_size_stripped | append: ') * 2.5);'
+                        echo 'transform: translateY(calc((var(--font-' | append: heading_size_stripped | append: ') * 0.833) - (var(--font-' | append: heading_size_stripped | append: ') * 0.167)));'
+                      endcapture
+                    -%}
+
+                    <blockquote class="blockquote font-heading {{ heading_size }}{% if show_quotation_marks %} blockquote--quoted{% endif %}">
+                      {%- if show_quotation_marks -%}
+                        <span class="review__quote review__quote--open">
+                          <span class="review__quote-inner" style="{{ quotes_styles }}">&ldquo;</span>
+                        </span>
+                      {%- endif -%}
+
+                      <p>{{ review | truncatewords: 200 }}</p>
+
+                      {%- if show_quotation_marks -%}
+                        <span class="review__quote review__quote--close">
+                          <span class="review__quote-inner" style="{{ quotes_styles }}">&rdquo;</span>
+                        </span>
+                      {%- endif -%}
+                    </blockquote>
+                  {%- endif -%}
+
+                  {%- if block_title != blank or subheading != blank or bio_image != blank -%}
+                    <div class="review__author">
+                      {%- if bio_image != blank -%}
+                        <div class="review__author__bio-image" style="--image-size: {{ bio_image_width }}px;">
+                          {%- render 'image',
+                            image: bio_image,
+                            width: bio_image_render_width,
+                            height: bio_image_render_width,
+                            sizes: bio_image_sizes,
+                            widths: '34, 68, 136, 272, 544, 1088',
+                            cover: true,
+                            loading: loading
+                          -%}
+                        </div>
+                      {%- endif -%}
+
+                      {%- if block_title != blank or subheading != blank -%}
+                        <div class="review__author__content">
+                          {%- if block_title != blank -%}
+                            <div class="review__author__name">{{ block_title }}</div>
+                          {%- endif -%}
+
+                          {%- if subheading != blank -%}
+                            <span class="review__author__subheading subheading">
+                              {{- subheading -}}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- if review_url != blank -%}
+                </a>
+              {%- else -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <slider-progress data-slider-always>
+          <div class="slider-progress__container" data-slider-progress hidden>
+            <div class="slider-progress__track">
+              <div class="slider-progress__fill" data-slider-progress-fill style="--slider-progress: 0;"></div>
+            </div>
+            <div class="slider-progress__counter body-x-small" data-slider-counter aria-live="polite"></div>
+          </div>
+        </slider-progress>
+      </grid-slider>
+    {%- else -%}
+      {%- render 'no-blocks' -%}
+    {%- endif -%}
+  </div>
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</div>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show featured image",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 0.5,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Image height",
+      "info": "Wide to tall",
+      "default": 1.3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quotation_marks",
+      "label": "Show quotation marks",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-small",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Customer name",
+          "default": "Example Customer"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Industry Expert"
+        },
+        {
+          "type": "richtext",
+          "id": "review_content",
+          "label": "Review",
+          "default": "<p>Use this text to showcase a review from one of your customers. A great review is honest and speaks to the concerns of your customers.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "featured_image",
+          "label": "Featured image",
+          "info": "1400 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "image_picker",
+          "id": "bio_image",
+          "label": "Bio image",
+          "info": "400 x 400px square image recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "bio_image_width",
+          "min": 20,
+          "max": 200,
+          "step": 2,
+          "unit": "px",
+          "label": "Bio image width",
+          "default": 34,
+          "visible_if": "{{ block.settings.bio_image != blank }}"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Card background"
+        },
+        {
+          "type": "header",
+          "content": "Review link",
+          "info": "Whole block turns into a link"
+        },
+        {
+          "type": "url",
+          "id": "review_url",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews",
+      "category": "Text",
+      "settings": {
+        "show_featured_image": false
+      },
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "title": "Jeremy Usborne"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Willy Bridge"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Kenneth Powell"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews with image",
+      "category": "Text",
+      "settings": {
+        "show_featured_image": true
+      },
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "title": "Jeremy Usborne"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Willy Bridge"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Kenneth Powell"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

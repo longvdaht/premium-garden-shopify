@@ -1,0 +1,14 @@
+.index-hero--split-images .hero__split-image--blank:nth-of-type(2) {
+  filter: brightness(0.9);
+}
+.index-hero--split-images.has-missing-metafield-image .hero__split-image--blank {
+  display: none;
+}
+
+.index-hero--split-images-with-text .brick__block--blank:nth-of-type(2),
+.index-hero--split-images-with-text .brick__block--blank:first-of-type + .brick__block:nth-of-type(2) {
+  filter: brightness(0.9);
+}
+.index-hero--split-images-with-text .hero__split-image {
+  height: 100%;
+}

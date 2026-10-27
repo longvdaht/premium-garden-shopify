@@ -1,0 +1,30 @@
+{% liquid
+  assign product_url = product.url | within: collection
+  assign shopify_attributes = shopify_attributes | default: ''
+
+  assign is_onboarding = false
+  if product == empty
+    assign is_onboarding = true
+  endif
+-%}
+
+<div
+  class="product-card__title"
+  {{ shopify_attributes }}
+>
+  <a
+    href="{{ product_url }}"
+    class="product-card__link"
+    data-product-link="{{ product_url }}"
+  >
+    {% if is_onboarding %}
+      {% liquid
+        assign default_title = 'home_page.onboarding.product_title' | t
+        assign title = title | default: default_title
+      -%}
+      {{ title }}
+    {% else %}
+      {{ product.title | strip_html | escape }}
+    {% endif %}
+  </a>
+</div>

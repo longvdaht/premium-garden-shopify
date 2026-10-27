@@ -1,0 +1,860 @@
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign animation_anchor = 'SocialVideos--' | append: section.id
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign heading = section.settings.heading
+  assign text = section.settings.text
+  assign aspect_ratio = 1.0 | divided_by: section.settings.aspect_ratio
+  assign videos_per_row = section.settings.videos_per_row
+  assign videos_per_row_tablet = videos_per_row | at_most: 4
+  assign popup_text = section.settings.popup_text
+  assign close_label = 'general.accessibility.close' | t
+-%}
+
+{%- capture style -%}
+  --PT: {{ section.settings.padding_top }}px;
+  --PB: {{ section.settings.padding_bottom }}px;
+  --videos-per-row: {{ videos_per_row }};
+  --videos-per-row-tablet: {{ videos_per_row_tablet }};
+{%- endcapture -%}
+
+{%- render 'stylesheet', name: 'section-social-videos.css' -%}
+{%- render 'stylesheet', name: 'modal.css', async: true -%}
+
+<div
+  class="social-videos section-padding {{ color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="social-videos"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+  style="{{ style }}"
+>
+  <div class="wrapper--full">
+    {%- if heading != blank or text != blank -%}
+      <div class="hero__content__wrapper {{ section.settings.text_alignment }}">
+        <div class="hero__content">
+          {%- if heading != blank -%}
+            {%- liquid
+              assign animation_order = animation_order | plus: 1
+              assign heading_tag = 'h2'
+
+              if section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+                if template.name == 'index' and section.location == 'template' and section.index == 1
+                  assign heading_tag = 'h1'
+                endif
+              else
+                assign heading_tag = section.settings.heading_tag
+              endif
+            -%}
+            <{{ heading_tag }}
+              class="hero__title {{ section.settings.heading_font_size }}"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="{{ animation_order }}"
+            >
+              {{- heading -}}
+            </{{ heading_tag }}>
+          {%- endif -%}
+
+          {%- if text != blank -%}
+            {%- assign animation_order = animation_order | plus: 1 -%}
+            <div
+              class="hero__description {{ section.settings.text_font_size }}"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="{{ animation_order }}"
+            >
+              {{- text -}}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- assign animation_order = animation_order | plus: 1 -%}
+    <div
+      class="social-videos__content"
+      data-aos="hero"
+      data-aos-anchor="{{ animation_anchor }}"
+      data-aos-order="{{ animation_order }}"
+    >
+      {%- if content_section_blocks.size != 0 -%}
+        <div class="swiper">
+          <swiper-container
+            loop="false"
+            slides-per-view="1.6"
+            grab-cursor="true"
+            navigation="true"
+            navigation-prev-el=".{{ section.id }}--button.swiper-button-prev"
+            navigation-next-el=".{{ section.id }}--button.swiper-button-next"
+            breakpoints='{"480": {"slidesPerView": 2.4}, "750": {"slidesPerView": {{ videos_per_row_tablet }}}, "990": {"slidesPerView": {{ videos_per_row }}}}'
+          >
+            {%- for block in content_section_blocks -%}
+              {%- liquid
+                assign product_list = block.settings.products
+                assign video = block.settings.video
+                assign popup_id = section.id | append: '-popup-' | append: forloop.index
+                assign popup_prev_id = null
+                assign popup_next_id = null
+
+                unless forloop.first
+                  assign prev_index = forloop.index | minus: 1
+                  assign popup_prev_id = section.id | append: '-popup-' | append: prev_index
+                endunless
+
+                unless forloop.last
+                  assign next_index = forloop.index | plus: 1
+                  assign popup_next_id = section.id | append: '-popup-' | append: next_index
+                endunless
+
+                assign video_card_poster_sizes = '(min-width: 990px) calc(100vw / ' | append: videos_per_row | append: '), (min-width: 750px) calc(100vw / ' | append: videos_per_row_tablet | append: '), (min-width: 480px) calc(100vw / 2.4), calc(100vw / 1.6)'
+                assign video_modal_poster_sizes = '(min-width: 750px) 340px, calc(100vw - 32px)'
+
+                capture video_card_poster
+                  render 'image', sizes: video_card_poster_sizes, image: video.preview_image, alt: video.alt, aspect_ratio: aspect_ratio, aspect_ratio_mobile: aspect_ratio, placeholder: 'product-1'
+                endcapture
+
+                capture video_modal_poster
+                  render 'image', sizes: video_modal_poster_sizes, image: video.preview_image, alt: video.alt, aspect_ratio: aspect_ratio, aspect_ratio_mobile: aspect_ratio, placeholder: 'product-1'
+                endcapture
+              -%}
+
+              <swiper-slide
+                class="social-video__item"
+                data-index="{{ forloop.index0 }}"
+                {{ block.shopify_attributes }}
+              >
+                <popup-component
+                  id="{{ popup_id }}"
+                  class="social-video__modal{% if product_list == empty and request.design_mode == false %} social-video__modal--video-only{% endif %}"
+                >
+                  <button
+                    class="social-video__button"
+                    type="button"
+                    data-popup-open
+                  >
+                    {{- video_card_poster -}}
+                    {%- render 'icon', name: 'play' -%}
+                  </button>
+
+                  <dialog class="dialog modal__overlay" aria-hidden="true" inert data-scroll-lock-required>
+                    <form method="dialog">
+                      <button class="visually-hidden" aria-label="{{ close_label }}"></button>
+                    </form>
+
+                    <button
+                      type="button"
+                      class="modal__close modal__nav-button desktop"
+                      data-popup-close
+                      aria-label="{{ close_label }}"
+                    >
+                      {%- render 'icon', name: 'x' -%}
+                    </button>
+
+                    <div class="modal__body">
+                      <button
+                        type="button"
+                        class="modal__close modal__nav-button mobile"
+                        data-popup-close
+                        aria-label="{{ close_label }}"
+                      >
+                        {%- render 'icon', name: 'x' -%}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="modal__prev modal__nav-button desktop"
+                        data-popup-prev="{{ popup_prev_id }}"
+                        aria-label="{{ 'general.pagination.prev' | t }}"
+                        {% if forloop.first %}
+                          disabled
+                        {% endif %}
+                      >
+                        {%- render 'icon', name: 'caret-left' -%}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="modal__next modal__nav-button desktop"
+                        data-popup-next="{{ popup_next_id }}"
+                        {% if forloop.last %}
+                          disabled
+                        {% endif %}
+                        aria-label="{{ 'general.pagination.next' | t }}"
+                      >
+                        {%- render 'icon', name: 'caret-right' -%}
+                      </button>
+                      <div
+                        class="modal__inner grid{% if product_list == empty and request.design_mode == false %} grid--1{% else %} grid--2{% endif %}"
+                        data-scroll-lock-scrollable
+                      >
+                        <div class="social-video__media">
+                          {%- if video != null -%}
+                            <script src="{{ 'video-background.js' | asset_url }}" defer="defer"></script>
+
+                            <div
+                              class="video-background image-height image-height--mobile"
+                              style="--aspect-ratio: {{ aspect_ratio }};"
+                            >
+                              <div class="video__poster">
+                                {{ video_modal_poster }}
+                              </div>
+
+                              <video-background
+                                class="video__player is-loading"
+                                data-video-player
+                                data-video-id="{{ section.id }}-video-background"
+                              >
+                                <template data-video-template>
+                                  {{
+                                    video
+                                    | video_tag:
+                                      autoplay: true,
+                                      image_size: '1085x',
+                                      loop: true,
+                                      muted: true,
+                                      controls: false
+                                  }}
+
+                                  <div class="social-video__button" data-video-hover-pause>
+                                    {%- render 'icon', name: 'pause' -%}
+                                  </div>
+                                </template>
+                              </video-background>
+                            </div>
+                          {%- else -%}
+                            <div
+                              class="video-background image-height image-height--mobile"
+                              style="--aspect-ratio: {{ aspect_ratio }};"
+                            >
+                              <iframe
+                                class="social-video__onboarding-video"
+                                src="https://www.youtube.com/embed/_9VUPq3SxOc?autoplay=1&mute=1&loop=1&playlist=_9VUPq3SxOc&controls=0&playsinline=1"
+                                allow="autoplay; encrypted-media"
+                                allowfullscreen
+                                loading="lazy"
+                                frameborder="0"
+                              ></iframe>
+                            </div>
+                          {%- endif -%}
+                        </div>
+
+                        {%- if product_list != empty -%}
+                          <div class="social-video__products" data-scroll-lock-scrollable>
+                            {%- if popup_text != blank -%}
+                              <div class="modal__heading subheading text-center {{ section.settings.popup_text_font_size }}">
+                                {{ popup_text }}
+                              </div>
+                            {%- endif -%}
+
+                            {%- for product_item in product_list -%}
+                              {% render 'product-card', product: product_item %}
+                            {%- endfor -%}
+                          </div>
+                        {%- elsif request.design_mode -%}
+                          <div class="social-video__products" data-scroll-lock-scrollable>
+                            {%- if popup_text != blank -%}
+                              <div class="modal__heading subheading text-center {{ section.settings.popup_text_font_size }}">
+                                {{ popup_text }}
+                              </div>
+                            {%- endif -%}
+
+                            {%- for i in (1..3) -%}
+                              {% render 'product-card', product: null, index: i %}
+                            {%- endfor -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </dialog>
+                </popup-component>
+              </swiper-slide>
+            {%- endfor -%}
+          </swiper-container>
+
+          <button
+            type="button"
+            class="{{ section.id }}--button swiper-button-prev"
+            aria-label="{{ 'general.accessibility.previous_slide' | t }}"
+          >
+            {%- render 'icon', name: 'caret-left' -%}
+          </button>
+          <button
+            type="button"
+            class="{{ section.id }}--button swiper-button-next"
+            aria-label="{{ 'general.accessibility.next_slide' | t }}"
+          >
+            {%- render 'icon', name: 'caret-right' -%}
+          </button>
+        </div>
+      {%- else -%}
+        {%- render 'no-blocks' -%}
+      {%- endif -%}
+    </div>
+  </div>
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</div>
+
+{% schema %}
+{
+  "name": "Social videos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What's inside?"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-medium",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {"value": "automatic", "label": "Automatic"},
+        {"value": "h1", "label": "H1"},
+        {"value": "h2", "label": "H2"},
+        {"value": "h3", "label": "H3"},
+        {"value": "h4", "label": "H4"},
+        {"value": "h5", "label": "H5"},
+        {"value": "h6", "label": "H6"}
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Learn about how our ingredients are sourced and why we chose them.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_font_size",
+      "label": "Text size",
+      "default": "body-medium",
+      "options": [
+        {
+          "value": "body-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "body-small",
+          "label": "Small"
+        },
+        {
+          "value": "body-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "body-large",
+          "label": "Large"
+        },
+        {
+          "value": "body-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "text-center",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "videos_per_row",
+      "label": "Videos per row on desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Video scaling ratio",
+      "info": "Wide to tall",
+      "default": 1.7
+    },
+    {
+      "type": "header",
+      "content": "Popup",
+      "info": "Appears above products"
+    },
+    {
+      "type": "text",
+      "id": "popup_text",
+      "label": "Text",
+      "default": "In this video"
+    },
+    {
+      "type": "select",
+      "id": "popup_text_font_size",
+      "label": "Text size",
+      "default": "body-small",
+      "options": [
+        {
+          "value": "body-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "body-small",
+          "label": "Small"
+        },
+        {
+          "value": "body-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "body-large",
+          "label": "Large"
+        },
+        {
+          "value": "body-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color palette",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products",
+          "limit": 5
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social videos",
+      "category": "Video",
+      "blocks": [
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        },
+        {
+          "type": "video"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "custom.pre_footer", "footer"]
+  }
+}
+{% endschema %}

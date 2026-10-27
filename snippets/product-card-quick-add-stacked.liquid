@@ -1,0 +1,223 @@
+{%- doc -%}
+  Renders the "Stacked" quick add below the text of a product card
+  (Theme settings > Product grid > Quick add > Style > Stacked).
+
+  - Product with one variant: an "Add to cart" button that adds the product straight away.
+  - Product with one variant option: a variant selector above the "Add to cart" button. The
+    selector is a dropdown, or boxes when "Show variants as boxes" is enabled.
+  - Product with more than one variant option: a "Quick add" button that opens the quick add
+    drawer, where the variants are chosen.
+
+  Renders nothing for a sold out product. When the product is empty, renders a preview for the
+  placeholder cards in the theme editor.
+
+  @param {object} product - The product to add to the cart, or empty for the placeholder cards
+  @param {section} [section] - Parent section; available automatically when rendered from a section
+  @param {number} [index] - Position of the card in its grid, starting at 1. Default: 1
+  @param {number} [block_index] - Index of the block the card is rendered in, used by tab collections. Default: 1
+
+  @example
+  {% render 'product-card-quick-add-stacked', product: product, index: index, block_index: block_index %}
+{%- enddoc -%}
+
+{%- liquid
+  assign show_boxes = settings.quick_add_variant_boxes
+  assign current_variant = product.first_available_variant
+  assign index = index | default: 1
+  assign block_index = block_index | default: 1
+  assign unique = section.id | append: '-' | append: product.id | append: '-' | append: index | append: '-' | append: block_index
+  assign product_form_id = 'QuickAddStackedForm-' | append: unique
+  assign option = product.options_with_values | first
+  assign button_class = 'btn btn--solid btn--primary btn--medium'
+
+  assign preorder = false
+  if product.metafields.theme.preorder.value == true or product.tags contains '_preorder'
+    assign preorder = true
+  endif
+
+  assign button_text = 'products.product.add_to_cart' | t
+  assign drawer_button_text = 'products.general.quick_add' | t
+  if preorder
+    assign button_text = 'products.product.pre_order' | t
+    assign drawer_button_text = button_text
+  endif
+
+  assign mode = 'drawer'
+  if product.variants.size == 1
+    assign mode = 'add'
+  elsif product.options.size == 1
+    assign mode = 'select'
+  endif
+-%}
+
+{%- if product == empty -%}
+  <div class="quick-add-stacked">
+    <div class="quick-add-stacked__form">
+      {%- if show_boxes -%}
+        <div class="quick-add-stacked__boxes radio__fieldset">
+          <div class="radio__buttons">
+            {%- for placeholder in (1..3) -%}
+              <span class="radio__button">
+                <input type="radio" tabindex="-1"{% if forloop.first %} checked{% endif %}>
+                <label><span class="option-title">{{ placeholder }}</span></label>
+              </span>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="quick-add-stacked__select">
+          <div class="select-popout">
+            <span class="select-popout__toggle">
+              <span>{{ 'products.product.select' | t }}</span>
+              {%- render 'icon', name: 'caret-down' -%}
+            </span>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <button type="button" class="{{ button_class }}" tabindex="-1">
+        <span class="btn__text">{{ button_text }}</span>
+      </button>
+    </div>
+  </div>
+{%- elsif current_variant -%}
+  {%- capture button_states -%}
+    <span class="btn__added">&nbsp;</span>
+    <span class="btn__loader">
+      {%- render 'svg-loader' -%}
+    </span>
+  {%- endcapture -%}
+
+  <quick-add-product class="quick-add-stacked" data-quick-add-stacked>
+    <div class="quick-add-stacked__holder" data-quick-add-holder="{{ product.id }}">
+      <div class="quick-add-stacked__errors" data-cart-errors-container></div>
+
+      {%- if mode == 'drawer' -%}
+        <button
+          type="button"
+          class="{{ button_class }}"
+          data-quick-add-btn
+          data-quick-add-modal-handle="{{ product.handle }}"
+        >
+          <span class="btn__text">{{ drawer_button_text }}</span>
+          {{- button_states -}}
+        </button>
+
+        {%- render 'product-quick-add-modal-template', product_id: product.id, unique: unique -%}
+      {%- else -%}
+        {%- form 'product', product, id: product_form_id, class: 'quick-add-stacked__form', novalidate: 'novalidate' -%}
+          {%- unless mode == 'select' and show_boxes -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+          {%- endunless -%}
+
+          {%- if settings.show_siblings -%}
+            {%- render 'product-card-siblings', part: 'line-item-props', product: product -%}
+          {%- endif -%}
+
+          {%- if preorder -%}
+            <input
+              type="hidden"
+              name="properties[{{ 'products.product.sale_type' | t | strip_html | escape }}]"
+              value="{{ 'products.product.pre_order' | t | strip_html | escape }}"
+            >
+          {%- endif -%}
+
+          {%- if mode == 'select' -%}
+            {%- if show_boxes -%}
+              <fieldset class="quick-add-stacked__fieldset">
+                <legend class="visually-hidden">{{ option.name | escape }}</legend>
+
+                <div class="quick-add-stacked__boxes radio__fieldset">
+                  <div class="radio__buttons">
+                    {%- for value in option.values -%}
+                      {%- assign input_id = 'QuickAddStackedOption-' | append: unique | append: '-' | append: forloop.index -%}
+
+                      <span class="radio__button">
+                        <input
+                          type="radio"
+                          name="id"
+                          id="{{ input_id }}"
+                          value="{{ value.variant.id }}"
+                          {% if value.variant.id == current_variant.id %}
+                            checked
+                          {% endif %}
+                          {% unless value.available %}
+                            disabled
+                          {% endunless %}
+                        >
+                        <label for="{{ input_id }}">
+                          <span class="option-title">{{ value | escape }}</span>
+                          {%- unless value.available -%}
+                            <span class="visually-hidden label-unavailable">
+                              {{- 'products.product.variant_sold_out_or_unavailable' | t -}}
+                            </span>
+                          {%- endunless -%}
+                        </label>
+                      </span>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </fieldset>
+            {%- else -%}
+              {%- assign select_id = 'QuickAddStackedSelect-' | append: unique -%}
+
+              <variant-selects class="quick-add-stacked__select">
+                <span class="visually-hidden" id="{{ select_id }}-label">{{ option.name | escape }}</span>
+
+                <popout-select class="select-popout" data-variant-change>
+                  <button
+                    type="button"
+                    class="select-popout__toggle"
+                    aria-expanded="false"
+                    aria-controls="{{ select_id }}"
+                    aria-labelledby="{{ select_id }}-label {{ select_id }}-value"
+                    data-popout-toggle
+                  >
+                    <span id="{{ select_id }}-value" data-popout-toggle-text>{{ current_variant.options[0] | escape }}</span>
+                    {%- render 'icon', name: 'caret-down' -%}
+                  </button>
+
+                  <ul id="{{ select_id }}" class="select-popout__list" data-popout-list>
+                    {%- for value in option.values -%}
+                      <li class="select-popout__item{% if value.variant.id == current_variant.id %} is-active{% endif %}">
+                        <a
+                          class="select-popout__option{% unless value.available %} sold-out{% endunless %}"
+                          href="#"
+                          {% if value.variant.id == current_variant.id %}
+                            aria-current="true"
+                          {% endif %}
+                          {% unless value.available %}
+                            aria-disabled="true"
+                            tabindex="-1"
+                            data-select-soldout=" - {{ 'products.product.sold_out' | t }}"
+                          {% endunless %}
+                          data-value="{{ value | escape }}"
+                          data-variant-id="{{ value.variant.id }}"
+                          data-popout-option
+                        >
+                          <span>{{ value | escape }}</span>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                  <input type="hidden" value="{{ current_variant.options[0] | escape }}" data-popout-input>
+                </popout-select>
+              </variant-selects>
+            {%- endif -%}
+          {%- endif -%}
+
+          <button
+            type="submit"
+            name="add"
+            class="{{ button_class }}"
+            data-add-to-cart
+          >
+            <span class="btn__text">{{ button_text }}</span>
+            {{- button_states -}}
+          </button>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </quick-add-product>
+{%- endif -%}

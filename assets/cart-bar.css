@@ -1,0 +1,120 @@
+.cart-bar {
+  --bg: var(--COLOR-BG);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 2001;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.cart-bar:focus-within,
+.cart-bar.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0s;
+}
+
+.cart-bar__form__wrapper {
+  padding: 8px var(--outer);
+}
+
+@media only screen and (min-width: 750px) {
+  .cart-bar__form,
+  .cart-bar__form__wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .cart-bar__form {
+    max-width: 50%;
+    margin-left: auto;
+  }
+}
+.cart-bar__form .product__submit {
+  min-width: 0;
+  margin: 5px 0;
+}
+.cart-bar__form .product__submit__add {
+  position: relative;
+  overflow: hidden;
+  min-height: 50px;
+  min-width: 260px;
+  padding-left: 35px;
+  padding-right: 35px;
+  margin: 0;
+  line-height: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cart-bar__form .product__submit__add span.btn__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: normal;
+}
+@media only screen and (max-width: 989px) {
+  .cart-bar__form .product__submit__add {
+    min-width: 200px;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .cart-bar__form .product__submit__add {
+    width: 100%;
+    min-height: 42px;
+    white-space: normal;
+  }
+}
+.cart-bar__form button {
+  visibility: unset;
+}
+
+.cart-bar__product__title {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--font-body-large);
+}
+@media only screen and (max-width: 749px) {
+  .cart-bar__product__title {
+    display: inline;
+    padding: 0 3px;
+    white-space: normal;
+  }
+}
+
+.cart-bar__product__price {
+  position: relative;
+  margin: 0;
+  font-size: var(--font-body-medium);
+  min-width: 90px;
+}
+@media only screen and (min-width: 750px) {
+  .cart-bar__product__price {
+    display: flex;
+    align-items: center;
+    padding-inline: var(--inner);
+  }
+}
+.variant--unavailable .cart-bar__product__price {
+  display: none;
+}
+@media only screen and (max-width: 749px) {
+  .cart-bar__product__price .price--on-sale {
+    padding-inline: 6px;
+  }
+}
+
+.cart-bar__submit {
+  margin-right: 0;
+}

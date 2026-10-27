@@ -1,0 +1,239 @@
+{%- liquid
+  assign selected_color_scheme = section.settings.color_scheme | strip
+  assign scheme_bg_color = settings.color_schemes[selected_color_scheme].settings.bg
+  assign scheme_text_color = settings.color_schemes[selected_color_scheme].settings.text
+  assign section_width = section.settings.width
+  assign desktop_height = section.settings.height
+  assign mobile_height = section.settings.mobile_height
+  assign image_desktop = block.settings.image
+  assign image_mobile = block.settings.mobile_image
+  assign default_slide_label = 'general.accessibility.slide_image' | t
+  assign alt = image_mobile.alt | default: image_desktop.alt | default: block.settings.title | default: default_slide_label
+  assign image_link = block.settings.link | default: ''
+  assign show_text_background = block.settings.show_text_background
+  assign overlay_color = block.settings.overlay_color
+  assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
+  assign show_overlay_text = block.settings.show_overlay_text
+  assign bg_color = block.settings.bg_color
+  assign text_color = block.settings.color
+  assign bg = ''
+  assign text = ''
+  assign hero_class = 'hero__image'
+  assign video = block.settings.video
+  assign flex_align_desktop = block.settings.flex_align_desktop
+  assign flex_align_mobile = block.settings.flex_align_mobile
+  assign upsell_product = block.settings.product
+
+  if video != blank
+    assign hero_class = 'hero__video'
+    assign image_desktop = video.preview_image
+    assign image_mobile = video.preview_image
+  endif
+
+  assign hero_transparent = true
+  if show_text_background and scheme_bg_color.alpha != 0.0 or scheme_bg_color != blank or bg_color.alpha != 0.0 or bg_color != blank
+    assign hero_transparent = false
+  endif
+
+  if bg_color.alpha != 0.0 and bg_color != blank
+    assign bg = '--bg:' | append: bg_color | append: '; background:' | append: bg_color | append: ';'
+  endif
+
+  assign show_header_backdrop = false
+  if hero_transparent and show_overlay_text
+    assign show_header_backdrop = true
+  endif
+
+  if text_color.alpha != 0.0 and text_color != blank
+    assign text = '--text:' | append: text_color | append: '; color:' | append: text_color | append: ';'
+  else
+    assign text = '--text:' | append: scheme_text_color | append: '; color:' | append: scheme_text_color | append: ';'
+  endif
+
+  assign loading = 'lazy'
+  assign fetchpriority = 'auto'
+  assign preload = false
+  assign image_priority = priority | default: false
+  assign first_block = section.blocks | first
+  assign is_first_homepage_slide = false
+
+  if template.name == 'index' and section.location == 'template' and section.index == 1
+    if first_block.id == block.id
+      assign is_first_homepage_slide = true
+    endif
+  endif
+
+  unless image_priority
+    if is_first_homepage_slide
+      assign image_priority = true
+    endif
+  endunless
+
+  assign rendered_blocks = content_blocks
+
+  capture badge_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'badges'
+  endcapture
+
+  capture text_blocks
+    render 'badge-blocks', source: rendered_blocks, part: 'content'
+  endcapture
+
+  capture content_blocks
+    render 'heading-auto-promote', content_blocks: text_blocks, promote: is_first_homepage_slide
+  endcapture
+
+  assign image_modifier = ''
+  assign video_modifier = ''
+  if section_width == 'wrapper--full'
+    assign image_modifier = 'image-square'
+    assign video_modifier = 'video__player--square'
+  endif
+
+  capture slide_image
+    render 'image-hero', image_desktop: image_desktop, image_mobile: image_mobile, desktop_height: desktop_height, mobile_height: mobile_height, alt: alt, loading: loading, fetchpriority: fetchpriority, preload: preload, priority: image_priority, aspect_ratio: image_desktop.aspect_ratio, aspect_ratio_mobile: image_mobile.aspect_ratio, modifier: image_modifier
+  endcapture
+
+  if upsell_product != blank
+    assign unique_id = section.id | append: '-upsell-' | append: block.id
+    assign upsell_position_primary = 'right'
+    assign upsell_position_vertical = block.settings.product_desktop_alignment_vertical
+    assign upsell_position_horizontal = block.settings.product_desktop_alignment_horizontal
+    assign upsell_position_secondary = upsell_position_vertical
+    assign upsell_animation_order = 'auto'
+
+    if flex_align_desktop == 'align--top-right-desktop' or flex_align_desktop == 'align--middle-right-desktop' or flex_align_desktop == 'align--bottom-right-desktop'
+      assign upsell_position_primary = 'left'
+    endif
+
+    if flex_align_desktop == 'align--top-center-desktop'
+      assign upsell_position_primary = 'bottom'
+    endif
+
+    if flex_align_desktop == 'align--bottom-center-desktop'
+      assign upsell_position_primary = 'top'
+      assign upsell_animation_order = 0
+    endif
+
+    if flex_align_desktop == 'align--middle-center-desktop'
+      assign upsell_position_primary = 'center'
+    endif
+
+    if flex_align_desktop == 'align--top-center-desktop' or flex_align_desktop == 'align--bottom-center-desktop' or flex_align_desktop == 'align--middle-center-desktop'
+      assign upsell_position_secondary = upsell_position_horizontal
+    endif
+  endif
+-%}
+
+{%- capture slide_style -%}
+  --overlay-opacity: {{ overlay_opacity }};
+  --hero-content-width: {{ block.settings.content_width | default: 50 }}%;
+
+  {%- unless overlay_color.alpha == 0.0 or overlay_color == blank -%}
+    --overlay-bg: {{ overlay_color }};
+  {%- endunless -%}
+
+  {% if show_header_backdrop %}
+    --header-overlay-color: var(--overlay-bg);
+    --header-overlay-opacity: {{ overlay_opacity }};
+  {% endif %}
+
+  {%- if bg != blank or text != blank -%}
+    {{ bg }}
+    {{ text }}
+  {%- endif -%}
+{%- endcapture -%}
+
+<swiper-slide
+  data-badge-host
+  class="frame {{ section.settings.height }} {{ section.settings.mobile_height }} hero__wrapper{% if upsell_product != blank %} hero__wrapper--upsell hero__wrapper--upsell-{{ upsell_position_primary }}{% if upsell_position_secondary != blank %} hero__wrapper--upsell-position-{{ upsell_position_secondary }}{% endif %}{% endif %}"
+  data-slide="{{ block.id }}"
+  data-slide-text-color="{{ text_color }}"
+  style="{{ slide_style }}"
+  {{ block.shopify_attributes }}
+>
+  {%- if image_link != '' -%}
+    <a
+      class="{{ hero_class }} frame__item"
+      href="{{ image_link }}"
+      aria-label="{{ block.settings.title | default: default_slide_label | escape }}"
+    >
+  {%- else -%}
+    <div class="{{ hero_class }} frame__item">
+  {%- endif -%}
+
+  {%- if video != null -%}
+    <script src="{{ 'video-background.js' | asset_url }}" defer="defer"></script>
+
+    <div
+      class="video-background {{ desktop_height }} {{ mobile_height }}"
+      style="--aspect-ratio: {{ video.aspect_ratio | default: 1 }};"
+    >
+      <div class="video__poster">
+        {{ slide_image }}
+      </div>
+
+      <video-background
+        class="video__player{% if video_modifier != '' %} {{ video_modifier }}{% endif %} is-loading"
+        data-video-player
+        data-video-id="{{ section.id }}-video-background"
+      >
+        <template data-video-template>
+          {{ video | video_tag: autoplay: true, image_size: '1085x', loop: true, muted: true, controls: false }}
+        </template>
+      </video-background>
+    </div>
+  {%- else -%}
+    {{ slide_image }}
+  {%- endif -%}
+
+  {%- unless show_overlay_text or overlay_opacity == 0.0 -%}
+    <div class="image-overlay"></div>
+  {%- endunless -%}
+
+  {{ badge_blocks }}
+
+  {%- if image_link != '' -%}
+    </a>
+  {%- else -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.type != blank -%}
+    <div class="hero__content__wrapper frame__item {{ flex_align_desktop }} {{ flex_align_mobile }}{% if show_header_backdrop %} backdrop--linear{% endif %}" data-slide-content>
+      {%- capture hero_content_style -%}
+        {%- unless hero_transparent -%}background: var(--bg); color: var(--text);{%- endunless -%}
+        {%- if show_header_backdrop -%} --overlay-opacity: {{ overlay_opacity }};{%- endif -%}
+      {%- endcapture -%}
+
+      <div
+        class="hero__content hero__content--width{% if hero_transparent %} hero__content--transparent{% endif %}{% if show_overlay_text %} backdrop--radial{% endif %}"
+        {% if hero_content_style != blank %}
+          style="{{ hero_content_style }}"
+        {% endif %}
+      >
+        {{ content_blocks }}
+      </div>
+
+      {%- if upsell_product != blank -%}
+        <div
+          class="hero__content__aside"
+          data-aos="hero"
+          data-aos-order="{{ upsell_animation_order }}"
+          data-aos-anchor="{{ section.id }}"
+        >
+          {%- render 'upsell-product',
+            upsell_product: upsell_product,
+            upsell_modifier: 'product-upsell__holder--mini-mobile product-upsell__holder--frosted-glass',
+            unique_id: unique_id,
+            color_scheme: block.settings.upsell_color_scheme,
+            button_type: block.settings.upsell_button_type,
+            button_size: block.settings.upsell_button_size,
+            button_style: block.settings.upsell_button_style,
+            is_compact: true
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</swiper-slide>

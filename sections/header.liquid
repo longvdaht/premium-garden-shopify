@@ -1,0 +1,224 @@
+{%- capture announcement_html -%}
+  {% content_for "block", type: "_header-announcement", id: "announcement" %}
+{%- endcapture -%}
+
+{%- capture toolbar_html -%}
+  {% content_for "block", type: "_header-toolbar", id: "toolbar" %}
+{%- endcapture -%}
+
+{%- capture menu_block_html -%}
+  {% content_for "block", type: "_header-menu", id: "menu" %}
+{%- endcapture -%}
+
+{% render 'header',
+  header_style: 'logo_center_menu_left',
+  is_floating: true,
+  announcement_html: announcement_html,
+  toolbar_html: toolbar_html,
+  menu_block_html: menu_block_html
+%}
+
+{% schema %}
+{
+  "name": "Header - Floating",
+  "class": "page-header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "header_sticky",
+      "label": "Enable sticky header",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator_line",
+      "label": "Show border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "separator_opacity",
+      "label": "Border opacity",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icons",
+      "label": "Show icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_as_circle",
+      "label": "Show cart icon as circle",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Image",
+      "info": "300 x 90px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_limit",
+      "min": 30,
+      "max": 495,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop width",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "logo_max_limit_mobile",
+      "min": 30,
+      "max": 250,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile width",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_search",
+      "default": true,
+      "label": "Show search"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "default": true,
+      "label": "Show social icons"
+    },
+    {
+      "type": "header",
+      "content": "Language selector",
+      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Show language selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Country/Region selector",
+      "info": "To add a country/region, go to your [markets settings](/admin/settings/markets)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Show country/region selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_name",
+      "label": "Show country name",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_flag",
+      "label": "Show country flag",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Transparent header"
+    },
+    {
+      "type": "image_picker",
+      "id": "transparent_logo",
+      "label": "Logo",
+      "info": "300 x 90px .png recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_home",
+      "label": "Enable on Home page",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_collection",
+      "label": "Enable on Collection pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_article",
+      "label": "Enable on Article pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_page",
+      "label": "Enable on Pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_product_page",
+      "label": "Enable on Product pages",
+      "info": "Stretch image size recommended. Desktop only",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "transparent_logo_pdp",
+      "label": "Product pages logo",
+      "info": "300 x 90px .png recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 15
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

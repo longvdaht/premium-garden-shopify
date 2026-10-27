@@ -1,0 +1,97 @@
+{%- doc -%}
+  Renders one decorative badge, positioned absolutely against the nearest [data-badge-host].
+  Shared by the private Badges theme block and by sections that declare Badges as a local
+  section block, so both read the same settings.
+
+  @param {object} block - Theme block or section block with Badges settings
+  @param {section} [section] - Parent section; available automatically when rendered from a section. Drives eager vs lazy image loading
+
+  @example
+  {% render 'badge', block: block %}
+{%- enddoc -%}
+
+{%- liquid
+  assign shape = block.settings.shape | default: 'circle'
+  assign badge_image = block.settings.image
+  assign animation = block.settings.animation
+
+  assign classes = 'badge-block badge-block--' | append: shape
+
+  unless block.settings.show_on_mobile
+    assign classes = classes | append: ' badge-block--hide-mobile'
+  endunless
+
+  unless block.settings.show_on_desktop
+    assign classes = classes | append: ' badge-block--hide-desktop'
+  endunless
+
+  if block.settings.half_width_mobile
+    assign classes = classes | append: ' badge-block--half-mobile'
+  endif
+
+  assign loading = 'lazy'
+  if section.location == 'template' and section.index < 3
+    assign loading = 'eager'
+  endif
+
+  assign rotate_class = ''
+  if animation == 'rotate'
+    assign rotate_class = ' badge-block__rotate--spin'
+  endif
+
+  capture style
+    echo '--badge-width: ' | append: block.settings.badge_width | append: 'px;'
+    echo '--badge-x: ' | append: block.settings.position_x | append: '%;'
+    echo '--badge-y: ' | append: block.settings.position_y | append: '%;'
+    echo '--badge-rotate: ' | append: block.settings.rotate | append: 'deg;'
+    if block.settings.background_color != blank
+      echo '--badge-bg: ' | append: block.settings.background_color | append: ';'
+    endif
+    if block.settings.text_color != blank
+      echo '--badge-text: ' | append: block.settings.text_color | append: ';'
+    endif
+  endcapture
+
+  capture data_attributes
+    echo 'data-rotate="' | append: block.settings.rotate | append: '"'
+    if animation == 'rotate-scroll'
+      echo ' data-rotate-on-scroll'
+    endif
+    if block.settings.enable_parallax
+      echo ' data-parallax data-parallax-speed="' | append: block.settings.parallax_speed | append: '"'
+    endif
+  endcapture
+-%}
+
+<badge-block
+  class="{{ classes }}"
+  style="{{ style }}"
+  {{ data_attributes }}
+  {{ block.shopify_attributes }}
+>
+  {%- render 'stylesheet', name: 'badge-block.css' -%}
+  <div class="badge-block__parallax" data-badge-parallax>
+    <div class="badge-block__rotate{{ rotate_class }}" data-badge-rotate>
+      {%- if badge_image != blank -%}
+        {{
+          badge_image
+          | image_url: width: 600
+          | image_tag:
+            class: 'badge-block__image',
+            widths: '100, 200, 300, 400, 600',
+            sizes: '300px',
+            loading: loading,
+            alt: badge_image.alt
+        }}
+      {%- else -%}
+        <div class="badge-block__shape"></div>
+        {%- if block.settings.text != blank -%}
+          <span class="badge-block__text {{ block.settings.heading_font_size }}">{{ block.settings.text }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if animation == 'rotate-scroll' or block.settings.enable_parallax -%}
+    <script src="{{ 'badge.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</badge-block>

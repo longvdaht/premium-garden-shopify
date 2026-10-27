@@ -1,0 +1,49 @@
+{%- doc -%}
+  API endpoint section for fetching product recommendations without instant add enabled.
+  Used by compact (product-list) and mini upsell blocks.
+
+  URL params (handled by Shopify):
+  - product_id: Product ID to get recommendations for
+  - limit: Maximum number of recommendations
+  - intent: 'related' or 'complementary'
+
+  Visual differences (compact vs mini) are applied via JS class modifiers.
+
+  @example
+  Fetch: /recommendations/products?product_id=123&limit=4&intent=related&section_id=api-upsell-recommendations-standard
+{%- enddoc -%}
+
+<div data-api-upsell-recommendations>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    {%- for product in recommendations.products -%}
+      {%- liquid
+        assign hidden_product = false
+        if product.tags contains 'hide'
+          assign hidden_product = true
+        endif
+
+        comment
+          Skip unavailable products for upsells
+        endcomment
+        assign all_variants_soldout = true
+        for variant in product.variants
+          if variant.available
+            assign all_variants_soldout = false
+            break
+          endif
+        endfor
+      -%}
+
+      {%- unless hidden_product or all_variants_soldout -%}
+        <div data-upsell-item data-product-id="{{ product.id }}">
+          {%- render 'upsell-product',
+            upsell_product: product,
+            unique_id: product.id,
+            is_compact: true,
+            show_available_upsell_only: true
+          -%}
+        </div>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endif -%}
+</div>

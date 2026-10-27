@@ -1,0 +1,301 @@
+.hotspots {
+  position: absolute;
+  inset: 10px;
+  display: block;
+}
+
+.hotspot__button {
+  --hotspot-top: 50%;
+  --hotspot-left: 50%;
+  --hotspot-size: 23px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hotspot-size, 23px);
+  height: var(--hotspot-size, 23px);
+  padding: 0;
+  margin-top: calc(var(--hotspot-size, 23px) / -2);
+  margin-left: calc(var(--hotspot-size, 23px) / -2);
+  top: var(--hotspot-top);
+  left: var(--hotspot-left);
+  border: 0;
+  border-radius: 50%;
+  -moz-appearance: none;
+       appearance: none;
+}
+
+@media only screen and (max-width: 749px) {
+  .hotspot__button.is-selected .hotspot::before {
+    animation: prePulseDot 2.5s linear infinite;
+  }
+}
+@media (hover: hover) {
+  .hotspot__button:hover .hotspot::before {
+    animation-iteration-count: 1;
+  }
+  .hotspot__button:hover .hotspot::after {
+    animation: prePulseDotHover 1.5s linear infinite;
+  }
+}
+.hotspot-item {
+  --position-x: var(--hotspot-x-sm, 50%);
+  --position-y: var(--hotspot-y-sm, 50%);
+  --hotspot-size: 23px;
+  --hotspot-offset: 12px;
+  --padding-block: 8px;
+  --padding-inline: 16px;
+  --line-height: 1.25;
+  --font-size: var(--FONT-SIZE-BASE, 16px);
+  --btn-inner-block: calc(var(--padding-block) * var(--adjust-title, 1));
+  --btn-inner-inline: calc(var(--padding-inline) * var(--adjust-title, 1));
+  --title-height: calc(2 * var(--btn-inner-block) + var(--line-height) * var(--font-size));
+  --info-bubble-inset-block: var(--inset-block-sm, calc(100% + var(--hotspot-offset)) auto);
+  --info-bubble-inset-inline: var(--inset-inline-sm, auto auto);
+  --info-bubble-justify: var(--justify-sm, center);
+  --line-rotation: var(--rotate-sm, -90deg);
+  --inner: 10px;
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: var(--position-x);
+  inset-block-start: var(--position-y);
+  margin-inline-start: calc(var(--hotspot-size) / -2);
+  margin-block-start: calc(var(--hotspot-size) / -2);
+  width: auto;
+  line-height: var(--line-height);
+}
+@media only screen and (min-width: 750px) {
+  .hotspot-item {
+    --position-x: var(--hotspot-x-lg, 50%);
+    --position-y: var(--hotspot-y-lg, 50%);
+    --info-bubble-inset-block: var(--inset-block-lg, calc(100% + var(--hotspot-offset)) auto);
+    --info-bubble-inset-inline: var(--inset-inline-lg, auto auto);
+    --info-bubble-justify: var(--justify-lg, center);
+    --info-bubble-align: var(--align-lg, baseline);
+    --line-rotation: var(--rotate-lg, -90deg);
+  }
+}
+
+.look-banner .hotspot-item:hover {
+  z-index: 100;
+}
+
+.hotspot__line {
+  position: absolute;
+  z-index: 3;
+  inset-block: auto auto;
+  inset-inline: auto auto;
+  width: var(--hotspot-size);
+  height: 1px;
+  display: block;
+  background: transparent;
+  transform: rotate(var(--line-rotation));
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+.hotspot__line::after {
+  content: "";
+  position: absolute;
+  inset-block: auto auto;
+  inset-inline: auto 100%;
+  width: min(var(--hotspot-size), var(--title-height));
+  height: 100%;
+  background-color: var(--bg);
+}
+
+.look-banner .hotspot__line,
+.look-banner .hotspot__info-bubble {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease 0.12s, visibility 0s linear 0.37s;
+}
+.look-banner .hotspot__info-bubble {
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease 0.12s, visibility 0s linear 0.37s, transform 0.25s ease 0.12s;
+}
+.look-banner .hotspot__line {
+  pointer-events: auto;
+}
+.look-banner .hotspot__info-bubble::before {
+  content: "";
+  position: absolute;
+  inset: -10px -20px;
+}
+.look-banner .hotspot-item:hover .hotspot__line,
+.look-banner .hotspot-item:hover .hotspot__info-bubble,
+.look-banner .hotspot-item:focus-within .hotspot__line,
+.look-banner .hotspot-item:focus-within .hotspot__info-bubble {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.look-banner .hotspot-item:hover .hotspot__info-bubble,
+.look-banner .hotspot-item:focus-within .hotspot__info-bubble {
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.hotspot__info-bubble {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: max-content;
+  inset-block: var(--info-bubble-inset-block);
+  inset-inline: var(--info-bubble-inset-inline);
+  justify-content: var(--info-bubble-justify);
+  align-items: var(--info-bubble-align, baseline);
+}
+
+.hotspot__content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc((100vw - var(--scrollbar-width, 0px) - var(--outer) * 2) / 1.5);
+  margin-block: 0;
+  margin-inline: auto;
+  padding: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  text-align: left;
+  color: var(--text);
+  background: var(--bg);
+  min-width: 140px;
+}
+@media only screen and (min-width: 990px) {
+  .hotspot__content {
+    max-width: calc(var(--wrapper-width, 1440px) / 2);
+    min-width: 240px;
+  }
+}
+
+.hotspot__title {
+  display: block;
+  margin: 0;
+}
+
+.hotspot__product-price {
+  margin: 0;
+}
+
+.hotspot__product-price-sale {
+  color: var(--color-sale);
+}
+
+.hotspot__product-compare-price {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.hotspot__content .hotspot__text p,
+.hotspot__content .hotspot__title {
+  margin: 0.5em 0;
+}
+
+.hotspot__product-title {
+  margin: 0;
+}
+
+.hotspot__product-image {
+  width: 30px;
+}
+.hotspot__product-image a {
+  display: block;
+  position: relative;
+  padding-top: var(--PRODUCT-GRID-ASPECT-RATIO);
+}
+.hotspot__product-image .image-wrapper {
+  position: absolute;
+  inset: 0;
+}
+
+.hotspot__product-actions {
+  margin-left: auto;
+}
+
+.hotspot__icon-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hotspot__icon-toggle .icon {
+  position: absolute;
+  transition: opacity 0.3s ease;
+}
+.hotspot__icon-toggle .icon-plus {
+  opacity: 1;
+}
+.hotspot__icon-toggle .icon-minus {
+  opacity: 0;
+}
+
+@media (hover: hover) {
+  .hotspot-item:hover {
+    z-index: 100;
+  }
+  .hotspot__button:hover .icon-plus {
+    opacity: 0;
+  }
+  .hotspot__button:hover .icon-minus {
+    opacity: 1;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .hotspot__button.is-selected .icon-plus {
+    opacity: 0;
+  }
+  .hotspot__button.is-selected .icon-minus {
+    opacity: 1;
+  }
+  .hotspot__content-toggleable {
+    color: var(--text);
+    background: var(--bg-accent);
+    margin-top: var(--inner);
+    padding: var(--inner) var(--outer);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+  }
+  .is-selected > .hotspot__content-toggleable {
+    opacity: 1;
+    visibility: unset;
+  }
+}
+@keyframes prePulseDot {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  89% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  90% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+@keyframes prePulseDotHover {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  20% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  21% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}

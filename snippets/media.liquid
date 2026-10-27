@@ -1,0 +1,176 @@
+{%- doc -%}
+  Renders one product gallery slide: an image, video or 3D model.
+
+  @param {object} media - The product media to render
+  @param {object} [featured_media] - The gallery's featured media; it is marked active and gets priority loading on product pages
+  @param {string} [sectionkey] - Section key used in the slide's data-media-id
+  @param {number} [image_width] - Image width on desktop based on the image size setting
+  @param {boolean} [enable_video_looping] - Loop videos
+  @param {string} [loading] - Image loading attribute. Default: 'lazy'
+  @param {string} [attributes] - Additional attributes for the image wrapper
+  @param {boolean} [cover] - Image covers its frame. Default: false
+  @param {boolean} [product_modal] - Media in the product modal. Modal media never gets priority; it is not the LCP image
+  @param {section} [section] - Parent section; available automatically when rendered from a section
+
+  @example
+  {% render 'media', media: media, featured_media: featured_media, enable_video_looping: enable_video_looping, sectionkey: section.id %}
+{%- enddoc -%}
+
+{%- liquid
+  assign product_modal = product_modal | default: false
+  assign product_image_size = section.settings.image_size | default: 'normal'
+  assign product_image_layout = section.settings.image_layout | default: 'thumbnails'
+  assign media_preview_size = '1024x1024'
+  assign media_aspect_ratio = media.aspect_ratio
+  unless media_aspect_ratio
+    assign media_aspect_ratio = 1
+  endunless
+
+  capture image
+    assign loading = loading | default: 'lazy'
+    assign fetchpriority = 'auto'
+    assign image_priority = false
+    assign attributes = attributes | default: null
+    assign cover = cover | default: false
+
+    unless product_modal
+      if template.name == 'product'
+        if media == featured_media
+          assign image_priority = true
+        else
+          comment
+            Fade stacks every slide in the LCP box; grid/stacked images are also in the gallery column.
+            Eager-load them. Only the featured image gets fetchpriority=high via priority.
+          endcomment
+          assign loading = 'eager'
+        endif
+      endif
+    endunless
+
+    if media.alt contains 'variant--'
+      assign attributes = attributes | append: ' data-variant="' | append: media.alt | append: '"'
+    endif
+
+    assign thumb_offset = 0
+    if product_image_layout == 'thumbnails-left' or product_image_layout == 'thumbnails-right'
+      assign thumb_offset = 90
+    endif
+    assign desktop_image_width = image_width | minus: thumb_offset
+    assign col_offset = 30 | plus: thumb_offset
+    if product_image_size == 'small'
+      assign sizes_medium = 'calc(37.5vw - ' | append: col_offset | append: 'px)'
+    else
+      assign sizes_medium = 'calc(50vw - ' | append: col_offset | append: 'px)'
+    endif
+    assign sizes_small = 'calc(100vw - 32px)'
+    if section.settings.image_aspect_ratio_mobile_enable and product_modal == false
+      assign mobile_crop_scale = section.settings.image_aspect_ratio_mobile | times: media_aspect_ratio | round: 2
+      if mobile_crop_scale > 1
+        assign sizes_small = 'calc((100vw - 32px) * ' | append: mobile_crop_scale | append: ')'
+      endif
+    endif
+    if product_image_layout == 'grid-1' or product_image_layout == 'grid-2'
+      if media == featured_media
+        assign image_sizes = '(min-width: 1400px) ' | append: desktop_image_width | append: 'px, (min-width: 750px) ' | append: sizes_medium | append: ', ' | append: sizes_small
+      else
+        assign half_width = desktop_image_width | divided_by: 2
+        assign image_sizes = '(min-width: 1400px) ' | append: half_width | append: 'px, (min-width: 990px) calc(25vw - 15px), (min-width: 750px) ' | append: sizes_medium | append: ', ' | append: sizes_small
+      endif
+    else
+      assign image_sizes = '(min-width: 1400px) ' | append: desktop_image_width | append: 'px, (min-width: 750px) ' | append: sizes_medium | append: ', ' | append: sizes_small
+    endif
+
+    render 'image', image: media.preview_image, sizes: image_sizes, loading: loading, fetchpriority: fetchpriority, priority: image_priority, attributes: attributes, aspect_ratio: media_aspect_ratio, cover: cover
+  endcapture
+-%}
+
+<swiper-slide
+  class="product__slide{% if featured_media == media %} is-active{% endif %}"
+  data-image-id="{{ media.id }}"
+  data-media-id="{{ sectionkey }}-{{ media.id }}"
+  data-type="{{ media.media_type }}"
+  {% if media.media_type == 'video' or media.media_type == 'external_video' %}
+    data-video
+    data-video-id="{{ media.id }}"
+    data-enable-video-looping="{{ enable_video_looping }}"
+  {% endif %}
+  {% if media.media_type == 'model' %}
+    data-model
+    data-model-id="{{ media.id }}"
+  {% endif %}
+  {% if media.media_type == 'external_video' %}
+    data-youtube-id="{{ media.external_id }}"
+  {% endif %}
+  data-slide
+>
+  {%- if media.media_type == 'image' -%}
+    <div
+      class="product__photo{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
+      id="product-modal-media-{{ media.id }}"
+      {% unless product_modal %}
+        tabindex="0"
+      {% endunless %}
+      style="--aspect-ratio: {{ media_aspect_ratio }}"
+      {% if section.settings.enable_zoom %}
+        data-zoom-image
+        data-image-src="{{ media | image_url: width: 3000 }}"
+        data-image-width="{{ media.width }}"
+        data-image-height="{{ media.height }}"
+      {% endif %}
+    >
+      {{ image }}
+    </div>
+  {%- else -%}
+    {%- if media.media_type == 'model' -%}
+      <product-model class="product__media deferred-media" style="--aspect-ratio: {{ media_aspect_ratio }};">
+    {%- else -%}
+      <deferred-media class="product__media deferred-media" style="--aspect-ratio: {{ media_aspect_ratio }};">
+    {%- endif -%}
+
+    {%- assign button_tag = 'button' -%}
+    {% if product_modal %}
+      {%- assign button_tag = 'div' -%}
+    {% endif %}
+    <{{ button_tag }}
+      {% unless product_modal %}
+        type="button"
+      {% endunless %}
+      class="deferred-media__poster"
+      aria-label="{{ 'general.accessibility.view' | t }} {{ media.alt | strip_html | escape }}"
+      data-deferred-media-button
+    >
+      <span class="deferred-media__poster-button">
+        {%- if media.media_type == 'model' -%}
+          {%- render 'icon', name: 'cube' -%}
+        {%- else -%}
+          {%- render 'icon', name: 'play' -%}
+        {%- endif -%}
+      </span>
+
+      {{ image }}
+    </{{ button_tag }}>
+
+    <template>
+      {%- liquid
+        case media.media_type
+          when 'model'
+            echo media | model_viewer_tag: image_size: media_preview_size, toggleable: true, data-model-id: media.id
+          when 'video'
+            echo media | media_tag: image_size: media_preview_size, class: 'media-video', autoplay: true, loop: enable_video_looping, controls: true, preload: 'none'
+          when 'external_video'
+            if media.host == 'youtube'
+              echo media | external_video_url: autoplay: true, playsinline: true, loop: enable_video_looping, playlist: media.external_id | external_video_tag: loading: 'lazy', data-host: media.host
+            else
+              echo media | external_video_url: autoplay: true, playsinline: true, loop: enable_video_looping | external_video_tag: loading: 'lazy', data-host: media.host
+            endif
+        endcase
+      -%}
+    </template>
+
+    {%- if media.media_type == 'model' -%}
+      </product-model>
+    {%- else -%}
+      </deferred-media>
+    {%- endif -%}
+  {%- endif -%}
+</swiper-slide>

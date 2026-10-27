@@ -1,0 +1,111 @@
+{%- doc -%}
+  Renders a full-bleed shape divider for a section edge.
+  Color comes from the target section color scheme background gradient, falling
+  back to the solid background. Position follows "target section"
+  (straight side connects to that neighbor).
+
+  @param {object} block - Theme block with shape-divider settings
+
+  @example
+  {% render 'shape-divider', block: block %}
+{%- enddoc -%}
+
+{%- liquid
+  assign style = block.settings.style | default: 'waves-medium'
+  assign target_section = block.settings.target_section | default: 'below'
+  assign flip_horizontal = block.settings.flip_horizontal
+  assign height = block.settings.height | default: 80
+  assign height_mobile = block.settings.height_mobile | default: height
+
+  if target_section == 'above'
+    assign position = 'top'
+  else
+    assign position = 'bottom'
+  endif
+
+  assign target_scheme = block.settings.target_color_scheme | strip
+  assign divider_color = '#ffffff'
+  if target_scheme != blank
+    assign scheme_settings = settings.color_schemes[target_scheme].settings
+    if scheme_settings.bg_gradient != blank
+      assign divider_color = scheme_settings.bg_gradient
+    elsif scheme_settings.bg != blank
+      assign divider_color = scheme_settings.bg
+    endif
+  endif
+
+  case style
+    when 'waves-small'
+      assign divider_path = 'M0,60 Q12.5,50 25,60 T50,60 T75,60 T100,60 T125,60 T150,60 T175,60 T200,60 T225,60 T250,60 T275,60 T300,60 T325,60 T350,60 T375,60 T400,60 T425,60 T450,60 T475,60 T500,60 T525,60 T550,60 T575,60 T600,60 T625,60 T650,60 T675,60 T700,60 T725,60 T750,60 T775,60 T800,60 T825,60 T850,60 T875,60 T900,60 T925,60 T950,60 T975,60 T1000,60 T1025,60 T1050,60 T1075,60 T1100,60 T1125,60 T1150,60 T1175,60 T1200,60 L1200,120 L0,120 Z'
+    when 'waves-large'
+      assign divider_path = 'M0,65 Q300,20 600,65 T1200,65 L1200,120 L0,120 Z'
+    when 'waves-abstract'
+      assign divider_path = 'M0,23 C160,85 280,109 430,109 C620,109 720,56 920,56 C1040,56 1130,80 1200,94 L1200,120 L0,120 Z'
+    else
+      assign divider_path = 'M0,50 Q75,10 150,50 T300,50 T450,50 T600,50 T750,50 T900,50 T1050,50 T1200,50 L1200,120 L0,120 Z'
+  endcase
+
+  assign is_gradient = false
+  if divider_color contains 'gradient'
+    assign is_gradient = true
+  endif
+
+  assign classes = 'shape-divider shape-divider--' | append: position
+  if flip_horizontal
+    assign classes = classes | append: ' shape-divider--flip'
+  endif
+  if is_gradient
+    assign classes = classes | append: ' shape-divider--gradient'
+  endif
+
+  capture divider_style
+    echo '--divider-color: ' | append: divider_color | append: ';'
+    echo '--divider-height: ' | append: height | append: 'px;'
+    echo '--divider-height-mobile: ' | append: height_mobile | append: 'px;'
+    if is_gradient
+      assign mask_transform = ''
+      if position == 'top'
+        if flip_horizontal
+          assign mask_transform = 'translate(1200,120) scale(-1,-1)'
+        else
+          assign mask_transform = 'translate(0,120) scale(1,-1)'
+        endif
+      elsif flip_horizontal
+        assign mask_transform = 'translate(1200,0) scale(-1,1)'
+      endif
+
+      capture mask_svg
+        echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path fill="black"'
+        if mask_transform != blank
+          echo ' transform="' | append: mask_transform | append: '"'
+        endif
+        echo ' d="'
+        echo divider_path
+        echo '"/></svg>'
+      endcapture
+      assign encoded_mask = mask_svg | url_encode | replace: '+', '%20'
+      echo '--divider-mask: url(data:image/svg+xml,'
+      echo encoded_mask
+      echo ');'
+    endif
+  endcapture
+-%}
+
+<shape-divider-component
+  class="{{ classes }}"
+  data-position="{{ position }}"
+  style="{{ divider_style }}"
+  aria-hidden="true"
+  {{ block.shopify_attributes }}
+>
+  {%- unless is_gradient -%}
+    <svg
+      class="shape-divider__svg"
+      viewBox="0 0 1200 120"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="{{ divider_path }}"></path>
+    </svg>
+  {%- endunless -%}
+</shape-divider-component>

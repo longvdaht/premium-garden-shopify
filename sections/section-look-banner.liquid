@@ -1,0 +1,997 @@
+<!-- /sections/section-look-banner.liquid -->
+
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign unique = 'LookBanner--' | append: section.id
+  assign image_desktop = section.settings.image
+  assign section_width = section.settings.width
+  assign aspect_ratio_desktop = section.settings.aspect_ratio_desktop
+  assign heading = section.settings.title
+  assign heading_font_size = section.settings.heading_font_size
+  assign text = section.settings.text
+  assign text_font_size = section.settings.text_font_size
+  assign text_alignment = section.settings.text_alignment
+  assign image_mobile = section.settings.image_mobile
+  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile
+  assign hotspot_color = section.settings.hotspot_color
+  assign hotspot_bg = section.settings.hotspot_bg
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign blocks_size = content_section_blocks.size
+  assign arrow_style = settings.arrow_style
+  assign line_thickness = settings.line_thickness
+  assign animations_enabled = settings.animations_enable
+  assign hotspot_markup = ''
+
+  if section_width == 'wrapper--full-padded'
+    assign sizes = '(min-width: 1024px) calc(100vw - 2 * 60px), calc(100vw - 2 * 20px)'
+  endif
+  if section_width == 'wrapper--full'
+    assign sizes = '100vw'
+  endif
+-%}
+
+{%- for block in content_section_blocks -%}
+  {%- liquid
+    assign product = all_products[block.settings.product]
+    if product != blank
+      assign hotspot_title = product.title | strip_html | escape
+      assign hotspot_image = product.featured_image
+      assign hotspot_price = product.price
+      assign hotspot_compare_price = product.compare_at_price
+      assign hotspot_url = product.url | within: collection
+    else
+      assign hotspot_title = 'home_page.onboarding.product_title' | t
+      assign hotspot_image = blank
+      assign hotspot_price = 9900
+      assign hotspot_compare_price = 0
+      assign hotspot_url = '#!'
+    endif
+
+    assign is_on_sale = false
+    if hotspot_compare_price > hotspot_price
+      assign is_on_sale = true
+    endif
+
+    assign aria_label = 'shop_the_look_banner.pagination' | t: current: forloop.index, total: blocks_size
+
+    assign position_x_desktop = block.settings.position_x_desktop
+    assign position_y_desktop = block.settings.position_y_desktop
+    assign position_x_mobile = block.settings.position_x_mobile
+    assign position_y_mobile = block.settings.position_y_mobile
+    assign info_bubbles_position_desktop = block.settings.info_bubbles_position_desktop
+    assign info_bubbles_position_mobile = block.settings.info_bubbles_position_mobile
+
+    capture typography_adjustment
+      assign adjustment = settings.base_font_size | default: 16 | times: 0.075
+      echo ' --adjust-title: ' | append: adjustment | append: ';'
+    endcapture
+
+    capture hotspot_positions
+      echo ' --hotspot-x-lg: ' | append: position_x_desktop | append: '%;'
+      echo ' --hotspot-y-lg: ' | append: position_y_desktop | append: '%;'
+      echo ' --hotspot-x-sm: ' | append: position_x_mobile | append: '%;'
+      echo ' --hotspot-y-sm: ' | append: position_y_mobile | append: '%;'
+    endcapture
+
+    capture info_bubble_styles
+      render 'look-bubbles', info_bubbles_position_desktop: info_bubbles_position_desktop, info_bubbles_position_mobile: info_bubbles_position_mobile
+    endcapture
+  -%}
+
+  {%- capture hotspot_elements -%}
+    <div class="hotspot">
+      <span class="hotspot__icon"></span>
+      <span class="hotspot__line"></span>
+      <div class="hotspot__info-bubble">
+        <div class="hotspot__content">
+          <div class="hotspot__product-image">
+            <a href="{{ hotspot_url }}" aria-label="{{ aria_label | strip_html | escape }}">
+              {%- assign aspect_ratio = 1 | divided_by: settings.product_grid_aspect_ratio -%}
+              {%- render 'image',
+                image: hotspot_image,
+                width: 60,
+                sizes: '30px',
+                widths: '30, 60, 90',
+                aspect_ratio: aspect_ratio
+              -%}
+            </a>
+          </div>
+          <div class="hotspot__product-details">
+            <div class="hotspot__product-title h5">
+              <a href="{{ hotspot_url }}">
+                {{- hotspot_title -}}
+              </a>
+            </div>
+            <p class="hotspot__product-price body-x-small">
+              <span class="{% if is_on_sale %}hotspot__product-price-sale{% endif %}">{{ hotspot_price | money }}</span>
+
+              {% if is_on_sale -%}
+                <span class="hotspot__product-compare-price">
+                  {{- hotspot_compare_price | money -}}
+                </span>
+              {%- endif -%}
+            </p>
+          </div>
+          <div class="hotspot__product-actions">
+            {%- unless product == blank -%}
+              <quick-add-product>
+                <div data-quick-add-holder="{{ product.id }}">
+                  {%- if product.variants.size == 1 -%}
+                    {%- assign product_form_id = 'ProductForm-' | append: unique -%}
+                    {%- form 'product', product, id: product_form_id -%}
+                      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+                      <button class="btn btn--small btn--secondary btn--outline"
+                        id="ProductSubmitButton-{{ section_id }}"
+                        type="submit"
+                        name="add"
+                        aria-label="{{ 'products.general.quick_add' | t }}"
+                        data-add-to-cart
+                      >
+                        <span class="btn__text">
+                          {{- 'products.general.add' | t -}}
+                        </span>
+                        <span class="btn__added">&nbsp;</span>
+                        <span class="btn__loader">
+                          <svg height="18" width="18" class="svg-loader">
+                            <circle r="7" cx="9" cy="9" />
+                            <circle stroke-dasharray="87.96459430051421 87.96459430051421" r="7" cx="9" cy="9" />
+                          </svg>
+                        </span>
+                        <span class="btn__error" data-message-error>&nbsp;</span>
+                      </button>
+                    {%- endform -%}
+                  {%- else -%}
+                    <button class="btn btn--small btn--secondary btn--outline"
+                      type="button"
+                      aria-label="{{ 'products.general.quick_add' | t }}"
+                      data-quick-add-btn
+                      data-quick-add-modal-handle="{{ product.handle }}"
+                    >
+                      <span class="btn__text">{{- 'products.general.add' | t -}}</span>
+                      <span class="btn__added">&nbsp;</span>
+                      <span class="btn__loader">
+                        <svg height="18" width="18" class="svg-loader">
+                          <circle r="7" cx="9" cy="9" />
+                          <circle stroke-dasharray="87.96459430051421 87.96459430051421" r="7" cx="9" cy="9" />
+                        </svg>
+                      </span>
+                    </button>
+                  {%- endif -%}
+
+                  {%- unless product.has_only_default_variant -%}
+                    {%- render 'product-quick-add-modal-template', product_id: product.id, unique: unique -%}
+                  {%- endunless -%}
+                </div>
+              </quick-add-product>
+            {%- else -%}
+              <button class="btn btn--small btn--secondary btn--outline"
+                type="button"
+                aria-label="{{ 'products.general.quick_add' | t }}"
+              >
+                <span class="btn__text">{{- 'products.general.add' | t -}}</span>
+              </button>
+            {%- endunless -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- capture hotspot_markup -%}
+    {{ hotspot_markup }}
+
+    <div id="hotspotItem--{{ block.id }}"
+      class="hotspot-item"
+      style="{{ typography_adjustment }} {{ hotspot_positions }} {{ info_bubble_styles }}"
+      data-aos="fade"
+      data-aos-order="{{ forloop.index | plus: 1 }}"
+      data-aos-anchor="{{ unique }}"
+      {% if forloop.first %}aria-current="true"{% endif %}
+    >
+      <div
+        class="hotspot__button"
+        {{ block.shopify_attributes }}
+      >
+        {{- hotspot_elements -}}
+      </div>
+    </div>
+  {%- endcapture -%}
+{%- endfor -%}
+
+{%- render 'stylesheet', name: 'section-look-banner.css' -%}
+{%- render 'stylesheet', name: 'hotspots.css' -%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ section.settings.padding_top }}px;
+    --PB: {{ section.settings.padding_bottom }}px;
+  }
+
+  {% if hotspot_bg.alpha != 0.0 and hotspot_bg != '' -%}
+    #{{ unique }} .hotspot { --bg: {{ hotspot_bg }}; }
+  {%- endif -%}
+
+  {% if hotspot_color.alpha != 0.0 and hotspot_color != '' -%}
+    #{{ unique }} .hotspot__button { --icons: {{ hotspot_color }}; }
+  {%- endif -%}
+{%- endstyle -%}
+
+<section
+  id="{{ unique }}"
+  class="look-banner section-padding {{ color_scheme }}"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+>
+  <div class="{{ section_width }}">
+    <div class="look-banner__wrapper {{ text_alignment }}">
+      {%- if heading != blank or text != blank or blocks_size > 0 -%}
+        {%- assign animation_order = 0 -%}
+        {%- assign animation_anchor = 'LookBannerHead--' | append: section.id -%}
+
+        {%- unless heading == blank and text == blank -%}
+          <div id="LookBannerHead--{{ section.id }}" class="look-banner__head">
+            {%- if heading != blank -%}
+              {%- liquid
+                assign animation_order = animation_order | plus: 1
+                assign heading_tag = 'h2'
+
+                unless section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+                  assign heading_tag = section.settings.heading_tag
+                endunless
+              -%}
+
+              <{{ heading_tag }}
+                class="look-banner__heading hero__title {{ heading_font_size }}"
+                data-aos="hero"
+                data-aos-anchor="{{ animation_anchor }}"
+                data-aos-order="{{ animation_order }}"
+              >
+                {{- heading -}}
+              </{{ heading_tag }}>
+            {%- endif -%}
+
+            {%- if text != blank -%}
+              {%- assign animation_order = animation_order | plus: 1 -%}
+
+              <div
+                class="look-banner__rte hero__rte {{ text_font_size }}"
+                data-aos="hero"
+                data-aos-anchor="{{ animation_anchor }}"
+                data-aos-order="{{ animation_order }}"
+              >
+                {{- text -}}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endunless -%}
+      {%- endif -%}
+
+      <div class="look-banner__hero">
+        <div class="look-banner__image">
+          {%- assign animation_order = animation_order | at_least: 1 -%}
+          {%- assign image_modifier = 'aspect-ratio' -%}
+          {%- if section_width == 'wrapper--full' -%}
+            {%- assign image_modifier = image_modifier | append: ' image-square' -%}
+          {%- endif -%}
+
+          {%- render 'image-hero',
+            image_desktop: image_desktop,
+            image_mobile: image_mobile,
+            sizes: sizes,
+            widths: '294, 336, 385, 422, 588, 654, 672, 770, 844, 900, 1236, 1308, 1540, 1688, 1800, 2472',
+            modifier: image_modifier,
+            animation_delay: animation_order,
+            aspect_ratio: aspect_ratio_desktop,
+            aspect_ratio_mobile: aspect_ratio_mobile,
+            parallax_disable: true
+          -%}
+        </div>
+
+        <div class="look-banner__hotspots">
+          {{ hotspot_markup }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Shop the look banner",
+  "class": "section-look-banner",
+  "max_blocks": 7,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop the look banner"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-large",
+      "options": [
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Our most popular looks of the season</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_font_size",
+      "label": "Text size",
+      "info": "Applies only when content in Text field is set to Paragraph.",
+      "default": "body-medium",
+      "options": [
+        {
+          "value": "body-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "body-small",
+          "label": "Small"
+        },
+        {
+          "value": "body-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "body-large",
+          "label": "Large"
+        },
+        {
+          "value": "body-x-large",
+          "label": "Extra large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "label": "Center",
+          "value": "text-center"
+        },
+        {
+          "label": "Left",
+          "value": "text-left"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full-padded",
+      "options": [
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio_desktop",
+      "label": "Image scaling ratio",
+      "info": "Wide to tall",
+      "min": 0.3,
+      "max": 1,
+      "step": 0.1,
+      "unit": ":1",
+      "default": 0.6
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio_mobile",
+      "label": "Image scaling ratio",
+      "info": "Wide to tall",
+      "min": 0.8,
+      "max": 2,
+      "step": 0.1,
+      "unit": ":1",
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_color",
+      "label": "Dot icon"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_bg",
+      "label": "Dot background"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading SEO tag",
+      "default": "automatic",
+      "options": [
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Hotspot position"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "range",
+          "id": "position_x_desktop",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Horizontal",
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y_desktop",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Vertical",
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "range",
+          "id": "position_x_mobile",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Horizontal",
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y_mobile",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "label": "Vertical",
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Product title position",
+          "info": "Values replicate the movement of the minute hand on a clock"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "range",
+          "id": "info_bubbles_position_desktop",
+          "min": 0,
+          "max": 55,
+          "step": 5,
+          "label": "Placement",
+          "unit": "min",
+          "default": 45
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "range",
+          "id": "info_bubbles_position_mobile",
+          "min": 0,
+          "max": 55,
+          "step": 5,
+          "label": "Placement",
+          "unit": "min",
+          "default": 45
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop the look banner",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 36,
+            "position_y_desktop": 55,
+            "position_x_mobile": 46,
+            "position_y_mobile": 55,
+            "info_bubbles_position_desktop": 45,
+            "info_bubbles_position_mobile": 45
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 45,
+            "position_y_desktop": 75,
+            "position_x_mobile": 88,
+            "position_y_mobile": 42,
+            "info_bubbles_position_desktop": 45,
+            "info_bubbles_position_mobile": 45
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 55,
+            "position_y_desktop": 50,
+            "position_x_mobile": 20,
+            "position_y_mobile": 75,
+            "info_bubbles_position_desktop": 15,
+            "info_bubbles_position_mobile": 15
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

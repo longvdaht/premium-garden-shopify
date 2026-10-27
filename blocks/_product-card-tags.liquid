@@ -1,0 +1,19 @@
+{% liquid
+  assign product = closest.product
+-%}
+
+{% render 'product-card-tags', product: product, placement: 'block', shopify_attributes: block.shopify_attributes %}
+
+{% schema %}
+{
+  "name": "Tags",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Tags",
+      "category": "Product card"
+    }
+  ]
+}
+{% endschema %}

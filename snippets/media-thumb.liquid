@@ -1,0 +1,36 @@
+{%- doc -%}
+  /snippets/media-thumb.liquid
+  Returns a media thumbnail for a product slideshow
+
+  @param {object} media - The media object we will use (required)
+  @param {object} featured_media - The featured media object (required)
+
+  Thumbnails sit in the viewport on thumbnails-left/right. Load them eager with fetchpriority=auto so they do not
+  compete with the LCP gallery image.
+
+  @example
+  {% render 'media-thumb', media: media, featured_media: featured_media %}
+{%- enddoc -%}
+
+<swiper-slide
+  class="product__thumb{% if media == featured_media %} is-active{% endif %}"
+  data-thumb-item
+  data-media-id="{{ section.id }}-{{ media.id }}"
+>
+  <button
+    type="button"
+    class="product__thumb__link{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
+    aria-current="{% if media == featured_media %}true{% else %}false{% endif %}"
+    data-thumb-link
+  >
+    {%- liquid
+      render 'image', image: media.preview_image, width: 150, height: 150, sizes: '75px', widths: '75, 100, 150, 225, 300', aspect_ratio: 1, loading: 'eager', fetchpriority: 'auto'
+
+      if media.media_type == 'video' or media.media_type == 'external_video'
+        render 'icon', name: 'play'
+      elsif media.media_type == 'model'
+        render 'icon', name: 'cube'
+      endif
+    -%}
+  </button>
+</swiper-slide>

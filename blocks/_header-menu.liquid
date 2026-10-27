@@ -1,0 +1,120 @@
+{%- liquid
+  assign main_menu_linklist = block.settings.main_menu_linklist | default: 'main-menu'
+  assign highlight_item = block.settings.highlight_item
+  assign highlight_item_color = block.settings.highlight_item_color
+  assign animation_name = 'drawer-items-fade'
+  assign animation_delay = 0
+  assign animation_delay_increment = 50
+-%}
+
+{%- capture all_images -%}
+  {% content_for 'blocks' %}
+{%- endcapture -%}
+
+{%- capture highlight_style -%}
+  {%- if highlight_item_color != 'rgba(0,0,0,0)' and highlight_item_color != blank -%}
+    style="--highlight: {{ highlight_item_color }};"
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign end_marker = '</image-data>' -%}
+{%- assign drawer_items = '' -%}
+
+<nav class="header__menu{% if settings.type_nav_caps %} caps{% endif %}" {{ highlight_style }}>
+  {%- for link in linklists[main_menu_linklist].links -%}
+    {%- assign pos = forloop.index | append: '' -%}
+    {%- assign marker_w = 'data-meta-key="' | append: pos | append: ':W"' -%}
+    {%- assign marker_n = 'data-meta-key="' | append: pos | append: ':N"' -%}
+
+    {%- assign position_images = '' -%}
+    {%- assign image_count = 0 -%}
+    {%- assign image_wide_count = 0 -%}
+
+    {%- assign parts = all_images | split: marker_w -%}
+    {%- for part in parts -%}
+      {%- unless forloop.first -%}
+        {%- assign tag_tail = part | split: '>' | first | append: '>' -%}
+        {%- assign img_html = part | remove_first: tag_tail | split: end_marker | first -%}
+        {%- assign position_images = position_images | append: img_html -%}
+        {%- assign image_count = image_count | plus: 1 -%}
+        {%- assign image_wide_count = image_wide_count | plus: 1 -%}
+      {%- endunless -%}
+    {%- endfor -%}
+
+    {%- assign parts = all_images | split: marker_n -%}
+    {%- for part in parts -%}
+      {%- unless forloop.first -%}
+        {%- assign tag_tail = part | split: '>' | first | append: '>' -%}
+        {%- assign img_html = part | remove_first: tag_tail | split: end_marker | first -%}
+        {%- assign position_images = position_images | append: img_html -%}
+        {%- assign image_count = image_count | plus: 1 -%}
+      {%- endunless -%}
+    {%- endfor -%}
+
+    {%- render 'nav-item',
+      link: link,
+      index: forloop.index,
+      highlight_item: highlight_item,
+      images_html: position_images,
+      image_count: image_count,
+      image_wide_count: image_wide_count
+    -%}
+
+    {%- capture mobile_item -%}
+      {%- assign item_animation_delay = animation_delay_increment | times: forloop.index | plus: animation_delay -%}
+      {%- render 'nav-item-mobile',
+        link: link,
+        index: forloop.index,
+        forloop_index: forloop.index,
+        highlight_item: highlight_item,
+        animation_delay: item_animation_delay,
+        images_html: position_images,
+        image_count: image_count,
+        unique: 'mobile-menu--desktop'
+      -%}
+    {%- endcapture -%}
+    {%- assign drawer_items = drawer_items | append: mobile_item -%}
+  {%- endfor -%}
+
+  <div class="hover__bar"></div>
+  <div class="hover__bg"></div>
+</nav>
+
+<menu-data data-meta-drawer-nav style="display:none">
+  <div {{ highlight_style }}>{{ drawer_items }}</div>
+</menu-data>
+
+{% schema %}
+{
+  "name": "Menu",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "label": "Main menu",
+      "id": "main_menu_linklist"
+    },
+    {
+      "type": "header",
+      "content": "Highlight link"
+    },
+    {
+      "type": "text",
+      "id": "highlight_item",
+      "label": "Menu item",
+      "default": "Sale"
+    },
+    {
+      "type": "color",
+      "id": "highlight_item_color",
+      "label": "Color",
+      "default": "#D02E2E"
+    }
+  ],
+  "blocks": [{"type": "_header-image"}]
+}
+{% endschema %}

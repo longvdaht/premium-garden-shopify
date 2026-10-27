@@ -1,0 +1,160 @@
+{%- liquid
+  assign width_class = 'menu__block--narrow'
+  assign aspect_ratio = 1 | divided_by: block.settings.aspect_ratio
+  assign text_color = block.settings.text_color
+  assign image = block.settings.image
+  assign link = block.settings.link
+  assign sizes = '(min-width: 990px) 25vw, (min-width: 380px) 350px, calc(100vw - 30px)'
+
+  if block.settings.wide_image
+    assign width_class = 'menu__block--wide'
+  endif
+-%}
+
+<image-data
+  data-meta-key="{{ block.settings.position }}:{% if block.settings.wide_image %}W{% else %}N{% endif %}"
+  style="display:contents"
+>
+  <div
+    class="menu__block {{ width_class }}"
+    {{ block.shopify_attributes }}
+  >
+    <div
+      class="header__dropdown__image"
+      {% unless text_color == 'rgba(0,0,0,0)' or text_color == blank %}
+        style="--text: {{ text_color }};"
+      {% endunless %}
+      data-stagger-first
+    >
+      {%- if link != blank -%}
+        <a href="{{ link }}" class="link-over-image">
+      {%- else -%}
+        <div class="link-over-image">
+      {%- endif -%}
+
+      <div class="hero__content__wrapper align--bottom-left">
+        <div class="hero__content hero__content--transparent backdrop--radial">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+
+      {%- if link != blank -%}
+        </a>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+
+      <div
+        class="image-overlay"
+        style="--OVERLAY-BG: {{ block.settings.overlay_color }}; --overlay-opacity: {{ block.settings.overlay_opacity | times: 0.01 }};"
+      ></div>
+
+      {%- render 'image', image: image, aspect_ratio: aspect_ratio, sizes: sizes, loading: 'lazy' -%}
+    </div>
+  </div>
+</image-data>
+
+{% schema %}
+{
+  "name": "Menu image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Link position in main menu",
+      "default": "1",
+      "options": [
+        {"value": "1", "label": "Item 1"},
+        {"value": "2", "label": "Item 2"},
+        {"value": "3", "label": "Item 3"},
+        {"value": "4", "label": "Item 4"},
+        {"value": "5", "label": "Item 5"},
+        {"value": "6", "label": "Item 6"},
+        {"value": "7", "label": "Item 7"},
+        {"value": "8", "label": "Item 8"},
+        {"value": "9", "label": "Item 9"},
+        {"value": "10", "label": "Item 10"}
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1400 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio",
+      "min": 0.5,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": ":1",
+      "label": "Image scaling ratio",
+      "info": "Wide to tall",
+      "default": 0.5
+    },
+    {
+      "type": "checkbox",
+      "id": "wide_image",
+      "label": "Wide image",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "info": "Increase contrast for legible text.",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "paragraph",
+      "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    }
+  ],
+  "blocks": [{"type": "heading"}, {"type": "subheading"}, {"type": "text"}],
+  "presets": [
+    {
+      "name": "Menu image",
+      "blocks": [
+        {
+          "type": "heading",
+          "settings": {
+            "text": "Heading",
+            "heading_font_size": "heading-medium",
+            "padding_bottom": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

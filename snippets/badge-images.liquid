@@ -1,0 +1,61 @@
+{%- doc -%}
+  Renders the image badges of a product, read from the list of files metafield `theme.badge_images`.
+  Only image files are rendered; a badge without its own alt text is decorative. Outputs nothing when "Show image badge" is off in Theme settings > Badges
+  or the product has no image badges.
+
+  @param {product} product - Product whose image badges to render
+  @param {string} [modifier] - Extra classes on the wrapper, e.g. 'badge-images--gallery'
+  @param {string} [sizes] - Sizes attribute of the badge images. Defaults to '120px'
+  @param {string} [attributes] - Extra attributes on the wrapper, e.g. block.shopify_attributes
+  @param {string} [loading] - "eager" or "lazy". When omitted the image snippet decides from the section position
+  @param {number} [aos_delay] - Animation delay of the badges, in ms
+  @param {string} [aos_anchor] - Animation anchor of the badges
+
+  @example
+  {% render 'badge-images', product: product, modifier: 'badge-images--gallery' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign badge_images = product.metafields.theme.badge_images
+  assign sizes = sizes | default: '120px'
+-%}
+
+{%- if settings.show_image_badge and badge_images.type == 'list.file_reference' -%}
+  {%- capture badge_images_content -%}
+    {%- for file in badge_images.value -%}
+      {%- if file.media_type == 'image' -%}
+        {%- liquid
+          # Badges without their own alt text are decorative, so screen readers skip them
+          assign badge_decorative = false
+          if file.alt == blank
+            assign badge_decorative = true
+          endif
+        -%}
+        <div class="badge-image">
+          {%- render 'image',
+            image: file,
+            decorative: badge_decorative,
+            sizes: sizes,
+            loading: loading,
+            widths: '60, 120, 180, 240, 360',
+            show_backfill: false
+          -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if badge_images_content != blank -%}
+    <div
+      class="badge-images {{ settings.image_badge_alignment }}{% if modifier %} {{ modifier }}{% endif %}"
+      {% if aos_anchor %}
+        data-aos="fade"
+        data-aos-delay="{{ aos_delay | default: 0 }}"
+        data-aos-anchor="{{ aos_anchor }}"
+      {% endif %}
+      {{ attributes }}
+    >
+      {{ badge_images_content }}
+    </div>
+  {%- endif -%}
+{%- endif -%}

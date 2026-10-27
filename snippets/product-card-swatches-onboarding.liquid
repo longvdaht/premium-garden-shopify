@@ -1,0 +1,122 @@
+{%- liquid
+  assign index = index | default: 1
+  assign block_index = block_index | default: 1
+  assign block_id_index = block.id | split: '-' | last | plus: 0 | default: 0
+  assign product_card_index = block_id_index
+  if block.id == blank
+    assign product_card_index = index | plus: 0 | default: 0
+  endif
+
+  # Generate onboarding swatches with predefined colors
+  assign onboarding_colors = 'White,Silver,Grey,Dark Grey,Charcoal,Black' | split: ','
+  assign total_values = onboarding_colors.size
+  assign limited_count = 5
+  assign swatches_left = total_values | minus: limited_count
+  assign count_text = 'collections.general.colors_with_count.other' | t
+  if total_values == 1
+    assign count_text = 'collections.general.colors_with_count.one' | t
+  endif
+-%}
+
+{%- capture swatches_count_markup -%}
+  <span class="product-card__swatches__count">
+    <span>
+      {{ total_values }}
+      {{ count_text }}
+    </span>
+  </span>
+{%- endcapture -%}
+
+{%- if settings.enable_swatches and settings.show_grid_swatches -%}
+  <div
+    class="product-card__swatches__holder product-card__swatches__holder--{{ settings.swatch_style }} product-card__swatches__holder--{{ settings.collection_swatch_style }} product-card__swatches__holder--onboarding"
+    {{ shopify_attributes }}
+  >
+    {%- if settings.collection_swatch_style == 'text-slider' or settings.collection_swatch_style == 'text' -%}
+      {{- swatches_count_markup -}}
+    {%- endif -%}
+
+    <native-scrollbar class="radio__fieldset radio__fieldset--swatches radio__fieldset--pgi is-visible">
+      <div class="selector-wrapper__scrollbar" data-scrollbar>
+        {%- for color in onboarding_colors -%}
+          {%- liquid
+            assign color_handle = color | handle
+            assign swatch_value = color_handle
+
+            case color_handle
+              when 'white'
+                assign swatch_value = '#ffffff'
+              when 'silver'
+                assign swatch_value = '#d9d9d9'
+              when 'grey'
+                assign swatch_value = '#888888'
+              when 'dark-grey'
+                assign swatch_value = '#5e5e5e'
+              when 'charcoal'
+                assign swatch_value = '#383838'
+              when 'black'
+                assign swatch_value = '#000000'
+            endcase
+
+            capture swatch_style
+              echo '--swatch: ' | append: swatch_value | append: ';'
+            endcapture
+
+            assign unique_id = unique_id | default: section.id
+            assign unique = unique_id | append: '-' | append: product_card_index | append: '-' | append: block_index
+            assign input_id = unique | append: '-swatch-' | append: forloop.index
+          -%}
+
+          {%- unless settings.collection_swatch_style == 'limited' and forloop.index > limited_count -%}
+            <tooltip-component
+              data-tooltip="{{ color | escape | capitalize }}"
+              class="swatches swatch__button swatch__button--{{ settings.swatch_style }} swatch-{{ color_handle }}"
+              style="{{ swatch_style }}"
+            >
+              <input
+                type="radio"
+                name="onboarding[Color]-{{ unique }}"
+                value="{{ color }}"
+                id="{{ input_id }}"
+                data-variant-id="{{ variant_for_value.id }}"
+                {% if color == onboarding_colors[0] %}
+                  checked
+                {% endif %}
+              >
+              <label for="{{ input_id }}" data-swatch="{{ color }}">
+                <span class="visually-hidden">{{ color }}</span>
+              </label>
+            </tooltip-component>
+          {%- endunless -%}
+        {%- endfor -%}
+
+        {%- if settings.collection_swatch_style == 'limited' and swatches_left > 0 -%}
+          <div class="swatch-limited">+{{ swatches_left }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if settings.collection_swatch_style == 'text-slider' or settings.collection_swatch_style == 'slider' -%}
+        <div class="selector-wrapper__actions">
+          <button
+            type="button"
+            class="radio__fieldset__arrow radio__fieldset__arrow--prev"
+            disabled
+            data-scrollbar-arrow-prev
+          >
+            {%- render 'icon', name: 'caret-left' -%}
+            <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+          </button>
+          <button
+            type="button"
+            class="radio__fieldset__arrow radio__fieldset__arrow--next"
+            disabled
+            data-scrollbar-arrow-next
+          >
+            {% render 'icon', name: 'caret-right' %}
+            <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+          </button>
+        </div>
+      {%- endif -%}
+    </native-scrollbar>
+  </div>
+{%- endif -%}

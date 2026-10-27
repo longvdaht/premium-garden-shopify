@@ -1,0 +1,71 @@
+[class^=junip-] {
+  --junipPrimaryColor: var(--btn-primary-bg);
+  --junipButtonColor: var(--btn-primary-bg);
+  --junipButtonOutlineColor: var(--btn-primary-bg-lighter);
+  --junipStarColor: var(--COLOR-SALE-BG);
+  --junipButtonTextColor: var(--btn-primary-text);
+  --junipBorderColor: var(--COLOR-BORDER);
+  --junipSurfaceColor: var(--COLOR-BG-ACCENT);
+}
+[class^=junip-] .junip-btn {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  padding: var(--btn-top) var(--btn-left);
+  border: var(--btn-border-width, 1px) solid var(--btn-border);
+  border-radius: var(--RADIUS-BUTTON);
+  font-family: var(--FONT-STACK-BTN);
+  font-size: var(--BTN-FONT-SIZE);
+  line-height: var(--line-height-normal);
+  color: var(--btn-text);
+  font-style: var(--FONT-STYLE-BTN);
+  font-weight: var(--FONT-WEIGHT-BTN);
+  letter-spacing: var(--BTN-LETTER-SPACING);
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: var(--BTN-UPPERCASE);
+  transition: 0.25s ease-out;
+  transition-property: color, background, border;
+  backface-visibility: hidden;
+  background-color: var(--btn-bg);
+  --btn-border: var(--BTN-PRIMARY-BG);
+  --btn-bg: var(--BTN-PRIMARY-BG);
+  --btn-text: var(--BTN-PRIMARY-TEXT);
+  --btn-border-hover: var(--BTN-PRIMARY-BG-BRIGHTER);
+  --btn-bg-hover: var(--BTN-PRIMARY-BG-BRIGHTER);
+  --btn-text-hover: var(--BTN-PRIMARY-TEXT);
+  overflow: hidden;
+  z-index: 1;
+}
+[class^=junip-] .junip-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60px;
+  z-index: -1;
+  width: calc(100% + 120px);
+  height: 100%;
+  background-color: var(--btn-bg-hover);
+  opacity: 1;
+  transform: translate3d(-100%, 0, 0) skew(30deg);
+  transition: transform 0.5s cubic-bezier(0.33, 0, 0, 1);
+}
+@media (hover: hover) {
+  [class^=junip-] .junip-btn:hover::after {
+    transform: translateZ(0);
+  }
+}
+[class^=junip-] .junip-chevron-left,
+[class^=junip-] .junip-chevron-right {
+  --icon-size: 24px;
+  display: inline-block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.1752 14.6667C5.02549 14.6667 4.8758 14.6078 4.7664 14.49C4.54184 14.2605 4.5476 13.8836 4.77215 13.6599L10.1442 8.25541C10.2132 8.19059 10.2478 8.09642 10.2478 8.00226C10.2478 7.90799 10.2132 7.81383 10.1442 7.7491L4.77215 2.33862C4.5476 2.10902 4.54184 1.73812 4.7664 1.50851C4.99095 1.27891 5.35369 1.27302 5.57824 1.50262L10.9502 6.90717C11.2382 7.19561 11.3993 7.58426 11.3993 8.00226C11.3993 8.4143 11.2382 8.80286 10.9502 9.09725L5.57824 14.4959C5.46884 14.6078 5.31915 14.6667 5.1752 14.6667Z' fill='%23222222'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

@@ -1,0 +1,68 @@
+.product-social-videos {
+  --social-video-gap: 12px;
+  --social-videos-per-view: 3;
+  display: block;
+}
+.product-social-videos dialog[open] {
+  cursor: pointer;
+}
+.product-social-videos .modal__body {
+  cursor: default;
+}
+.product-social-videos .swiper {
+  position: relative;
+  container-type: inline-size;
+}
+.product-social-videos .swiper-button-disabled {
+  opacity: 0;
+}
+
+.product-social-videos__heading {
+  margin: 0 0 12px;
+}
+
+.product-social-videos__item {
+  width: calc((100% - var(--social-video-gap) * (var(--social-videos-per-view) + 1)) / var(--social-videos-per-view));
+}
+
+@container (min-width: 420px) {
+  .product-social-videos__item {
+    --social-videos-per-view: 4;
+  }
+}
+@container (min-width: 522px) {
+  .product-social-videos__item {
+    --social-videos-per-view: 5;
+  }
+}
+.product-social-videos__card {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--RADIUS);
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) {
+  .product-social-videos__card:hover {
+    opacity: 0.85;
+  }
+}
+.product-social-videos__video {
+  opacity: 0;
+}
+
+.product-social-videos__card.is-playing .product-social-videos__video {
+  opacity: 1;
+}
+
+@media only screen and (min-width: 750px) {
+  .product-social-videos .social-video__modal--video-only .modal__body {
+    width: min(680px, (90vh - var(--inner) * 2) * var(--video-aspect-ratio) + var(--inner) * 2);
+  }
+}

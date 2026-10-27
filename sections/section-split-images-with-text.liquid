@@ -1,0 +1,500 @@
+<!-- /sections/section-split-images-with-text.liquid -->
+{%- liquid
+  assign unique = 'SplitImagesWithText--' | append: section.id
+  assign show_gutters = section.settings.gutters
+  assign section_width = section.settings.width
+  assign layout_mobile = section.settings.layout_mobile
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign padding_top = section.settings.padding_top | default: 0
+  assign padding_bottom = section.settings.padding_bottom | default: 0
+  assign show_placeholder = section.settings.show_placeholder
+
+  comment
+    Theme blocks report "@theme" for block.type, so section.blocks cannot be filtered by type.
+    Each Image block wraps its output in <!--split-image--> markers instead. The section only
+    lays out two columns, so keep the first two and drop the rest; other blocks (shape
+    dividers) pass through untouched.
+  endcomment
+  capture rendered_blocks
+    content_for 'blocks'
+  endcapture
+
+  assign split_image_block_count = 0
+  assign visible_block_count = 0
+  assign content_blocks = ''
+  assign chunks = rendered_blocks | split: '<!--split-image-->'
+
+  for chunk in chunks
+    if forloop.first
+      assign content_blocks = content_blocks | append: chunk
+      continue
+    endif
+
+    assign pieces = chunk | split: '<!--/split-image-->'
+
+    if split_image_block_count < 2
+      assign split_image_block_count = split_image_block_count | plus: 1
+      assign content_blocks = content_blocks | append: pieces.first
+      unless pieces.first contains 'brick__block--hidden'
+        assign visible_block_count = visible_block_count | plus: 1
+      endunless
+    endif
+
+    if pieces.size > 1
+      assign content_blocks = content_blocks | append: pieces.last
+    endif
+  endfor
+
+  # Rendering conditions
+  assign render_section = false
+  if split_image_block_count > 0 or show_placeholder or request.design_mode
+    assign render_section = true
+  endif
+
+  if request.design_mode == false and split_image_block_count > 0 and visible_block_count == 0
+    assign render_section = false
+  endif
+
+  assign enable_slider_mobile = false
+  if layout_mobile == 'slider'
+    assign enable_slider_mobile = true
+  endif
+
+  capture image_sizes
+    if split_image_block_count > 1
+      if section_width == 'wrapper--full'
+        echo '(min-width: 750px) 50vw, 100vw'
+      elsif section_width == 'wrapper--full-padded'
+        echo '(min-width: 990px) calc((100vw - 100px) / 2), (min-width: 750px) calc((100vw - 60px) / 2), calc(100vw - 32px)'
+      else
+        echo '(min-width: 990px) calc(1100px / 2), (min-width: 750px) calc((100vw - 60px) / 2), calc(100vw - 32px)'
+      endif
+    else
+      if section_width == 'wrapper--full'
+        echo '100vw'
+      elsif section_width == 'wrapper--full-padded'
+        echo '(min-width: 990px) calc(100vw - 100px), (min-width: 750px) calc(100vw - 60px), calc(100vw - 32px)'
+      else
+        echo '(min-width: 990px) 1100px, (min-width: 750px) calc(100vw - 60px), calc(100vw - 32px)'
+      endif
+    endif
+  endcapture
+-%}
+
+{%- style -%}
+  #{{ unique }} {
+    --PT: {{ padding_top }}px;
+    --PB: {{ padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{%- render 'stylesheet', name: 'split-images.css' -%}
+
+<div
+  class="index-hero index-hero--split-images-with-text section-padding {{ color_scheme }}"
+  id="{{ unique }}"
+  data-section-id="{{ section.id }}"
+  data-overlay-header
+  data-shape-divider-root
+>
+  {%- if render_section -%}
+    <div
+      class="brick__section{% if enable_slider_mobile %} brick__section--mobile-slider{% endif %}{% if show_gutters %} has-gap{% endif %} {{ section_width }}"
+      {% if request.design_mode %}
+        data-block-scroll
+      {% endif %}
+    >
+      {%- liquid
+        assign promote_homepage_h1 = false
+        if template.name == 'index' and section.location == 'template' and section.index == 1
+          assign promote_homepage_h1 = true
+        endif
+      -%}
+
+      {%- render 'heading-auto-promote', content_blocks: content_blocks, promote: promote_homepage_h1 -%}
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "Split images with text",
+  "class": "section-overlay-header section-floating",
+  "blocks": [
+    {
+      "type": "_split-image-with-text"
+    },
+    {
+      "type": "shape-divider"
+    }
+  ],
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "gutters",
+      "label": "Enable gutters",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full",
+      "options": [
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "screen-height-three-quarters",
+      "options": [
+        {
+          "value": "image-height",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero ",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "flex_align_desktop",
+      "label": "Desktop alignment",
+      "default": "align--middle-center-desktop",
+      "options": [
+        {
+          "value": "align--top-left-desktop",
+          "label": "Top left"
+        },
+        {
+          "value": "align--top-center-desktop",
+          "label": "Top center"
+        },
+        {
+          "value": "align--top-right-desktop",
+          "label": "Top right"
+        },
+        {
+          "value": "align--middle-left-desktop",
+          "label": "Middle left"
+        },
+        {
+          "value": "align--middle-center-desktop",
+          "label": "Absolute center"
+        },
+        {
+          "value": "align--middle-right-desktop",
+          "label": "Middle right"
+        },
+        {
+          "value": "align--bottom-left-desktop",
+          "label": "Bottom left"
+        },
+        {
+          "value": "align--bottom-center-desktop",
+          "label": "Bottom center"
+        },
+        {
+          "value": "align--bottom-right-desktop",
+          "label": "Bottom right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Height",
+      "default": "screen-height-three-quarters--mobile",
+      "options": [
+        {
+          "value": "image-height--mobile",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full--mobile",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters--mobile",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds--mobile",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half--mobile",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third--mobile",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero--mobile",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero--mobile",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero--mobile",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero--mobile",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "flex_align_mobile",
+      "label": "Mobile alignment",
+      "default": "align--middle-center-mobile",
+      "options": [
+        {
+          "value": "align--top-left-mobile",
+          "label": "Top left"
+        },
+        {
+          "value": "align--top-center-mobile",
+          "label": "Top center"
+        },
+        {
+          "value": "align--top-right-mobile",
+          "label": "Top right"
+        },
+        {
+          "value": "align--middle-left-mobile",
+          "label": "Middle left"
+        },
+        {
+          "value": "align--middle-center-mobile",
+          "label": "Absolute center"
+        },
+        {
+          "value": "align--middle-right-mobile",
+          "label": "Middle right"
+        },
+        {
+          "value": "align--bottom-left-mobile",
+          "label": "Bottom left"
+        },
+        {
+          "value": "align--bottom-center-mobile",
+          "label": "Bottom center"
+        },
+        {
+          "value": "align--bottom-right-mobile",
+          "label": "Bottom right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_background",
+      "label": "Show text background",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "info": "Increase contrast for legible text.",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay_text",
+      "label": "Overlay behind text only",
+      "default": false,
+      "info": "Overlay opacity must be greater than 0."
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder",
+      "label": "Show placeholder image",
+      "info": "Disable if using a metafield",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split images with text",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "_split-image-with-text",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Image with text"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>Tell your brand's story through images.</p>"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "text": "Shop now"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_split-image-with-text",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "text": "Image with text"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>Tell your brand's story through images.</p>"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "text": "Shop now"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

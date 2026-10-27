@@ -1,0 +1,11 @@
+{% comment %}
+  {%- render 'product-card', product: product -%}
+{% endcomment %}
+
+<div data-api-content>
+  {%- render 'product-card',
+    product: product,
+    aos_delay: '||itemAnimationDelay||',
+    aos_anchor: '||itemAnimationAnchor||'
+  -%}
+</div>

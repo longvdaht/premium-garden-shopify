@@ -1,0 +1,163 @@
+{% comment %}
+  Renders a Featured image block on Collection pages
+
+  Accepts:
+  - block: {Object} The block object (optional, for backward compatibility)
+  - promo_metaobject: {Object} The promo metaobject (optional, new method)
+  - index: {Number} Index for unique ID when using metaobjects
+
+  Usage:
+  {% render 'collection-featured-image', block: block %}
+  OR
+  {% render 'collection-featured-image', promo_metaobject: promo_metaobject, index: forloop.index %}
+{% endcomment %}
+
+{%- liquid
+  # Support both block and metaobject
+  if promo_metaobject
+    assign featured_video = promo_metaobject.video.value
+    assign featured_image = promo_metaobject.image.value
+    assign featured_header = promo_metaobject.heading.value
+    assign featured_text = promo_metaobject.text.value
+    assign featured_button_text = promo_metaobject.button_text.value | default: promo_metaobject.button_link.value.text
+    assign featured_button_link = promo_metaobject.button_link.value.url
+    assign featured_color_text = promo_metaobject.color_text.value
+    assign featured_color_overlay = promo_metaobject.overlay_color.value
+    assign featured_overlay_opacity = promo_metaobject.overlay_opacity.value | times: 0.01
+    assign align_with_image = promo_metaobject.align_with_product_images.value
+    assign heading_font_size = promo_metaobject.heading_size.value
+    assign heading_tag = promo_metaobject.heading_tag.value
+    assign button_type = promo_metaobject.button_type.value | default: 'btn--primary'
+    assign button_size = promo_metaobject.button_size.value
+    assign button_style = promo_metaobject.button_style.value
+    assign show_arrow = promo_metaobject.show_arrow.value
+    assign unique_id = 'promo-' | append: index
+  else
+    assign featured_video = block.settings.featured_video
+    assign featured_image = block.settings.featured_image
+    assign featured_header = block.settings.featured_heading
+    assign featured_text = block.settings.featured_text
+    assign featured_button_text = block.settings.featured_button_text
+    assign featured_button_link = block.settings.featured_button_link
+    assign featured_color_text = block.settings.featured_color_text
+    assign featured_color_overlay = block.settings.featured_color_overlay
+    assign featured_overlay_opacity = block.settings.featured_overlay_opacity | times: 0.01
+    assign align_with_image = block.settings.align_with_product_images
+    assign heading_font_size = block.settings.heading_font_size
+    assign heading_tag = block.settings.heading_tag
+    assign button_type = block.settings.button_type
+    assign button_size = block.settings.button_size
+    assign button_style = block.settings.button_style
+    assign show_arrow = block.settings.show_arrow
+    assign unique_id = block.id
+  endif
+
+  if button_style == 'btn--text' and show_arrow
+    assign button_style = button_style | append: ' btn--text-no-underline'
+  endif
+-%}
+
+{%- capture style -%}
+  {%- unless featured_color_text == 'rgba(0,0,0,0)' or featured_color_text == blank -%}
+    --text: {{ featured_color_text }};
+  {%- endunless -%}
+  --overlay-opacity: {{ featured_overlay_opacity }};
+  --OVERLAY-BG: {{ featured_color_overlay }};
+{%- endcapture -%}
+
+<div
+  class="grid-item product-card product-card--featured-image{% if align_with_image %} product-card--aligned{% endif %}"
+  id="product-card--{{ unique_id }}"
+  style="{{ style }}"
+  {% if block %}
+    {{- block.shopify_attributes -}}
+  {% endif %}
+>
+  {%- capture featured_image_content -%}
+    <div class="product-card__image-overlay">
+      <div class="product-card__image-content">
+        {%- if featured_header != blank -%}
+          {%- liquid
+            assign heading_tag_value = 'h2'
+
+            unless heading_tag == 'automatic' or heading_tag == blank
+              assign heading_tag_value = heading_tag
+            endunless
+          -%}
+          <{{ heading_tag_value }} class="{{ heading_font_size }}">{{ featured_header }}</{{ heading_tag_value }}>
+        {%- endif -%}
+
+        {%- if featured_text != blank -%}
+          {{ featured_text }}
+        {%- endif -%}
+
+        {%- if featured_button_text != blank -%}
+          <a href="{{ featured_button_link }}" class="btn {{ button_style }} {{ button_size }} {{ button_type }}">
+            <span>{{ featured_button_text }}</span>
+
+            {%- if show_arrow -%}
+              {%- render 'icon', name: 'caret-right' -%}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if featured_button_text == blank -%}
+        <a href="{{ featured_button_link }}" class="product-card__image-link" aria-label="{{ featured_image.alt | default: featured_header | default: featured_text | strip_html | escape }}"></a>
+      {%- endif -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- if featured_image != blank -%}
+    <div class="product-card__image{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}">
+      <div
+        class="product-card__bg"
+        data-aos="img-in"
+        data-aos-anchor="{{ animation_anchor }}"
+        data-aos-delay="{{ animation_delay | times: 150 }}"
+      >
+        {%- render 'image', image: featured_image, sizes: image_sizes, cover: true -%}
+      </div>
+
+      {{ featured_image_content }}
+    </div>
+  {%- elsif featured_video != blank -%}
+    <div class="product-card__image{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}">
+      <div
+        class="product-card__bg"
+        data-aos="img-in"
+        data-aos-anchor="{{ animation_anchor }}"
+        data-aos-delay="{{ animation_delay | times: 150 }}"
+      >
+        <div class="video__poster">
+          {%- render 'image-hero', image_desktop: featured_video.preview_image -%}
+        </div>
+
+        <script src="{{ 'video-background.js' | asset_url }}" defer="defer"></script>
+
+        <video-background
+          class="video__player is-loading"
+          data-video-player
+          data-video-id="{{ section.id }}-video-background-{{ unique_id }}"
+        >
+          <template data-video-template>
+            {{
+              featured_video
+              | video_tag: autoplay: true, image_size: '1085x', loop: true, muted: true, controls: false
+            }}
+          </template>
+        </video-background>
+      </div>
+
+      {{ featured_image_content }}
+    </div>
+  {%- else -%}
+    <div class="product-card__image{% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}">
+      <div class="svg-placeholder">
+        {{ 'collection-1' | placeholder_svg_tag }}
+      </div>
+
+      {{ featured_image_content }}
+    </div>
+  {%- endif -%}
+</div>

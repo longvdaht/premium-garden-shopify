@@ -1,0 +1,54 @@
+{%- doc -%}
+  Renders a reviews block for Cart page and Cart drawer
+
+  @param {object} block - Block object (required)
+
+  @example
+  {% render 'cart-block-reviews', block: block %}
+{%- enddoc -%}
+
+{%- liquid
+  assign style = block.settings.style | default: 'inline'
+  assign stars = block.settings.stars | default: 5
+  assign text = block.settings.text | default: ''
+  assign alignment = block.settings.alignment | default: 'align--middle-center'
+
+  capture block_classes
+    echo 'cart-reviews flex'
+    if style == 'inline'
+      echo ' cart-reviews--inline'
+    else
+      echo ' cart-reviews--stacked'
+    endif
+    echo ' '
+    echo alignment
+  endcapture
+-%}
+
+<div
+  class="{{ block_classes }}"
+>
+  <div class="cart-reviews__stars">
+    {%- liquid
+      assign full_star = true
+
+      for idx in (1..5)
+        if full_star
+          render 'icon', name: 'star-full'
+        else
+          render 'icon', name: 'star'
+        endif
+
+        if idx == stars
+          assign full_star = false
+        endif
+      endfor
+    -%}
+  </div>
+
+  {%- if text != blank -%}
+    <p class="cart-reviews__text subheading">
+      {{- text -}}
+    </p>
+  {%- endif -%}
+</div>

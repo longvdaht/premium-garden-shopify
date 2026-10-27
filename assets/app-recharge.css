@@ -1,0 +1,237 @@
+.recharge-gifting-widget {
+  margin-bottom: var(--SPACING-MEDIUM);
+}
+.recharge-gifting-widget .field__label {
+  position: absolute !important;
+  overflow: hidden;
+  clip-path: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+.recharge-gifting-widget input:not([type=checkbox]):not([type=radio]),
+.recharge-gifting-widget textarea,
+.recharge-gifting-widget select {
+  font-family: var(--FONT-STACK-BODY);
+  font-style: var(--FONT-STYLE-BODY);
+  font-weight: var(--FONT-WEIGHT-BODY);
+  letter-spacing: var(--LETTER-SPACING-BODY);
+  border: none;
+  font-size: var(--FONT-SIZE-BASE);
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  background: var(--TRANSPARENT);
+  -moz-appearance: none;
+       appearance: none;
+  width: 100%;
+  display: block;
+}
+.recharge-gifting-widget input:not([type=checkbox]):not([type=radio])[disabled],
+.recharge-gifting-widget textarea[disabled],
+.recharge-gifting-widget select[disabled] {
+  cursor: default;
+}
+.recharge-gifting-widget input:not([type=checkbox]):not([type=radio]):-webkit-autofill, .recharge-gifting-widget input:not([type=checkbox]):not([type=radio]):-webkit-autofill:hover, .recharge-gifting-widget input:not([type=checkbox]):not([type=radio]):-webkit-autofill:focus, .recharge-gifting-widget input:not([type=checkbox]):not([type=radio]):-webkit-autofill:active,
+.recharge-gifting-widget textarea:-webkit-autofill,
+.recharge-gifting-widget textarea:-webkit-autofill:hover,
+.recharge-gifting-widget textarea:-webkit-autofill:focus,
+.recharge-gifting-widget textarea:-webkit-autofill:active,
+.recharge-gifting-widget select:-webkit-autofill,
+.recharge-gifting-widget select:-webkit-autofill:hover,
+.recharge-gifting-widget select:-webkit-autofill:focus,
+.recharge-gifting-widget select:-webkit-autofill:active {
+  -webkit-transition: background-color 5000s ease-in-out 0s, border-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s, border-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--text-dark) !important;
+}
+.recharge-gifting-widget input:not([type=checkbox]):not([type=radio]).input-error,
+.recharge-gifting-widget textarea.input-error,
+.recharge-gifting-widget select.input-error {
+  border-color: var(--COLOR-ERROR-BORDER);
+  background-color: var(--COLOR-ERROR-BG);
+  color: var(--COLOR-ERROR);
+}
+.recharge-gifting-widget textarea {
+  min-height: 100px;
+  min-width: 100%;
+}
+.recharge-gifting-widget select {
+  -moz-appearance: none;
+  appearance: none;
+  background-image: var(--ICON-SELECT);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-color: transparent;
+  background-size: 18px auto;
+  padding-right: 28px;
+  text-indent: 0.01px;
+  text-overflow: unset;
+  cursor: pointer;
+}
+.recharge-gifting-widget select::-ms-expand {
+  display: none;
+}
+.recharge-gifting-widget .field {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  position: relative;
+}
+.recharge-gifting-widget .field label {
+  font-size: var(--font-body-x-small);
+  font-weight: var(--FONT-WEIGHT-BODY-BOLD);
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.recharge-gifting-widget .field input.field,
+.recharge-gifting-widget .field textarea.field {
+  --border: var(--text-a35, var(--text));
+  display: block;
+  width: 100%;
+  border: 0;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--text);
+  margin: 0;
+  background: transparent;
+}
+.recharge-gifting-widget .field input.field:focus,
+.recharge-gifting-widget .field textarea.field:focus {
+  border: 0;
+  border-bottom: var(--BORDER-THICKNESS) solid var(--border);
+  outline: none;
+}
+.recharge-gifting-widget .field input.field::placeholder, .recharge-gifting-widget .field input.field:-webkit-autofill, .recharge-gifting-widget .field input.field:-webkit-autofill:hover, .recharge-gifting-widget .field input.field:-webkit-autofill:focus, .recharge-gifting-widget .field input.field:-webkit-autofill:active,
+.recharge-gifting-widget .field textarea.field::placeholder,
+.recharge-gifting-widget .field textarea.field:-webkit-autofill,
+.recharge-gifting-widget .field textarea.field:-webkit-autofill:hover,
+.recharge-gifting-widget .field textarea.field:-webkit-autofill:focus,
+.recharge-gifting-widget .field textarea.field:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text-a80);
+}
+.recharge-gifting-widget input[type=checkbox] {
+  margin: 4px 3px 4px 0;
+  -moz-appearance: checkbox;
+       appearance: checkbox;
+}
+.recharge-gifting-widget .checkbox {
+  position: relative;
+}
+.recharge-gifting-widget .checkbox input[type=checkbox] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+}
+.recharge-gifting-widget .checkbox input[type=checkbox] + label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.recharge-gifting-widget .checkbox input[type=checkbox] + label::before {
+  content: "";
+  align-self: flex-start;
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  border: var(--BORDER-THICKNESS) solid var(--text-light);
+  margin-right: 10px;
+}
+.recharge-gifting-widget .checkbox input[type=checkbox]:checked + label::before {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--COLOR-BG);
+}
+.recharge-gifting-widget input[type=radio] {
+  margin: 11px 3px 4px 0;
+  -moz-appearance: radio;
+       appearance: radio;
+}
+.recharge-gifting-widget button,
+.recharge-gifting-widget .btn,
+.recharge-gifting-widget input[type=submit],
+.recharge-gifting-widget input[type=button] {
+  -moz-user-select: none;
+  user-select: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  padding: var(--btn-top) var(--btn-left);
+  border: var(--btn-border-width, 1px) solid var(--btn-border);
+  border-radius: var(--RADIUS-BUTTON);
+  font-family: var(--FONT-STACK-BTN);
+  font-size: var(--BTN-FONT-SIZE);
+  line-height: var(--line-height-normal);
+  color: var(--btn-text);
+  font-style: var(--FONT-STYLE-BTN);
+  font-weight: var(--FONT-WEIGHT-BTN);
+  letter-spacing: var(--BTN-LETTER-SPACING);
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: var(--BTN-UPPERCASE);
+  transition: 0.25s ease-out;
+  transition-property: color, background, border;
+  backface-visibility: hidden;
+  background-color: var(--btn-bg);
+  --icons: var(--btn-text);
+}
+.recharge-gifting-widget .errors,
+.recharge-gifting-widget .form-errors {
+  padding: var(--inner);
+  margin-bottom: 10px;
+  border: 1px solid var(--COLOR-ERROR-BORDER);
+  border-radius: var(--RADIUS-SELECT);
+  background-color: var(--COLOR-ERROR-BG);
+  color: var(--COLOR-ERROR);
+}
+.recharge-gifting-widget .errors ul,
+.recharge-gifting-widget .form-errors ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+.recharge-gifting-widget .errors li:last-child,
+.recharge-gifting-widget .form-errors li:last-child {
+  margin-bottom: 0;
+}
+.recharge-gifting-widget .form-success {
+  border: var(--BORDER-THICKNESS) solid var(--border);
+  border-radius: var(--RADIUS-SELECT);
+  margin: 0 0 1.875rem 0;
+  padding: var(--inner);
+  color: var(--text-dark);
+  box-shadow: 0 1px 3px var(--border-hairline), 0 1px 2px var(--border-hairline);
+}
+.recharge-gifting-widget .form__legal {
+  max-width: none;
+  line-height: 1;
+  text-align: left;
+  margin-top: 15px;
+}
+.recharge-gifting-widget .form__legal p {
+  font-style: italic;
+  color: var(--text-a80);
+  font-size: var(--font-body-x-small);
+  margin: 0;
+}
+.recharge-gifting-widget .form__legal p a {
+  padding-bottom: 0;
+  background: none;
+}
+.recharge-gifting-widget .rc_gifting_recipient_block {
+  padding: 0;
+}

@@ -1,0 +1,100 @@
+{%- liquid
+  assign show_bar = true
+
+  if block.settings.target_url_enabled and block.settings.target_url != blank
+    assign show_bar = false
+    if block.settings.target_url == request.path
+      assign show_bar = true
+    endif
+  endif
+
+  assign target_device_class = ''
+  if block.settings.target_device_enabled and show_bar
+    if block.settings.target_device == 'mobile'
+      assign target_device_class = ' mobile'
+    elsif block.settings.target_device == 'desktop'
+      assign target_device_class = ' desktop'
+    endif
+  endif
+-%}
+
+{%- if show_bar and block.settings.code != blank -%}
+  <slide-data style="display:contents">
+    <div
+      style="font-size: var(--text-size)"
+      {% if target_device_class != blank %}
+        data-device="{{ target_device_class | strip }}"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {{ block.settings.code }}
+    </div>
+  </slide-data>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Custom code",
+  "tag": null,
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code",
+      "label": "Code",
+      "default": "<p>Custom code</p>"
+    },
+    {
+      "type": "header",
+      "content": "Target page"
+    },
+    {
+      "id": "target_url_enabled",
+      "type": "checkbox",
+      "label": "Limit to specific page"
+    },
+    {
+      "id": "target_url",
+      "type": "url",
+      "label": "Targeted page"
+    },
+    {
+      "type": "header",
+      "content": "Target referrer"
+    },
+    {
+      "id": "target_referrer_enabled",
+      "type": "checkbox",
+      "label": "Limit to specific referrer path"
+    },
+    {
+      "id": "target_referrer",
+      "type": "text",
+      "label": "Targeted referrer"
+    },
+    {
+      "type": "header",
+      "content": "Target device"
+    },
+    {
+      "id": "target_device_enabled",
+      "type": "checkbox",
+      "label": "Limit to desktop or mobile"
+    },
+    {
+      "type": "select",
+      "id": "target_device",
+      "label": "Device",
+      "default": "mobile",
+      "options": [
+        {"value": "mobile", "label": "Only show on mobile"},
+        {"value": "desktop", "label": "Only show on desktop"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom code"
+    }
+  ]
+}
+{% endschema %}

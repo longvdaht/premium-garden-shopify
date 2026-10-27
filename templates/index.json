@@ -1,0 +1,414 @@
+{
+  "sections": {
+    "slideshow": {
+      "type": "section-slideshow",
+      "blocks": {
+        "slide-1": {
+          "type": "_slide-image",
+          "blocks": {
+            "subheading": {
+              "type": "subheading",
+              "settings": {
+                "subheading": "Start the year strong"
+              }
+            },
+            "heading": {
+              "type": "heading",
+              "settings": {
+                "text": "New drop has arrived"
+              }
+            },
+            "text": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Performance leggings designed to keep up—wherever the day takes you.<\/p>"
+              }
+            },
+            "group-buttons": {
+              "type": "group-buttons",
+              "settings": {
+                "text": "Shop the latest",
+                "text_2": "Shop all"
+              }
+            }
+          },
+          "settings": {
+            "flex_align_desktop": "align--bottom-left-desktop"
+          },
+          "block_order": [
+            "subheading",
+            "heading",
+            "text",
+            "group-buttons"
+          ]
+        },
+        "slide-2": {
+          "type": "_slide-image",
+          "blocks": {
+            "subheading": {
+              "type": "subheading",
+              "settings": {
+                "subheading": "From studio to street"
+              }
+            },
+            "heading": {
+              "type": "heading",
+              "settings": {
+                "text": "Move through it all"
+              }
+            },
+            "text": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Performance leggings designed to keep up—wherever the day takes you.<\/p>"
+              }
+            },
+            "button": {
+              "type": "button",
+              "settings": {
+                "text": "Shop now"
+              }
+            }
+          },
+          "settings": {
+            "flex_align_desktop": "align--middle-center-desktop"
+          },
+          "block_order": [
+            "subheading",
+            "heading",
+            "text",
+            "button"
+          ]
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide-2"
+      ],
+      "settings": {
+        "autoplay": true,
+        "autoplay_delay": 12,
+        "height": "seven-fifty-height-hero",
+        "mobile_height": "seven-fifty-height-hero--mobile",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "tab-collections": {
+      "type": "section-tab-collections",
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "title": "Running",
+            "show_image": false
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "title": "Yoga",
+            "show_image": false
+          }
+        },
+        "collection-3": {
+          "type": "collection",
+          "settings": {
+            "title": "Lounge",
+            "show_image": false
+          }
+        }
+      },
+      "block_order": [
+        "collection-1",
+        "collection-2",
+        "collection-3"
+      ],
+      "settings": {
+        "title": "Your favorites, on repeat",
+        "heading_font_size": "heading-large",
+        "text": "<p>The pieces our community reaches for most—because they work, wash beautifully and feel unreal.<\/p>",
+        "layout_desktop": "grid",
+        "layout_mobile": "slider",
+        "product_limit": 4,
+        "grid": 4,
+        "rows": 1,
+        "padding_top": 70,
+        "padding_bottom": 70
+      }
+    },
+    "rich-text": {
+      "type": "section-rich-text",
+      "blocks": {
+        "subheading": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Active or lounge"
+          }
+        },
+        "text-highlight": {
+          "type": "text-highlight",
+          "settings": {
+            "text": "<p>We’re here for the strong days, the soft days, and the “just show up” days. Wherever you’re at in your practice, <em>you belong here.</em></p>",
+            "heading_font_size": "heading-large",
+            "highlight_color": "#F13E31"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_text": "Shop products"
+          }
+        }
+      },
+      "block_order": [
+        "subheading",
+        "text-highlight",
+        "buttons"
+      ],
+      "settings": {
+        "width": "wrapper--full-padded",
+        "headings_inline": true,
+        "overlay_opacity": 100,
+        "padding_top": 60,
+        "padding_bottom": 100
+      }
+    },
+    "announcement": {
+      "type": "section-announcement",
+      "blocks": {
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>•</p>",
+            "text_font_size": "body-x-large"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Shop by activity",
+            "heading_font_size": "heading-x-large"
+          }
+        }
+      },
+      "block_order": [
+        "text",
+        "heading"
+      ],
+      "settings": {
+        "message_spacing": 30,
+        "color_scheme": "scheme-3",
+        "padding_top": 80,
+        "padding_bottom": 0
+      }
+    },
+    "collection-list": {
+      "type": "section-collection-list",
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "title": "Yoga"
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "title": "Lounge"
+          }
+        },
+        "collection-3": {
+          "type": "collection",
+          "settings": {
+            "title": "Pilates"
+          }
+        },
+        "collection-4": {
+          "type": "collection",
+          "settings": {
+            "title": "Running"
+          }
+        },
+        "collection-5": {
+          "type": "collection",
+          "settings": {
+            "title": "Sports"
+          }
+        }
+      },
+      "block_order": [
+        "collection-1",
+        "collection-2",
+        "collection-3",
+        "collection-4",
+        "collection-5"
+      ],
+      "settings": {
+        "title": "",
+        "aspect_ratio": 1.3,
+        "grid": 5,
+        "color_scheme": "scheme-3",
+        "padding_top": 32,
+        "padding_bottom": 80
+      }
+    },
+    "double": {
+      "type": "section-double",
+      "blocks": {
+        "subheading": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "The set you’ll plan outfits around"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Made to move with you."
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Match your bra, legging, short, or jacket in tones that go with everything. Designed together. Worn everywhere.</p>"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_text": "Build a set"
+          }
+        }
+      },
+      "block_order": [
+        "subheading",
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "settings": {
+        "width": "wrapper",
+        "height": "six-fifty-height-hero",
+        "mobile_height": "four-fifty-height-hero--mobile",
+        "padding_top": 60,
+        "padding_bottom": 0
+      }
+    },
+    "look": {
+      "type": "section-look-banner",
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 40,
+            "position_y_desktop": 41,
+            "position_x_mobile": 21,
+            "position_y_mobile": 42,
+            "info_bubbles_position_desktop": 45,
+            "info_bubbles_position_mobile": 15
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 60,
+            "position_y_desktop": 60,
+            "position_x_mobile": 75,
+            "position_y_mobile": 60,
+            "info_bubbles_position_desktop": 15,
+            "info_bubbles_position_mobile": 45
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "position_x_desktop": 46,
+            "position_y_desktop": 80,
+            "position_x_mobile": 44,
+            "position_y_mobile": 80,
+            "info_bubbles_position_desktop": 15,
+            "info_bubbles_position_mobile": 15
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2",
+        "product-3"
+      ],
+      "settings": {
+        "title": "",
+        "text": ""
+      }
+    },
+    "timeline": {
+      "type": "section-timeline",
+      "blocks": {
+        "timeline-1": {
+          "type": "timeline",
+          "settings": {
+            "subheading": "Every body",
+            "title": "Lifestyle",
+            "text": "<p>Designed to be as versatile as your lifestyle. We’re on a mission to create high quality activewear and wardrobe essentials accessible to everybody.</p>",
+            "button_text": ""
+          }
+        },
+        "timeline-2": {
+          "type": "timeline",
+          "settings": {
+            "subheading": "All together now",
+            "title": "Community",
+            "text": "<p>Athleisure designed for the way you actually train—pilates mornings, yoga nights, long runs, quick lifts, and everything between.</p>",
+            "button_text": ""
+          }
+        },
+        "timeline-3": {
+          "type": "timeline",
+          "settings": {
+            "subheading": "No forever plastics",
+            "title": "Essentials",
+            "text": "<p>We prioritize high-quality materials, responsible production partners, and fewer-but-better drops—so your wardrobe works harder and lasts longer.</p>",
+            "button_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "timeline-1",
+        "timeline-2",
+        "timeline-3"
+      ],
+      "settings": {
+        "title": "",
+        "text": "",
+        "width": "wrapper--full-padded",
+        "padding_top": 0,
+        "padding_bottom": 60
+      }
+    },
+    "collection": {
+      "type": "section-collection",
+      "settings": {
+        "heading": "Everybody's everyday uniform.",
+        "heading_font_size": "heading-large",
+        "description": "<p>Match your bra, legging, short, or jacket in tones that go with everything. Designed together. Worn everywhere.</p>",
+        "button_type": "btn--secondary",
+        "rows": 1,
+        "width": "wrapper--full-padded",
+        "color_scheme": "scheme-4",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "tab-collections",
+    "rich-text",
+    "announcement",
+    "collection-list",
+    "double",
+    "look",
+    "timeline",
+    "collection"
+  ]
+}

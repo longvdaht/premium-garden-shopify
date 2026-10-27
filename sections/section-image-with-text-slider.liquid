@@ -1,0 +1,1216 @@
+{%- liquid
+  assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
+  assign badge_blocks = section.blocks | where: 'type', 'badges'
+  assign desktop_height = section.settings.height
+  assign mobile_height = section.settings.mobile_height
+  assign width = section.settings.width
+  assign enable_slider = false
+  assign enable_text_slider = false
+  assign show_placeholder = section.settings.show_placeholder
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+
+  assign unique = 'ImageWithTextSlider--' | append: section.id
+  assign animation_anchor = unique
+  assign animation_order = 0
+
+  assign autoplay = section.settings.autoplay
+  assign autoplay_delay = 0
+
+  if autoplay
+    assign autoplay_delay = section.settings.autoplay_delay | times: 1000
+  endif
+
+  if content_section_blocks.size > 1
+    assign enable_text_slider = true
+
+    for block in content_section_blocks
+      if block.settings.image
+        assign enable_slider = true
+        assign enable_text_slider = false
+        break
+      endif
+    endfor
+  endif
+
+  capture style
+    echo '--PT: ' | append: section.settings.padding_top | append: 'px;'
+    echo '--PB: ' | append: section.settings.padding_bottom | append: 'px;'
+  endcapture
+
+  assign image_1 = section.settings.image_1
+  assign image_2 = section.settings.image_2
+  assign image_width = section.settings.image_width
+  capture sizes
+    if image_1 and image_2
+      if image_width == 'three-quarters'
+        echo '(min-width: 750px) 37.5vw, 100vw'
+      else
+        echo '(min-width: 750px) 25vw, 100vw'
+      endif
+    else
+      if image_width == 'three-quarters'
+        echo '(min-width: 750px) 75vw, 100vw'
+      else
+        echo '(min-width: 750px) 50vw, 100vw'
+      endif
+    endif
+  endcapture
+
+  assign figure_width_class = ''
+
+  if image_width == 'three-quarters'
+    assign figure_width_class = ' brick__block--three-quarters'
+  endif
+
+  assign enable_image_slider = false
+  if image_1 != blank and image_2 != blank
+    assign enable_image_slider = true
+  endif
+-%}
+
+{%- capture section_images -%}
+  {%- liquid
+    assign image_element_tag = 'div'
+    assign image_element_class = 'brick__block__image'
+    if enable_image_slider
+      assign image_element_tag = 'swiper-slide'
+      assign image_element_class = image_element_class
+    endif
+  -%}
+  {%- if image_1 != blank -%}
+    <{{ image_element_tag }} class="{{ image_element_class }}">
+      {%- render 'image-hero' image: image_1, sizes: sizes, desktop_height: desktop_height, mobile_height: mobile_height -%}
+    </{{ image_element_tag }}>
+  {%- endif -%}
+
+  {%- if image_2 != blank -%}
+    <{{ image_element_tag }} class="{{ image_element_class }}">
+      {%- render 'image-hero' image: image_2, sizes: sizes, desktop_height: desktop_height, mobile_height: mobile_height -%}
+    </{{ image_element_tag }}>
+  {%- endif -%}
+
+  {%- if image_1 == blank and image_2 == blank -%}
+    <{{ image_element_tag }} class="{{ image_element_class }}">
+      {%- render 'image-hero' sizes: sizes, desktop_height: desktop_height, mobile_height: mobile_height -%}
+    </{{ image_element_tag }}>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- render 'stylesheet', name: 'section-image-with-text-slider.css' -%}
+
+<section
+  id="{{ unique }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="double"
+  {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
+  {% if badge_blocks != blank %}data-badge-host{% endif %}
+  class="index-image-text section-padding {{ section.settings.text_alignment }} {{ color_scheme }}"
+  style="{{ style }}"
+>
+  {%- if content_section_blocks.size != 0 -%}
+    {%- if enable_slider -%}
+      <div class="swiper brick__slider {{ width }}">
+        <swiper-container
+          loop="true"
+          slides-per-view="1"
+          speed="500"
+          grab-cursor="true"
+          navigation="true"
+          navigation-prev-el=".{{ section.id }}--button.swiper-button-prev"
+          navigation-next-el=".{{ section.id }}--button.swiper-button-next"
+          {%- if autoplay %}
+            autoplay="{{ autoplay }}"
+            autoplay-delay="{{ autoplay_delay }}"
+            autoplay-disable-on-interaction="false"
+          {%- endif -%}
+          {%- unless settings.dots_style == 'hidden' -%}
+            pagination="true"
+            pagination-clickable="true"
+            pagination-el=".{{ section.id }}--pagination.swiper-pagination"
+          {%- endunless -%}
+        >
+          {%- for block in content_section_blocks -%}
+            {%- liquid
+              assign image = block.settings.image
+              assign subheading = block.settings.subheading
+              assign title = block.settings.title
+              assign text = block.settings.text
+              assign button_text = block.settings.button_text
+            -%}
+
+            <swiper-slide
+              class="brick__section{% if section.settings.layout == 'is-reversed' %} brick__section--reversed{% endif %}{% if section.settings.reverse_blocks %} brick__section--reversed-mobile{% endif %} {{ desktop_height }} {{ mobile_height }}"
+              {{ block.shopify_attributes }}
+            >
+              <div class="brick__block brick__block--images{{ figure_width_class }}">
+                {%- if image -%}
+                  <div class="brick__block__image">
+                    {%- render 'image-hero',
+                      image: image,
+                      sizes: sizes,
+                      desktop_height: desktop_height,
+                      mobile_height: mobile_height
+                    -%}
+                  </div>
+                {%- else -%}
+                  {{ section_images }}
+                {%- endif -%}
+              </div>
+
+              <div
+                class="brick__block brick__block--text"
+                {% if style != blank %}
+                  style="{{ style }}"
+                {% endif %}
+              >
+                <div class="brick__block__text">
+                  <div class="hero__content hero__content--compact">
+                    {%- if subheading != blank -%}
+                      <p class="hero__subheading">
+                        {{ subheading }}
+                      </p>
+                    {%- endif -%}
+
+                    {%- if title != blank -%}
+                      {%- liquid
+                        assign heading_tag = 'h2'
+
+                        unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                          assign heading_tag = block.settings.heading_tag
+                        endunless
+                      -%}
+
+                      <{{ heading_tag }} class="hero__title {{ block.settings.heading_font_size }}">
+                        {{ title }}
+                      </{{ heading_tag }}>
+                    {%- endif -%}
+
+                    {%- if text != blank -%}
+                      <div class="hero__rte {{ block.settings.text_font_size }}">
+                        {{ text }}
+                      </div>
+                    {%- endif -%}
+
+                    {%- if button_text != blank -%}
+                      {%- liquid
+                        capture button_classes
+                          assign button_style = block.settings.button_style
+                          if button_style == 'btn--text' and block.settings.show_arrow
+                            assign button_style = button_style | append: ' btn--text-no-underline'
+                          endif
+                          echo 'btn ' | append: button_style | append: ' ' | append: block.settings.button_type | append: ' ' | append: block.settings.button_size
+                        endcapture
+                      -%}
+
+                      <div class="hero__button">
+                        <a
+                          href="{{ block.settings.button_url | default: '#!' }}"
+                          class="{{ button_classes }}"
+                        >
+                          <span>{{ button_text }}</span>
+
+                          {%- if block.settings.show_arrow -%}
+                            {%- render 'icon', name: 'caret-right' -%}
+                          {%- endif -%}
+                        </a>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </swiper-slide>
+          {%- endfor -%}
+        </swiper-container>
+
+        <button
+          type="button"
+          class="{{ section.id }}--button swiper-button-prev"
+          aria-label="{{ 'general.accessibility.previous_slide' | t }}"
+        >
+          {%- render 'icon', name: 'caret-left' -%}
+        </button>
+        <button
+          type="button"
+          class="{{ section.id }}--button swiper-button-next"
+          aria-label="{{ 'general.accessibility.next_slide' | t }}"
+        >
+          {%- render 'icon', name: 'caret-right' -%}
+        </button>
+
+        {% unless settings.dots_style == 'hidden' %}
+          <div class="{{ section.id }}--pagination swiper-pagination swiper-pagination-bullets"></div>
+        {% endunless %}
+      </div>
+    {%- else -%}
+      {%- capture content_markup -%}
+        {%- for block in content_section_blocks -%}
+          {%- if enable_text_slider -%}
+            <swiper-slide
+              class="grid-item"
+              {{ block.shopify_attributes }}
+            >
+          {%- endif -%}
+
+          {%- if block.settings.subheading != blank -%}
+            <p class="hero__subheading">
+              {{ block.settings.subheading }}
+            </p>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            {%- liquid
+              assign heading_tag = 'h2'
+
+              unless block.settings.heading_tag == 'automatic' or block.settings.heading_tag == blank
+                assign heading_tag = block.settings.heading_tag
+              endunless
+            -%}
+
+            <{{ heading_tag }} class="hero__title {{ block.settings.heading_font_size }}">
+              {{ block.settings.title }}
+            </{{ heading_tag }}>
+          {%- endif -%}
+
+          {%- if block.settings.text != blank -%}
+            <div class="hero__rte {{ block.settings.text_font_size }}">
+              {{ block.settings.text }}
+            </div>
+          {%- endif -%}
+
+        {%- if block.settings.button_text != blank -%}
+          {%- liquid
+            capture button_classes
+              assign button_style = block.settings.button_style
+              if button_style == 'btn--text' and block.settings.show_arrow
+                assign button_style = button_style | append: ' btn--text-no-underline'
+              endif
+              echo 'btn ' | append: button_style | append: ' ' | append: block.settings.button_type | append: ' ' | append: block.settings.button_size
+            endcapture
+          -%}
+
+            <div class="hero__button">
+              <a
+                href="{{ block.settings.button_url | default: '#!' }}"
+                class="{{ button_classes }}"
+              >
+                <span>{{ block.settings.button_text }}</span>
+
+                {%- if block.settings.show_arrow -%}
+                  {%- render 'icon', name: 'caret-right'-%}
+                {%- endif -%}
+              </a>
+            </div>
+          {%- endif -%}
+
+          {%- if enable_text_slider -%}
+            </swiper-slide>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      <div class="brick__section{% if section.settings.layout == 'is-reversed' %} brick__section--reversed{% endif %}{% if section.settings.reverse_blocks %} brick__section--reversed-mobile{% endif %} {{ width }} {{ desktop_height }} {{ mobile_height }}">
+        {%- capture images_markup -%}
+          {%- if image_1 != blank or image_2 != blank or show_placeholder -%}
+            {{ section_images }}
+          {%- elsif request.design_mode -%}
+            <div class="brick__section-missing-metafield-image">
+              {{ 'products.general.missing_metafield_image' | t }}
+            </div>
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {%- if enable_image_slider -%}
+          <div class="brick__block brick__block--images{{ figure_width_class }}">
+            <div class="swiper">
+              <swiper-container
+                breakpoint="(max-width: 749px)"
+                {%- if autoplay %}
+                  autoplay="{{ autoplay }}"
+                  autoplay-delay="{{ autoplay_delay }}"
+                  autoplay-disable-on-interaction="false"
+                {%- endif -%}
+              >
+                {{ images_markup }}
+              </swiper-container>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="brick__block brick__block--images{{ figure_width_class }}">
+            {{ images_markup }}
+          </div>
+        {%- endif -%}
+
+        <div
+          class="brick__block brick__block--text{% if enable_slider %} brick__block--slider{% endif %}"
+          {% if style != blank %}
+            style="{{ style }}"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <div class="brick__block__text">
+            {%- if enable_text_slider -%}
+              <div class="hero__content hero__content--compact">
+                <div class="swiper">
+                  <swiper-container
+                    class="grid--mobile-slider"
+                    breakpoint="(min-width: 768px)"
+                    loop="true"
+                    grab-cursor="true"
+                    {%- if autoplay %}
+                      autoplay="{{ autoplay }}"
+                      autoplay-delay="{{ autoplay_delay }}"
+                      autoplay-disable-on-interaction="false"
+                    {%- endif -%}
+                    {%- unless settings.dots_style == 'hidden' -%}
+                      pagination="true"
+                      pagination-clickable="true"
+                      pagination-el=".{{ section.id }}--pagination.swiper-pagination"
+                    {%- endunless -%}
+                    {% if request.design_mode %}
+                      data-block-scroll
+                    {% endif %}
+                  >
+                    {{ content_markup }}
+                  </swiper-container>
+
+                  {% unless settings.dots_style == 'hidden' %}
+                    <div class="{{ section.id }}--pagination swiper-pagination swiper-pagination-bullets"></div>
+                  {% endunless %}
+                </div>
+              </div>
+            {%- else -%}
+              <div class="hero__content hero__content--compact hero__content--no-padding">
+                {{ content_markup }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    {%- render 'no-blocks' -%}
+  {%- endif -%}
+  {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
+  {%- render 'shape-dividers', mode: 'host' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Image with text slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Primary image",
+      "info": "2000 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Secondary image",
+      "info": "2000 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "select",
+      "id": "image_width",
+      "label": "Image width",
+      "default": "one-half",
+      "options": [
+        {
+          "value": "one-half",
+          "label": "50%"
+        },
+        {
+          "value": "three-quarters",
+          "label": "75%"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay slider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay speed",
+      "unit": "sec",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "",
+      "options": [
+        {
+          "value": "",
+          "label": "Image left, text right"
+        },
+        {
+          "value": "is-reversed",
+          "label": "Text left, image right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper--full",
+      "options": [
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "screen-height-three-quarters",
+      "options": [
+        {
+          "value": "image-height",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Height",
+      "default": "screen-height-one-half--mobile",
+      "options": [
+        {
+          "value": "image-height--mobile",
+          "label": "Image height"
+        },
+        {
+          "value": "screen-height-full--mobile",
+          "label": "Full screen height"
+        },
+        {
+          "value": "screen-height-three-quarters--mobile",
+          "label": "3/4 of screen"
+        },
+        {
+          "value": "screen-height-two-thirds--mobile",
+          "label": "2/3 of screen"
+        },
+        {
+          "value": "screen-height-one-half--mobile",
+          "label": "1/2 of screen"
+        },
+        {
+          "value": "screen-height-one-third--mobile",
+          "label": "1/3 of screen"
+        },
+        {
+          "value": "seven-fifty-height-hero--mobile",
+          "label": "750px"
+        },
+        {
+          "value": "six-fifty-height-hero--mobile",
+          "label": "650px"
+        },
+        {
+          "value": "five-fifty-height-hero--mobile",
+          "label": "550px"
+        },
+        {
+          "value": "four-fifty-height-hero--mobile",
+          "label": "450px"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_blocks",
+      "label": "Reverse block placement",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder",
+      "label": "Show placeholder image",
+      "info": "Disable if using a metafield",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text-slide",
+      "name": "Text slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Introducing"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image with text slider"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-large",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Text",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--primary",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "Size",
+          "default": "",
+          "options": [
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--solid",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            },
+            {
+              "label": "Text",
+              "value": "btn--text"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show arrow",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Optional image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides section image if uploaded. 2000 x 1400px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "header",
+          "content": "Advanced"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading SEO tag",
+          "default": "automatic",
+          "options": [
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "badge_width",
+          "label": "Badge width",
+          "min": 100,
+          "max": 300,
+          "step": 10,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "checkbox",
+          "id": "half_width_mobile",
+          "label": "Half width on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "New"
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "default": "circle",
+          "options": [
+            {
+              "value": "fit-to-text",
+              "label": "Fit to text"
+            },
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "diamond",
+              "label": "Diamond"
+            },
+            {
+              "value": "oval",
+              "label": "Oval"
+            },
+            {
+              "value": "scalloped-1",
+              "label": "Scalloped circle 1"
+            },
+            {
+              "value": "scalloped-2",
+              "label": "Scalloped circle 2"
+            },
+            {
+              "value": "semicircle",
+              "label": "Semicircle"
+            },
+            {
+              "value": "star-1",
+              "label": "Star 1"
+            },
+            {
+              "value": "star-2",
+              "label": "Star 2"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Custom image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the shape and text. 400 x 400px recommended."
+        },
+        {
+          "type": "header",
+          "content": "Position"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 85
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "rotate",
+          "label": "Rotate",
+          "min": -90,
+          "max": 90,
+          "step": 2,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_desktop",
+          "label": "Show on desktop",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Animation"
+        },
+        {
+          "type": "select",
+          "id": "animation",
+          "label": "Animation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "rotate",
+              "label": "Rotate"
+            },
+            {
+              "value": "rotate-scroll",
+              "label": "Rotate on scroll"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_parallax",
+          "label": "Enable parallax",
+          "info": "When enabled badges will scroll faster than the rest of the page.",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "parallax_speed",
+          "label": "Parallax speed",
+          "visible_if": "{{ block.settings.enable_parallax == true }}",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "This will be the section that connects to the straight side of the divider.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Select the color scheme of the target section",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text slider",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "text-slide"
+        },
+        {
+          "type": "text-slide"
+        },
+        {
+          "type": "text-slide"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

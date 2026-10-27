@@ -1,0 +1,39 @@
+{%- doc -%}
+  Renders named and styled SVG icons
+
+  @param {string} name - The name of the icon
+  @param {string} style - The style of the icon (regular, light)
+
+  @example
+  {% render 'icon', name: 'acorn' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign icon_key = name | default: '' | strip
+  assign icon_style = settings.icon_style | default: 'regular' | strip
+
+  capture icon_html
+    case icon_style
+      when 'regular', blank
+        render 'icons-regular', name: icon_key
+      when 'light'
+        render 'icons-light', name: icon_key
+    endcase
+  endcapture
+
+  unless icon_html contains 'class='
+    assign class_attribute = 'class="icon icon-' | append: name | append: '"'
+    assign class_attribute_html = '<svg ' | append: class_attribute | append: ' '
+    assign icon_html = icon_html | replace: '<svg', class_attribute_html
+  endunless
+
+  comment
+    Icons are decorative by default; hide them from assistive tech and keep them out of the tab order.
+    When an icon is the only content of a control, give that control an aria-label instead.
+  endcomment
+  unless icon_html contains 'aria-hidden'
+    assign icon_html = icon_html | replace_first: '<svg', '<svg aria-hidden="true" focusable="false"'
+  endunless
+-%}
+
+{{- icon_html -}}

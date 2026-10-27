@@ -1,0 +1,75 @@
+.collection-item {
+  --link: var(--text);
+  --link-hover: var(--text);
+  --bg: var(--COLOR-BG);
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  background: var(--bg);
+  scroll-snap-align: start;
+}
+
+.collection-item--card {
+  --bg: var(--COLOR-BG-ACCENT);
+  --text: var(--COLOR-TEXT);
+  border-radius: var(--RADIUS);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.collection-item__content {
+  flex: 0 1 100%;
+}
+
+.collection-item__image {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--RADIUS);
+}
+
+.collection-item__actions,
+.collection-item__info {
+  flex: 0 1 100%;
+  padding: var(--inner);
+  overflow: hidden;
+}
+@media only screen and (max-width: 749px) {
+  .collection-item__actions,
+  .collection-item__info {
+    padding: 12px;
+  }
+}
+
+.collection-item--centered .collection-item__actions,
+.collection-item--centered .collection-item__info {
+  text-align: center;
+}
+
+@media (hover: hover) {
+  .collection-item__bg .image-wrapper {
+    --transform-scale: scale(1.08);
+    transition: transform 2s cubic-bezier(0.225, 0.64, 0.365, 1);
+  }
+  .collection-item__info span {
+    --bg-size: 100% 1px;
+    padding: 0 0 5px;
+    background: linear-gradient(to right, currentcolor, currentcolor);
+    background-size: 0% 1px;
+    background-position: 50% 86%;
+    background-repeat: no-repeat;
+    transition: color 0.25s ease-in, background-size 0.25s ease-in;
+  }
+}
+@media (hover: hover) and (hover: hover) {
+  .collection-item__info span:hover {
+    background-size: 100% 1px;
+  }
+}
+@media (hover: hover) {
+  .collection-item:hover .collection-item__bg .image-wrapper {
+    transform: var(--transform-scale);
+  }
+  .collection-item:hover .collection-item__info span {
+    background-size: var(--bg-size);
+  }
+}

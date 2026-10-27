@@ -1,0 +1,35 @@
+.section-countdown {
+  position: relative;
+  overflow: hidden;
+}
+.section-countdown .brick__section {
+  position: relative;
+  gap: var(--gap);
+  align-content: center;
+  align-items: center;
+  padding: var(--inner) 0;
+}
+.section-countdown .flex-column {
+  justify-content: center;
+}
+.section-countdown .image-overlay {
+  z-index: auto;
+}
+.section-countdown .brick__block,
+.section-countdown .hero__content {
+  background: transparent;
+}
+.section-countdown .hero__content {
+  flex: 1;
+}
+.section-countdown .hero__content__wrapper {
+  overflow: unset;
+}
+.section-countdown .backdrop--radial {
+  z-index: 1;
+}
+@media only screen and (max-width: 749px) {
+  .section-countdown .brick__block {
+    min-width: 100%;
+  }
+}

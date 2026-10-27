@@ -1,0 +1,3685 @@
+{%- render 'product', product: all_products[section.settings.product], featured_product: true -%}
+
+{% schema %}
+{
+  "name": "Featured product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Reverse layout",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Media",
+      "info": "Learn more about [media types](https://help.shopify.com/manual/products/product-media)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable zoom",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Enable video looping",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_layout",
+      "label": "Product gallery",
+      "default": "thumbnails",
+      "options": [
+        {
+          "value": "thumbnails",
+          "label": "Thumbnails - Bottom"
+        },
+        {
+          "value": "thumbnails-left",
+          "label": "Thumbnails - Left"
+        },
+        {
+          "value": "thumbnails-right",
+          "label": "Thumbnails - Right"
+        }
+      ],
+      "info": "Desktop only"
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "label": "Image size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "stretch",
+          "label": "Stretch - No thumbnails"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_style",
+      "label": "Product gallery",
+      "options": [
+        {
+          "value": "thumbs",
+          "label": "Thumbnails"
+        },
+        {
+          "value": "slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "thumbs"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "product_form_color_scheme_enable",
+      "label": "Different product form color scheme",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "product_form_color_scheme",
+      "default": "scheme-1",
+      "label": "Color scheme",
+      "visible_if": "{{ section.settings.product_form_color_scheme_enable }}"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "subheading_option",
+          "label": "Navigation",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "breadcrumb",
+              "label": "Breadcrumb"
+            },
+            {
+              "value": "collection",
+              "label": "Collection"
+            },
+            {
+              "value": "vendor",
+              "label": "Vendor"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-medium",
+          "options": [
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 8
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "variants",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Size chart"
+        },
+        {
+          "type": "page",
+          "id": "info_page",
+          "label": "Page",
+          "info": "[Learn more](https://headlands.presidiocreative.com/products/product-pages/size-charts)"
+        },
+        {
+          "type": "select",
+          "id": "size_chart_style",
+          "label": "Style",
+          "default": "text",
+          "options": [
+            {
+              "value": "text",
+              "label": "Text"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "question",
+              "label": "Question mark"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Show quantity selector",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Add to cart button"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--primary",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--solid",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Dynamic checkout button"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_payment_button",
+          "label": "Show dynamic checkout buttons",
+          "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/en/manual/online-store/os/dynamic-checkout)",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "button_type_dynamic",
+          "label": "Color",
+          "default": "btn--secondary",
+          "options": [
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style_dynamic",
+          "label": "Style",
+          "default": "btn--solid",
+          "options": [
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Gift card"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "label": "Show recipient information form for gift card products",
+          "default": false,
+          "info": "Gift card products can optionally be sent direct to a recipient along with a personal message."
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 32
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_read_more",
+          "label": "Show read more button",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "tab_richtext",
+      "name": "Tabs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Show description",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_read_more",
+          "label": "Show read more button",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Tab heading size",
+          "default": "heading-x-small",
+          "options": [
+            {"value": "heading-mini", "label": "Mini"},
+            {"value": "heading-x-small", "label": "Extra small"},
+            {"value": "heading-small", "label": "Small"},
+            {"value": "heading-medium", "label": "Medium"},
+            {"value": "heading-large", "label": "Large"},
+            {"value": "heading-x-large", "label": "Extra large"}
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Tab heading",
+          "default": "Tab"
+        },
+        {
+          "type": "richtext",
+          "id": "raw_content_1",
+          "label": "Tab text",
+          "default": "<p>This content type will accept <strong>rich text</strong> to help with adding styles and links to additional pages or content. Use this to add supplementary information to help your buyers.</p>"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Tab heading",
+          "default": "Info"
+        },
+        {
+          "type": "richtext",
+          "id": "raw_content_2",
+          "label": "Tab text",
+          "default": "<p>You can use product metafields to assign content to this tab that is unique to an individual product.  Use tabs to highlight unique features, sizing information, or other sales information.</p>"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Tab heading"
+        },
+        {
+          "type": "richtext",
+          "id": "raw_content_3",
+          "label": "Tab text"
+        },
+        {
+          "type": "text",
+          "id": "title_4",
+          "label": "Tab heading"
+        },
+        {
+          "type": "richtext",
+          "id": "raw_content_4",
+          "label": "Tab text"
+        },
+        {
+          "type": "text",
+          "id": "title_5",
+          "label": "Tab heading"
+        },
+        {
+          "type": "richtext",
+          "id": "raw_content_5",
+          "label": "Tab text"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Show description",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_read_more",
+          "label": "Show read more button",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "default_open",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Accordion"
+        },
+        {
+          "type": "select",
+          "id": "heading_font_size",
+          "label": "Heading size",
+          "default": "heading-x-small",
+          "options": [
+            {"value": "heading-mini", "label": "Mini"},
+            {"value": "heading-x-small", "label": "Extra small"},
+            {"value": "heading-small", "label": "Small"},
+            {"value": "heading-medium", "label": "Medium"},
+            {"value": "heading-large", "label": "Large"},
+            {"value": "heading-x-large", "label": "Extra large"}
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>This content type will accept <strong>rich text</strong> to help with adding styles and links to additional pages or content. Use this to add supplementary information to help your buyers.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "inventory_countdown",
+      "name": "Inventory countdown",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "show_notice",
+          "label": "Show notice",
+          "default": "low-inventory",
+          "options": [
+            {
+              "label": "Always",
+              "value": "always"
+            },
+            {
+              "label": "Low inventory",
+              "value": "low-inventory"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "max_inventory",
+          "label": "Low inventory threshold",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_inventory_counter",
+          "label": "Hide inventory counter",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Icon size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "in_stock_color",
+          "label": "In stock",
+          "default": "#56AD6A"
+        },
+        {
+          "type": "color",
+          "id": "low_stock_color",
+          "label": "Low stock",
+          "default": "#f79554"
+        },
+        {
+          "type": "color",
+          "id": "out_of_stock_color",
+          "label": "Out of stock",
+          "default": "#721C24"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "sharing",
+      "name": "Sharing",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "pickup",
+      "name": "Local pickup",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Show customers where they can pick up the product. [Learn more](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup#show-pickup-availability-to-your-customers)"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 32
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Have questions?"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Get in touch with us at any time.</p>"
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "inline",
+              "label": "In-line"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "name": "Custom code",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "code",
+          "label": "Custom code",
+          "info": "Add app snippets or other Liquid code to create advanced customizations."
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Title</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "label": "Full width",
+              "value": "full"
+            },
+            {
+              "label": "Half",
+              "value": "half"
+            },
+            {
+              "label": "One third",
+              "value": "third"
+            },
+            {
+              "label": "One quarter",
+              "value": "quarter"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "name": "Divider",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_line",
+          "label": "Show line",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "line-item",
+      "name": "Line item property",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Your label"
+        },
+        {
+          "type": "select",
+          "id": "type",
+          "label": "Type",
+          "default": "text",
+          "options": [
+            {
+              "label": "Text",
+              "value": "text"
+            },
+            {
+              "label": "Checkbox",
+              "value": "checkbox"
+            },
+            {
+              "label": "Dropdown",
+              "value": "dropdown"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Typography",
+          "info": "For Type set to \"Text\"."
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Required",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Checkbox",
+          "info": "For Type set to \"Checkbox\"."
+        },
+        {
+          "type": "text",
+          "id": "checked_value",
+          "label": "Checked value",
+          "default": "Yes"
+        },
+        {
+          "type": "text",
+          "id": "unchecked_value",
+          "label": "Unchecked value",
+          "default": "No"
+        },
+        {
+          "type": "header",
+          "content": "Dropdown",
+          "info": "For Type set to \"Dropdown\"."
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "Option 1",
+          "default": "Option 1"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "Option 2",
+          "default": "Option 2"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "Option 3",
+          "default": "Option 3"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "features",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_alt",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Feature"
+        },
+        {
+          "type": "select",
+          "id": "text_font_size",
+          "label": "Text size",
+          "info": "Applies only when content in Text field is set to Paragraph.",
+          "default": "body-medium",
+          "options": [
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>This content type will accept <strong>rich text</strong> to help with adding styles and links to additional pages or content. Use this to add supplementary information to help your buyers.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides color scheme. Set to Transparent to revert back to using color schemes."
+        },
+        {
+          "id": "bg_color",
+          "type": "color",
+          "label": "Background"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Text"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "complementary-products",
+      "name": "Complementary products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "To select complementary products, add the Search & Discovery app. [Learn more](https://help.shopify.com/manual/online-store/search-and-discovery/product-recommendations)"
+        },
+        {
+          "type": "range",
+          "id": "complementary_limit",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "label": "Number of products",
+          "default": 3
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Color scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "label": "Color",
+          "default": "btn--secondary",
+          "options": [
+            {"value": "btn--black", "label": "Black"},
+            {"value": "btn--white", "label": "White"},
+            {"value": "btn--primary", "label": "Primary"},
+            {"value": "btn--secondary", "label": "Secondary"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "Size",
+          "default": "btn--small",
+          "options": [
+            {"label": "Small", "value": "btn--small"},
+            {"label": "Medium", "value": ""},
+            {"label": "Large", "value": "btn--large"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "btn--outline",
+          "options": [
+            {"label": "Solid", "value": "btn--solid"},
+            {"label": "Outline", "value": "btn--outline"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "popup",
+      "name": "Popup",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Link text",
+          "default": "Popup text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Additonal information about the product.</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Page"
+        },
+        {
+          "type": "select",
+          "id": "icon_key",
+          "label": "Icon",
+          "default": "heart-straight",
+          "options": [
+            {
+              "label": "Acorn",
+              "value": "acorn"
+            },
+            {
+              "label": "Airplane Tilt",
+              "value": "airplane-tilt"
+            },
+            {
+              "label": "Alarm",
+              "value": "alarm"
+            },
+            {
+              "label": "Alien",
+              "value": "alien"
+            },
+            {
+              "label": "Anchor",
+              "value": "anchor"
+            },
+            {
+              "label": "Approximate Equals",
+              "value": "approximate-equals"
+            },
+            {
+              "label": "Archive",
+              "value": "archive"
+            },
+            {
+              "label": "Armchair",
+              "value": "armchair"
+            },
+            {
+              "label": "Arrow Circle Up Right",
+              "value": "arrow-circle-up-right"
+            },
+            {
+              "label": "Arrow Up Right",
+              "value": "arrow-up-right"
+            },
+            {
+              "label": "Arrows Clockwise",
+              "value": "arrows-clockwise"
+            },
+            {
+              "label": "Asterisk",
+              "value": "asterisk"
+            },
+            {
+              "label": "Avocado",
+              "value": "avocado"
+            },
+            {
+              "label": "Axe",
+              "value": "axe"
+            },
+            {
+              "label": "Baby Carriage",
+              "value": "baby-carriage"
+            },
+            {
+              "label": "Baby",
+              "value": "baby"
+            },
+            {
+              "label": "Barbell",
+              "value": "barbell"
+            },
+            {
+              "label": "Barn",
+              "value": "barn"
+            },
+            {
+              "label": "Baseball Cap",
+              "value": "baseball-cap"
+            },
+            {
+              "label": "Bathtub",
+              "value": "bathtub"
+            },
+            {
+              "label": "Bell",
+              "value": "bell"
+            },
+            {
+              "label": "Bicycle",
+              "value": "bicycle"
+            },
+            {
+              "label": "Bird",
+              "value": "bird"
+            },
+            {
+              "label": "Bone",
+              "value": "bone"
+            },
+            {
+              "label": "Bookmark Simple",
+              "value": "bookmark-simple"
+            },
+            {
+              "label": "Butterfly",
+              "value": "butterfly"
+            },
+            {
+              "label": "Cactus",
+              "value": "cactus"
+            },
+            {
+              "label": "Camera",
+              "value": "camera"
+            },
+            {
+              "label": "Carrot",
+              "value": "carrot"
+            },
+            {
+              "label": "Cat",
+              "value": "cat"
+            },
+            {
+              "label": "Champagne",
+              "value": "champagne"
+            },
+            {
+              "label": "Check Circle",
+              "value": "check-circle"
+            },
+            {
+              "label": "Check Square",
+              "value": "check-square"
+            },
+            {
+              "label": "Check",
+              "value": "check"
+            },
+            {
+              "label": "Cheers",
+              "value": "cheers"
+            },
+            {
+              "label": "Cherries",
+              "value": "cherries"
+            },
+            {
+              "label": "Circle",
+              "value": "circle"
+            },
+            {
+              "label": "Cloud Moon",
+              "value": "cloud-moon"
+            },
+            {
+              "label": "Cloud Sun",
+              "value": "cloud-sun"
+            },
+            {
+              "label": "Clover",
+              "value": "clover"
+            },
+            {
+              "label": "Coat Hanger",
+              "value": "coat-hanger"
+            },
+            {
+              "label": "Coffee",
+              "value": "coffee"
+            },
+            {
+              "label": "Confetti",
+              "value": "confetti"
+            },
+            {
+              "label": "Cookie",
+              "value": "cookie"
+            },
+            {
+              "label": "Cooking Pot",
+              "value": "cooking-pot"
+            },
+            {
+              "label": "Cow",
+              "value": "cow"
+            },
+            {
+              "label": "Cowboy Hat",
+              "value": "cowboy-hat"
+            },
+            {
+              "label": "Crown Simple",
+              "value": "crown-simple"
+            },
+            {
+              "label": "Disco Ball",
+              "value": "disco-ball"
+            },
+            {
+              "label": "Dog",
+              "value": "dog"
+            },
+            {
+              "label": "Dress",
+              "value": "dress"
+            },
+            {
+              "label": "Drop Slash",
+              "value": "drop-slash"
+            },
+            {
+              "label": "Drop",
+              "value": "drop"
+            },
+            {
+              "label": "Eye",
+              "value": "eye"
+            },
+            {
+              "label": "Eyedropper",
+              "value": "eyedropper"
+            },
+            {
+              "label": "Facebook Logo",
+              "value": "facebook-logo"
+            },
+            {
+              "label": "Farm",
+              "value": "farm"
+            },
+            {
+              "label": "Fire",
+              "value": "fire"
+            },
+            {
+              "label": "Fish",
+              "value": "fish"
+            },
+            {
+              "label": "Flag",
+              "value": "flag"
+            },
+            {
+              "label": "Flask",
+              "value": "flask"
+            },
+            {
+              "label": "Flower Lotus",
+              "value": "flower-lotus"
+            },
+            {
+              "label": "Flower Tulip",
+              "value": "flower-tulip"
+            },
+            {
+              "label": "Flower",
+              "value": "flower"
+            },
+            {
+              "label": "Flying Saucer",
+              "value": "flying-saucer"
+            },
+            {
+              "label": "Football",
+              "value": "football"
+            },
+            {
+              "label": "Footprints",
+              "value": "footprints"
+            },
+            {
+              "label": "Gauge",
+              "value": "gauge"
+            },
+            {
+              "label": "Ghost",
+              "value": "ghost"
+            },
+            {
+              "label": "Gift",
+              "value": "gift"
+            },
+            {
+              "label": "Globe Hemisphere East",
+              "value": "globe-hemisphere-east"
+            },
+            {
+              "label": "Grains Slash",
+              "value": "grains-slash"
+            },
+            {
+              "label": "Grains",
+              "value": "grains"
+            },
+            {
+              "label": "Hair Dryer",
+              "value": "hair-dryer"
+            },
+            {
+              "label": "Hamburger",
+              "value": "hamburger"
+            },
+            {
+              "label": "Hammer",
+              "value": "hammer"
+            },
+            {
+              "label": "Hand Heart",
+              "value": "hand-heart"
+            },
+            {
+              "label": "Hand Peace",
+              "value": "hand-peace"
+            },
+            {
+              "label": "Hands Clapping",
+              "value": "hands-clapping"
+            },
+            {
+              "label": "Heart Straight",
+              "value": "heart-straight"
+            },
+            {
+              "label": "Heart",
+              "value": "heart"
+            },
+            {
+              "label": "Hourglass",
+              "value": "hourglass"
+            },
+            {
+              "label": "Infinity",
+              "value": "infinity"
+            },
+            {
+              "label": "Info",
+              "value": "info"
+            },
+            {
+              "label": "Instagram Logo",
+              "value": "instagram-logo"
+            },
+            {
+              "label": "Jar Label",
+              "value": "jar-label"
+            },
+            {
+              "label": "Key",
+              "value": "key"
+            },
+            {
+              "label": "Lamp",
+              "value": "lamp"
+            },
+            {
+              "label": "Leaf",
+              "value": "leaf"
+            },
+            {
+              "label": "Lifebuoy",
+              "value": "lifebuoy"
+            },
+            {
+              "label": "Lightning",
+              "value": "lightning"
+            },
+            {
+              "label": "Linkedin Logo",
+              "value": "linkedin-logo"
+            },
+            {
+              "label": "List",
+              "value": "list"
+            },
+            {
+              "label": "Lock Simple",
+              "value": "lock-simple"
+            },
+            {
+              "label": "Magic Wand",
+              "value": "magic-wand"
+            },
+            {
+              "label": "Magnifying Glass",
+              "value": "magnifying-glass"
+            },
+            {
+              "label": "Martini",
+              "value": "martini"
+            },
+            {
+              "label": "Megaphone",
+              "value": "megaphone"
+            },
+            {
+              "label": "Minus Circle",
+              "value": "minus-circle"
+            },
+            {
+              "label": "Moon Stars",
+              "value": "moon-stars"
+            },
+            {
+              "label": "Moon",
+              "value": "moon"
+            },
+            {
+              "label": "Mountains",
+              "value": "mountains"
+            },
+            {
+              "label": "Orange Slice",
+              "value": "orange-slice"
+            },
+            {
+              "label": "Orange",
+              "value": "orange"
+            },
+            {
+              "label": "Oven",
+              "value": "oven"
+            },
+            {
+              "label": "Package",
+              "value": "package"
+            },
+            {
+              "label": "Paint Brush Household",
+              "value": "paint-brush-household"
+            },
+            {
+              "label": "Palette",
+              "value": "palette"
+            },
+            {
+              "label": "Paper Plane Tilt",
+              "value": "paper-plane-tilt"
+            },
+            {
+              "label": "Paperclip",
+              "value": "paperclip"
+            },
+            {
+              "label": "Paw Print",
+              "value": "paw-print"
+            },
+            {
+              "label": "Pepper",
+              "value": "pepper"
+            },
+            {
+              "label": "Percent",
+              "value": "percent"
+            },
+            {
+              "label": "Phone",
+              "value": "phone"
+            },
+            {
+              "label": "Pill",
+              "value": "pill"
+            },
+            {
+              "label": "Ping Pong",
+              "value": "ping-pong"
+            },
+            {
+              "label": "Pint Glass",
+              "value": "pint-glass"
+            },
+            {
+              "label": "Pinterest Logo",
+              "value": "pinterest-logo"
+            },
+            {
+              "label": "Pizza",
+              "value": "pizza"
+            },
+            {
+              "label": "Planet",
+              "value": "planet"
+            },
+            {
+              "label": "Plant",
+              "value": "plant"
+            },
+            {
+              "label": "Plus Circle",
+              "value": "plus-circle"
+            },
+            {
+              "label": "Push Pin",
+              "value": "push-pin"
+            },
+            {
+              "label": "Question Mark",
+              "value": "question-mark"
+            },
+            {
+              "label": "Question",
+              "value": "question"
+            },
+            {
+              "label": "Rabbit",
+              "value": "rabbit"
+            },
+            {
+              "label": "Racquet",
+              "value": "racquet"
+            },
+            {
+              "label": "Radio",
+              "value": "radio"
+            },
+            {
+              "label": "Rainbow Cloud",
+              "value": "rainbow-cloud"
+            },
+            {
+              "label": "Rainbow",
+              "value": "rainbow"
+            },
+            {
+              "label": "Recycle",
+              "value": "recycle"
+            },
+            {
+              "label": "Repeat",
+              "value": "repeat"
+            },
+            {
+              "label": "Rocket",
+              "value": "rocket"
+            },
+            {
+              "label": "Sailboat",
+              "value": "sailboat"
+            },
+            {
+              "label": "Scissors",
+              "value": "scissors"
+            },
+            {
+              "label": "Seal Check",
+              "value": "seal-check"
+            },
+            {
+              "label": "Shield",
+              "value": "shield"
+            },
+            {
+              "label": "Shooting Star",
+              "value": "shooting-star"
+            },
+            {
+              "label": "Shopping Bag",
+              "value": "shopping-bag"
+            },
+            {
+              "label": "Shower",
+              "value": "shower"
+            },
+            {
+              "label": "Smiley",
+              "value": "smiley"
+            },
+            {
+              "label": "Snapchat Logo",
+              "value": "snapchat-logo"
+            },
+            {
+              "label": "Sparkle",
+              "value": "sparkle"
+            },
+            {
+              "label": "Spiral",
+              "value": "spiral"
+            },
+            {
+              "label": "Spray Bottle",
+              "value": "spray-bottle"
+            },
+            {
+              "label": "Star And Crescent",
+              "value": "star-and-crescent"
+            },
+            {
+              "label": "Star Four",
+              "value": "star-four"
+            },
+            {
+              "label": "Star",
+              "value": "star"
+            },
+            {
+              "label": "Sun",
+              "value": "sun"
+            },
+            {
+              "label": "Swatches",
+              "value": "swatches"
+            },
+            {
+              "label": "Tag",
+              "value": "tag"
+            },
+            {
+              "label": "Tiktok Logo",
+              "value": "tiktok-logo"
+            },
+            {
+              "label": "Timer",
+              "value": "timer"
+            },
+            {
+              "label": "Tree Evergreen",
+              "value": "tree-evergreen"
+            },
+            {
+              "label": "Tree Palm",
+              "value": "tree-palm"
+            },
+            {
+              "label": "Tree",
+              "value": "tree"
+            },
+            {
+              "label": "Trophy",
+              "value": "trophy"
+            },
+            {
+              "label": "Umbrella",
+              "value": "umbrella"
+            },
+            {
+              "label": "User",
+              "value": "user"
+            },
+            {
+              "label": "Warning Circle",
+              "value": "warning-circle"
+            },
+            {
+              "label": "Watch",
+              "value": "watch"
+            },
+            {
+              "label": "Waves",
+              "value": "waves"
+            },
+            {
+              "label": "Wine",
+              "value": "wine"
+            },
+            {
+              "label": "Wrench",
+              "value": "wrench"
+            },
+            {
+              "label": "X Circle",
+              "value": "x-circle"
+            },
+            {
+              "label": "X Square",
+              "value": "x-square"
+            },
+            {
+              "label": "X Logo",
+              "value": "x-logo"
+            },
+            {
+              "label": "Yarn",
+              "value": "yarn"
+            },
+            {
+              "label": "Youtube Logo",
+              "value": "youtube-logo"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Alternative icon/image",
+          "info": "160 x 160px .svg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Size",
+          "unit": "px",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "sale_badge",
+          "label": "Show sale badges",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "product_badges",
+          "label": "Show product badges",
+          "info": "Add tag '_preorder' or '_badge_with_custom_text' to a product in order to show the badge",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_over_gallery",
+          "label": "Show badges over gallery",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 8
+        }
+      ]
+    },
+    {
+      "type": "image_badge",
+      "name": "Image badge",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Navigate to [Theme settings → Badges](/admin/themes/current/editor?context=theme) to configure."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_over_gallery",
+          "label": "Show badge over gallery",
+          "info": "When disabled, the badge shows with the other product blocks",
+          "default": true
+        },
+        {
+          "type": "header",
+          "visible_if": "{{ block.settings.show_over_gallery == false }}",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "visible_if": "{{ block.settings.show_over_gallery == false }}",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 8
+        }
+      ]
+    },
+    {
+      "type": "product-card-tags",
+      "name": "Product card tags",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Tags, text size and default colors are set in Theme settings > Product card tags."
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 8
+        }
+      ]
+    },
+    {
+      "type": "sku",
+      "name": "SKU",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
+      "type": "fit-guide",
+      "name": "Fit guide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Fit"
+        },
+        {
+          "type": "text",
+          "id": "selected_segment",
+          "label": "Active segment",
+          "default": "4",
+          "info": "Enter a number from 1 - 5 to show active fit. Use a metafield for a custom fit per product."
+        },
+        {
+          "type": "text",
+          "id": "left_label",
+          "label": "Left label",
+          "default": "Small"
+        },
+        {
+          "type": "text",
+          "id": "middle_label",
+          "label": "Middle label",
+          "default": "True to size"
+        },
+        {
+          "type": "text",
+          "id": "right_label",
+          "label": "Right label",
+          "default": "Large"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "fit_color",
+          "label": "Color"
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 8
+        }
+      ]
+    },
+    {
+      "type": "shape-divider",
+      "name": "Shape divider",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "target_section",
+          "label": "Target section",
+          "info": "The divider sits on the product form edge. Section above places it on the top edge, Section below on the bottom edge.",
+          "default": "below",
+          "options": [
+            {
+              "value": "above",
+              "label": "Section above"
+            },
+            {
+              "value": "below",
+              "label": "Section below"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "target_color_scheme",
+          "label": "Target section color scheme",
+          "info": "Use this section's color scheme so the divider blends into the page around the product form.",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "waves-medium",
+          "options": [
+            {
+              "value": "waves-small",
+              "label": "Waves small"
+            },
+            {
+              "value": "waves-medium",
+              "label": "Waves medium"
+            },
+            {
+              "value": "waves-large",
+              "label": "Waves large"
+            },
+            {
+              "value": "waves-abstract",
+              "label": "Waves abstract"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "flip_horizontal",
+          "label": "Flip horizontal",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Desktop height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "height_mobile",
+          "label": "Mobile height",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "title",
+          "settings": {
+            "subheading_option": "breadcrumb"
+          }
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "variants"
+        },
+        {
+          "type": "buttons"
+        },
+        {
+          "type": "pickup"
+        },
+        {
+          "type": "tab_richtext"
+        },
+        {
+          "type": "divider",
+          "settings": {
+            "padding_bottom": 16
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "icon_key": "arrow-circle-up-right",
+            "text": "<p>Free 30 Days Returns</p>"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "icon_key": "package",
+            "text": "<p>Free shipping on orders over $100</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "aside", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,121 @@
+@charset "UTF-8";
+@media only screen and (max-width: 749px) {
+  .wrapper .featured-posts, .wrapper--full-padded .featured-posts {
+    padding: 0;
+  }
+  .wrapper .featured-posts swiper-slide, .wrapper--full-padded .featured-posts swiper-slide {
+    padding-left: var(--outer);
+    padding-right: var(--outer);
+  }
+}
+
+.editorial__slider .swiper-button-prev,
+.editorial__slider .swiper-button-next {
+  top: auto;
+  bottom: 35px;
+  margin-top: 0;
+}
+@media only screen and (max-width: 1399px) {
+  .editorial__slider .swiper-button-prev,
+  .editorial__slider .swiper-button-next {
+    bottom: 20px;
+  }
+}
+.editorial__slider .swiper-button-prev {
+  left: var(--outer);
+}
+.editorial__slider .swiper-button-next {
+  right: auto;
+  left: calc(var(--outer) + 50px);
+}
+@media only screen and (max-width: 749px) {
+  .editorial__slider swiper-container.grid--mobile-slider {
+    width: 100%;
+  }
+}
+
+.editorial {
+  background: var(--bg);
+  overflow-wrap: break-word;
+}
+@media only screen and (min-width: 750px) {
+  .editorial {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
+.editorial__aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--outer);
+}
+@media only screen and (min-width: 750px) {
+  .editorial__aside {
+    flex: 0 0 50%;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .editorial__aside {
+    display: block;
+  }
+  .wrapper--full-padded .editorial__aside {
+    padding-left: 0;
+  }
+}
+
+@media only screen and (max-width: 749px) {
+  .editorial__slider.is-initialized .editorial__aside {
+    padding-bottom: 70px;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .editorial__aside[data-subheading]::after {
+    content: attr(data-subheading);
+    padding-top: 0.5em;
+    margin-top: auto;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.editorial__content {
+  margin: auto 0;
+}
+
+.editorial__subheading {
+  padding-left: 5px;
+  padding-bottom: 0.5em;
+  margin: 0 0 auto;
+}
+
+.editorial__subheading + .editorial__content .editorial__title:first-child {
+  margin-top: 0;
+}
+
+.editorial__meta {
+  font-size: var(--font-body-small);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 7px 0;
+}
+
+.editorial__meta > *:not(:last-child)::after {
+  content: "•";
+  padding: 0 7px;
+}
+
+.editorial__image {
+  display: flex;
+}
+@media only screen and (min-width: 750px) {
+  .editorial__image {
+    flex: 0 0 50%;
+  }
+}
+
+.editorial__link {
+  margin-top: 1em;
+}

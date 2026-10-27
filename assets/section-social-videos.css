@@ -1,0 +1,175 @@
+.social-videos:not(:has(swiper-container.is-initialized)) {
+  overflow: hidden;
+}
+
+.social-video__modal {
+  --btn-size: 40px;
+  --nav-btn-size: 40px;
+}
+
+.social-videos__content dialog[open] {
+  cursor: pointer;
+}
+.social-videos__content .modal__body {
+  cursor: default;
+}
+.social-videos__content .swiper-button-disabled {
+  opacity: 0;
+}
+
+.social-video__item {
+  display: block;
+  padding: 0 calc(var(--gap) / 2);
+}
+@media only screen and (min-width: 990px) {
+  .social-video__item {
+    width: calc(100vw / var(--videos-per-row, 6));
+  }
+}
+@media only screen and (min-width: 750px) and (max-width: 989px) {
+  .social-video__item {
+    width: calc(100vw / var(--videos-per-row-tablet, 4));
+  }
+}
+@media only screen and (max-width: 749px) {
+  .social-video__item {
+    width: 62.5vw;
+  }
+}
+
+.social-video__button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+}
+.social-video__button .icon-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 4px;
+  background: color-mix(in srgb, var(--bg) var(--frosted-glass-bg-opacity, 100%), transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bg) var(--frosted-glass-border-opacity, 100%), transparent);
+  border-radius: var(--RADIUS);
+}
+
+.social-video__onboarding-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  aspect-ratio: 16/9;
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
+
+.social-video__media {
+  position: relative;
+  overflow: hidden;
+}
+.social-video__media .social-video__button {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.social-video__media .icon-pause {
+  display: block;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 8px;
+  background: color-mix(in srgb, var(--bg) var(--frosted-glass-bg-opacity, 100%), transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bg) var(--frosted-glass-border-opacity, 100%), transparent);
+  border-radius: var(--RADIUS);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.social-video__media:hover .icon-pause {
+  opacity: 1;
+}
+
+@media only screen and (min-width: 750px) {
+  .social-video__modal {
+    --btn-size: 40px;
+    position: sticky;
+    top: var(--inner);
+    bottom: var(--inner);
+  }
+  .social-video__modal .modal__body {
+    width: 640px;
+    max-width: calc(100% - (var(--outer) + var(--btn-size) + 20px) * 2);
+    overflow: unset;
+  }
+  .social-video__modal .modal__inner {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+  .social-video__modal .modal__prev {
+    left: auto;
+    right: calc(100% + var(--outer));
+  }
+  .social-video__modal .modal__next {
+    left: calc(100% + var(--outer));
+    right: auto;
+  }
+  .social-video__modal--video-only .modal__body {
+    width: 340px;
+  }
+  .social-video__products {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    padding: var(--inner);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter, 10px);
+  }
+}
+@media only screen and (max-width: 749px) {
+  .social-video__modal dialog[open] .modal__body {
+    animation: translateUp 0.5s ease forwards;
+  }
+  .social-video__modal dialog[closing] .modal__body {
+    animation: translateDown 0.5s ease forwards;
+  }
+  .social-video__modal .modal__body {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+  }
+  .social-video__modal .modal__close {
+    top: 11px;
+    right: 5px;
+  }
+  .social-video__modal .modal__inner {
+    grid-template-columns: 100%;
+  }
+}
+@keyframes translateUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes translateDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
