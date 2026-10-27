@@ -28,6 +28,7 @@
       <a href="#sg-layout">Layout and spacing</a>
       <a href="#sg-forms">Buttons and forms</a>
       <a href="#sg-product">Header and product</a>
+      <a href="#sg-collection">Collection</a>
       <a href="#sg-sections">Footer and sections</a>
       <a href="#sg-icons">Icons</a>
       <a href="#sg-imagery">Imagery</a>
@@ -603,6 +604,59 @@
     </div>
   </section>
 
+  {%- comment -%} Collection components: the theme's own product card and filter markup {%- endcomment -%}
+  <section class="sg-sec" id="sg-collection">
+    {{ 'filters.css' | asset_url | stylesheet_tag }}
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Collection</p>
+        <h2 class="heading-large font-heading">Collection components</h2>
+        <p class="body-large sg-lede">
+          The collection page keeps the Headlands defaults, restyled. These are the theme's own product card and filter markup, so they
+          show exactly what the collection renders.
+        </p>
+      </div>
+
+      <div class="sg-coll">
+        <div class="sg-coll__filters">
+          <p class="subheading sg-label">Filters</p>
+          <ul class="filter-group__links" role="list">
+            <li class="sidebar__item link--add">
+              <input type="checkbox" id="sg-filter-1"><label for="sg-filter-1"><span>In stock</span></label>
+            </li>
+            <li class="sidebar__item sidebar__item--active link--remove">
+              <input type="checkbox" id="sg-filter-2" checked><label for="sg-filter-2"><span>Pruners</span></label>
+            </li>
+            <li class="sidebar__item link--disable">
+              <input type="checkbox" id="sg-filter-3" disabled><label for="sg-filter-3"><span>Out of stock</span></label>
+            </li>
+          </ul>
+          <div class="filter__price__fields sg-gap-top">
+            <div class="filter__price__field filter__price__from"><span class="filter__price__currency">$</span><input class="filter__price__input" type="number" value="0" aria-label="From"></div>
+            <div class="filter__price__spacer">-</div>
+            <div class="filter__price__field filter__price__to"><span class="filter__price__currency">$</span><input class="filter__price__input" type="number" value="120" aria-label="To"></div>
+          </div>
+          <p class="body-x-small sg-muted sg-gap-top">Unchecked, checked (green fill, Bone check, never scarlet) and unavailable. Price fields: 1px border, 2px radius.</p>
+        </div>
+
+        <div>
+          <p class="subheading sg-label">Theme product card · used on collections</p>
+          <div class="sg-coll__cards">
+            {%- for sg_product in collections.all.products limit: 3 -%}
+              {%- render 'product-card', product: sg_product, index: forloop.index -%}
+            {%- else -%}
+              {%- render 'product-card', product: null, index: 1 -%}
+            {%- endfor -%}
+          </div>
+          <p class="body-x-small sg-muted sg-gap-top">
+            4:5 image, Inter name, muted tabular price. No badges, no hover image swap, no quick add. The Bone-raised card in "Header and
+            product" stays for custom sections (featured products, editorial picks).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {%- comment -%} Footer and sections {%- endcomment -%}
   <section class="sg-sec" id="sg-sections">
     <div class="ds-container">
@@ -1028,6 +1082,13 @@
   .sg-product__details .sg-label:first-child { margin-top: 0 !important; }
   .sg-price { margin-top: var(--space-3); }
 
+  .sg-coll { display: grid; grid-template-columns: 288px minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+  .sg-coll__filters .filter-group__links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .sg-coll__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+  @media only screen and (max-width: 767px) {
+    .sg-coll { grid-template-columns: 1fr; }
+    .sg-coll__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   .sg-bands { margin: var(--space-4) 0 0; }
   .sg-gradient { padding: var(--space-4) var(--space-3); min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
 

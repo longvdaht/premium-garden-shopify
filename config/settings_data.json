@@ -642,7 +642,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#B81A14",
+            "accent": "#16271C",
             "border": "#DBDCD6",
             "overlay": "#16271C",
             "links": "#16271C"
@@ -660,7 +660,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#B81A14",
+            "accent": "#16271C",
             "border": "#DBDCD6",
             "overlay": "#16271C",
             "links": "#16271C"
@@ -678,7 +678,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#B81A14",
+            "accent": "#16271C",
             "border": "#DBDCD6",
             "overlay": "#16271C",
             "links": "#16271C"
@@ -696,7 +696,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#C9C3B4",
+            "accent": "#FBF9F4",
             "border": "#3E4B41",
             "overlay": "#0E1812",
             "links": "#FBF9F4"
@@ -714,7 +714,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#C9C3B4",
+            "accent": "#FBF9F4",
             "border": "#3E4B41",
             "overlay": "#0E1812",
             "links": "#FBF9F4"
@@ -732,7 +732,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#C9C3B4",
+            "accent": "#FBF9F4",
             "border": "#3E4B41",
             "overlay": "#0E1812",
             "links": "#FBF9F4"
@@ -750,7 +750,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#C9C3B4",
+            "accent": "#FBF9F4",
             "border": "#3E4B41",
             "overlay": "#0E1812",
             "links": "#FBF9F4"
@@ -768,7 +768,7 @@
             "btn_secondary_bg": "#16271C",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#16271C",
-            "accent": "#B81A14",
+            "accent": "#16271C",
             "border": "#DBDCD6",
             "overlay": "#16271C",
             "links": "#16271C"
@@ -786,7 +786,7 @@
             "btn_secondary_bg": "#D91E18",
             "btn_secondary_text": "#FBF9F4",
             "btn_secondary_border": "#D91E18",
-            "accent": "#C9C3B4",
+            "accent": "#FBF9F4",
             "border": "#3E4B41",
             "overlay": "#0E1812",
             "links": "#FBF9F4"
@@ -833,7 +833,8 @@
       "show_saving_badge": false,
       "show_image_badge": false,
       "quick_add_bg_color": "#FBF9F4",
-      "quick_add_text_color": "#16271C"
+      "quick_add_text_color": "#16271C",
+      "quickview_enable": false
     }
   }
 }
