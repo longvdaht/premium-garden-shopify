@@ -1,0 +1,1094 @@
+{%- comment -%}
+  Potager styleguide: a living reference for the design system, rendered with the
+  theme's own settings and classes (headings, .subheading, .btn, color schemes) and
+  the ds-* components in assets/potager.css. Each type style, colour and key theme
+  setting reads its computed value in the browser and compares it with the token.
+  Source: Potager Style Guide v1 and developer files v1 (9 October 2026).
+  Template: templates/page.styleguide.json. Preview any page with ?view=styleguide.
+{%- endcomment -%}
+
+{%- liquid
+  assign wordmark = section.settings.wordmark | default: 'Potager'
+  assign legal_name = section.settings.legal_name
+  assign icon_names = 'search,user,shopping-bag,menu,x,plus,minus,chevron-down,chevron-right,chevron-left,chevron-up,arrow-right,check,mail,truck,instagram' | split: ','
+-%}
+
+<div class="sg" data-sg>
+  <header class="sg-hero ds-container">
+    <p class="subheading">Brand style guide · Version 1</p>
+    <h1 class="heading-x-large sg-hero__title">Design system</h1>
+    <p class="body-large sg-lede">
+      The visual reference for the Headlands build. Everything on this page is drawn with the theme's own settings and the
+      design-system layer, and each value checks itself against the tokens.
+    </p>
+    <nav class="sg-toc" aria-label="Styleguide sections">
+      <a href="#sg-start">Start here</a>
+      <a href="#sg-color">Colour</a>
+      <a href="#sg-type">Typography</a>
+      <a href="#sg-layout">Layout and spacing</a>
+      <a href="#sg-forms">Buttons and forms</a>
+      <a href="#sg-product">Header and product</a>
+      <a href="#sg-sections">Footer and sections</a>
+      <a href="#sg-icons">Icons</a>
+      <a href="#sg-imagery">Imagery</a>
+      <a href="#sg-logo">Logo</a>
+      <a href="#sg-checklist">Checklist</a>
+    </nav>
+    <p class="body-x-small sg-muted sg-summary" data-sg-summary aria-live="polite"></p>
+  </header>
+
+  {%- comment -%} Start here: theme settings map with live checks {%- endcomment -%}
+  <section class="sg-sec" id="sg-start">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Start here</p>
+        <h2 class="heading-large">Theme settings map</h2>
+        <p class="body-large sg-lede">
+          Set as much as possible through Headlands' Theme settings, then restyle components to match. The status column reads the
+          live page.
+        </p>
+      </div>
+
+      <div class="sg-split">
+        <table class="sg-table">
+          <thead>
+            <tr><th scope="col">Setting</th><th scope="col">Value</th><th scope="col">On this page</th></tr>
+          </thead>
+          <tbody>
+            <tr data-check="body" data-prop="backgroundColor" data-expect="#FBF9F4">
+              <td>Page background</td><td>#FBF9F4 bone-page. Never #FFFFFF</td><td data-result></td>
+            </tr>
+            <tr data-check="body" data-prop="color" data-expect="#16271C">
+              <td>Body and heading text</td><td>#16271C green. Never #000000</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='btn-primary']" data-prop="backgroundColor" data-expect="#16271C">
+              <td>Primary button</td><td>Fill #16271C, text #FBF9F4, hover #1E3527</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='btn-signal']" data-prop="backgroundColor" data-expect="#D91E18">
+              <td>Accent button (one per view)</td><td>Fill #D91E18, hover #B81A14</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='dark']" data-prop="backgroundColor" data-expect="#16271C">
+              <td>Dark colour scheme</td><td>Background #16271C, text #FBF9F4</td><td data-result></td>
+            </tr>
+            <tr data-check=":root" data-var="--hairline" data-expect="rgba(22, 39, 28, 0.14)">
+              <td>Borders and dividers</td><td>1px rgba(22,39,28,.14)</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='heading']" data-prop="font" data-expect="Fraunces 500">
+              <td>Heading font</td><td>Fraunces, weight 500</td><td data-result></td>
+            </tr>
+            <tr data-check="body" data-prop="font" data-expect="Inter 400">
+              <td>Body font</td><td>Inter, weights 400 / 500 / 600</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='btn-primary']" data-prop="borderTopLeftRadius" data-expect="0px">
+              <td>Corner radius</td><td>0 everywhere</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='input']" data-prop="borderTopLeftRadius" data-expect="2px">
+              <td>Form input radius</td><td>2px on form inputs only</td><td data-result></td>
+            </tr>
+            <tr data-check="[data-sg-probe='btn-primary']" data-prop="boxShadow" data-expect="none">
+              <td>Shadows</td><td>None, on any element</td><td data-result></td>
+            </tr>
+            <tr data-check=":root" data-var="--WIDTH-NORMAL" data-expect="1280px">
+              <td>Page width</td><td>1280px max · gutters 20px mobile, 40px desktop</td><td data-result></td>
+            </tr>
+            <tr data-check=":root" data-var="--LAYOUT-OUTER" data-expect="40px">
+              <td>Desktop gutter</td><td>40px from 768px</td><td data-result></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sg-rules">
+          <p class="subheading">Three rules that matter most</p>
+          <div class="ds-note">
+            <p><strong>No pure white, no pure black, no shadows.</strong> These are what make a store look like a default theme.</p>
+          </div>
+          <div class="ds-note">
+            <p><strong>Scarlet is punctuation.</strong> One scarlet action per screen, plus thin rules and small marks. Never large fills.</p>
+          </div>
+          <div class="ds-note">
+            <p><strong>Space reads as quality.</strong> 96px between sections and 144px hero padding on desktop.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Colour {%- endcomment -%}
+  <section class="sg-sec" id="sg-color">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Colour</p>
+        <h2 class="heading-large">Racing green, oatmeal Bone, one scarlet</h2>
+        <p class="body-large sg-lede">
+          Split each view about 62% green, 33% Bone, 5% scarlet. Green carries full-bleed sections, the footer and type. Bone is the
+          breathing room. Scarlet marks the one action that matters.
+        </p>
+      </div>
+
+      <div class="sg-ratio" role="img" aria-label="Colour split: 62% green, 33% Bone, 5% scarlet">
+        <span style="flex: 62; background: var(--green);"></span>
+        <span style="flex: 33; background: var(--bone-ground);"></span>
+        <span style="flex: 5; background: var(--signal);"></span>
+      </div>
+      <p class="body-x-small sg-muted">62% green · 33% Bone · 5% scarlet</p>
+
+      {%- liquid
+        capture swatches
+          echo 'green|#16271C|Green|Text, dark sections, primary button;'
+          echo 'green-raised|#1E3527|Green raised|Hover, raised areas on green;'
+          echo 'green-deep|#0E1812|Green deep|Footer base, recessed panels;'
+          echo 'green-lift|#2C4A36|Lift|Gradients only. Never a flat fill;'
+          echo 'green-glow|#3A5E45|Glow|Gradients only. Never a flat fill;'
+          echo 'signal|#D91E18|Signal scarlet|One action per view. Darken on hover, never lighten;'
+          echo 'signal-press|#B81A14|Signal press|Hover and pressed. Small labels on Bone;'
+          echo 'bone-page|#FBF9F4|Bone page|Page background;'
+          echo 'bone-raised|#F4F0E7|Bone raised|Cards, raised areas;'
+          echo 'bone-ground|#ECE6D8|Bone ground|Image placeholders, hover fills;'
+          echo 'ink-muted|#3B4A40|Muted on Bone|Captions, hints'
+        endcapture
+        assign swatch_list = swatches | split: ';'
+      -%}
+      <div class="sg-grid sg-grid--swatches">
+        {%- for swatch in swatch_list -%}
+          {%- assign s = swatch | split: '|' -%}
+          <figure class="sg-swatch">
+            <div class="sg-swatch__chip" style="background: var(--{{ s[0] }});" data-sg-color="{{ s[1] }}"></div>
+            <figcaption>
+              <p class="sg-swatch__name">{{ s[2] }}</p>
+              <p class="body-x-small sg-mono">{{ s[1] }} · --{{ s[0] }}</p>
+              <p class="body-x-small sg-muted">{{ s[3] }}</p>
+              <p class="body-x-small" data-result></p>
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+        <figure class="sg-swatch" data-theme="green">
+          <div class="sg-swatch__chip" style="background: var(--ink-muted);" data-sg-color="#C9C3B4"></div>
+          <figcaption>
+            <p class="sg-swatch__name">Muted on green</p>
+            <p class="body-x-small sg-mono">#C9C3B4 · --ink-muted</p>
+            <p class="body-x-small sg-muted">Captions on green</p>
+            <p class="body-x-small" data-result></p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="sg-split sg-split--even">
+        <div class="ds-note">
+          <p>
+            <strong>Small scarlet text fails contrast.</strong> Use scarlet as text only at 24px and above. Small labels (eyebrows,
+            form labels) use #B81A14 on Bone.
+          </p>
+        </div>
+        <div class="ds-note">
+          <p>
+            <strong>Gradients</strong> are allowed as matte tonal backgrounds in the green family only. No glossy shine, and never
+            on buttons.
+          </p>
+        </div>
+      </div>
+
+      <h3 class="heading-medium sg-subhead">Colour schemes in Theme settings</h3>
+      <p class="body-medium sg-muted sg-reading">
+        Sections pick one of these nine schemes in the theme editor. Each one maps to the Bone or Green token theme.
+      </p>
+      {%- liquid
+        capture schemes
+          echo 'scheme-1|Bone page (default);scheme-2|Bone raised;scheme-3|Bone ground;scheme-4|Green;scheme-5|Green deep;'
+          echo 'scheme-6|Green tonal;scheme-7|Green spot;scheme-8|Bone, scarlet primary;scheme-9|Green tonal deep'
+        endcapture
+        assign scheme_list = schemes | split: ';'
+      -%}
+      <div class="sg-grid sg-grid--schemes">
+        {%- for scheme in scheme_list -%}
+          {%- assign sc = scheme | split: '|' -%}
+          <div class="sg-scheme color-{{ sc[0] }}"{% if sc[0] == 'scheme-4' %} data-sg-probe="dark"{% endif %}>
+            <p class="subheading">{{ sc[0] | replace: '-', ' ' }}</p>
+            <p class="heading-small font-heading sg-scheme__name">{{ sc[1] }}</p>
+            <div class="sg-scheme__btns">
+              <span class="btn btn--solid btn--primary">Primary</span>
+              <span class="btn btn--outline btn--primary">Outline</span>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Typography {%- endcomment -%}
+  <section class="sg-sec" id="sg-type">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Typography</p>
+        <h2 class="heading-large">Fraunces for display, Inter for everything else</h2>
+        <p class="body-large sg-lede">
+          A serif display face with a blunt sans: overbuilt, not precious. Display sizes step down below 768px; text sizes stay the
+          same. The spec under each sample is read from the page.
+        </p>
+      </div>
+
+      <div class="sg-type">
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">display-xl</p>
+            <p class="body-x-small sg-muted">Hero headline. One per page. Theme: Heading extra large</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="heading-x-large font-heading sg-type__text" data-sg-spec data-expect="Fraunces 500 · 64 / 1.05 · -1%" data-expect-mobile="Fraunces 500 · 40 / 1.1 · -1%">
+              Cutting tools for the working garden.
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">display-l</p>
+            <p class="body-x-small sg-muted">Section headlines. Theme: Heading large</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="heading-large font-heading sg-type__text" data-sg-spec data-sg-probe="heading" data-expect="Fraunces 500 · 44 / 1.1 · -1%" data-expect-mobile="Fraunces 500 · 32 / 1.15 · -1%">
+              Section headline
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">display-m</p>
+            <p class="body-x-small sg-muted">Product name, card title, price. Theme: Heading medium</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="heading-medium font-heading sg-type__text" data-sg-spec data-expect="Fraunces 500 · 28 / 1.2" data-expect-mobile="Fraunces 500 · 24 / 1.25">
+              Kuroco bud scissors · <span class="sg-tabular">$[00]</span>
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">eyebrow</p>
+            <p class="body-x-small sg-muted">Kickers, labels, accordion titles. Theme: Subheading</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="subheading sg-type__text" data-sg-spec data-expect="Inter 600 · 11 / 1.4 · +20% · caps">
+              Bud scissors · Yoshioka Hamono
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">body-l</p>
+            <p class="body-x-small sg-muted">Ledes. Theme: Body large</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="body-large sg-type__text sg-reading" data-sg-spec data-expect="Inter 400 · 18 / 1.6">
+              Lede and intro copy, lines near 65 characters.
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">body</p>
+            <p class="body-x-small sg-muted">Body copy. Theme: Body medium</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="body-medium sg-type__text sg-reading" data-sg-spec data-expect="Inter 400 · 16 / 1.6">
+              Paragraph copy and product descriptions.
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">meta</p>
+            <p class="body-x-small sg-muted">Captions, hints. Theme: Body extra small</p>
+          </div>
+          <div class="sg-type__sample">
+            <p class="body-x-small sg-type__text sg-muted" data-sg-spec data-expect="Inter 500 · 13 / 1.5">
+              Captions, price notes, form hints
+            </p>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+        <div class="sg-type__row">
+          <div class="sg-type__meta">
+            <p class="subheading">button</p>
+            <p class="body-x-small sg-muted">Buttons, nav links, text CTAs. Theme: Buttons</p>
+          </div>
+          <div class="sg-type__sample">
+            <span class="btn btn--solid btn--primary" data-sg-spec data-sg-nolh data-expect="Inter 600 · 12 · +14% · caps">Add to cart</span>
+            <p class="body-x-small sg-spec" data-result></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-note sg-reading">
+        <p>Headings use weight 500, not bold. Prices use lining, tabular figures. Never use Fraunces below 20px.</p>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Layout and spacing {%- endcomment -%}
+  <section class="sg-sec" id="sg-layout">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Layout and spacing</p>
+        <h2 class="heading-large">Generous space, square corners, hairlines</h2>
+        <p class="body-large sg-lede">
+          Luxury reads as space. Use these values in place of theme defaults; where Headlands only offers presets, choose the nearest
+          larger option.
+        </p>
+      </div>
+
+      <div class="sg-split">
+        <div>
+          <p class="subheading sg-label">Spacing scale (8px base)</p>
+          {%- liquid
+            capture spaces
+              echo '1|8px|Icon-to-label gaps;2|16px|Form gaps, card padding;3|24px|Grid gaps between cards;'
+              echo '4|40px|Between blocks inside a section;5|64px|Padding inside a full-bleed section;'
+              echo '6|96px|Between sections;7|144px|Hero padding'
+            endcapture
+            assign space_list = spaces | split: ';'
+          -%}
+          <ul class="sg-spaces" role="list">
+            {%- for space in space_list -%}
+              {%- assign sp = space | split: '|' -%}
+              <li class="sg-space">
+                <span class="body-x-small sg-mono sg-space__name">space-{{ sp[0] }} · {{ sp[1] }}</span>
+                <span class="sg-space__bar" style="width: var(--space-{{ sp[0] }});"></span>
+                <span class="body-x-small sg-muted">{{ sp[2] }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+          <p class="body-x-small sg-muted">On mobile, use one step down: 64px between sections, 96px hero padding.</p>
+        </div>
+        <div>
+          <p class="subheading sg-label">Grid and breakpoints</p>
+          <table class="sg-table sg-table--compact">
+            <tbody>
+              <tr><td>Max content width</td><td>1280px</td></tr>
+              <tr><td>Reading column (articles, long copy)</td><td>720px</td></tr>
+              <tr><td>Side gutter</td><td>20px below 768px · 40px from 768px</td></tr>
+              <tr><td>Tablet layout starts</td><td>768px</td></tr>
+              <tr><td>Desktop layout starts</td><td>1200px</td></tr>
+              <tr><td>Product grid</td><td>4 across desktop · 3 tablet · 2 mobile</td></tr>
+            </tbody>
+          </table>
+          <p class="subheading sg-label">Edges</p>
+          <div class="sg-edges">
+            <div class="sg-edge"><div class="sg-edge__box"></div><p class="body-x-small sg-muted">radius-0 · cards, buttons, images, drawers, modals</p></div>
+            <div class="sg-edge"><div class="sg-edge__box sg-edge__box--input"></div><p class="body-x-small sg-muted">radius-1 · 2px, form inputs only</p></div>
+          </div>
+          <hr class="ds-rule">
+          <p class="body-x-small sg-muted sg-gap-top">1px hairline dividers instead of cards and shadows. No drop shadows, glass effects or rounded pills anywhere.</p>
+        </div>
+      </div>
+
+      <p class="subheading sg-label">Product grid · 4 across, 24px gaps, 4:5 images</p>
+      <div class="sg-productgrid">
+        {%- for i in (1..4) -%}
+          <div class="ds-ph">4:5</div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Buttons and forms {%- endcomment -%}
+  <section class="sg-sec" id="sg-forms">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Buttons and form elements</p>
+        <h2 class="heading-large">Actions and forms</h2>
+        <p class="body-large sg-lede">
+          Solid for most actions. Scarlet for the single most important action on a screen. Outline for secondary. Focus is a 2px green
+          outline, offset 3px. No icons, shadows or gradients inside buttons.
+        </p>
+      </div>
+
+      <p class="subheading sg-label">Buttons · 48px tall, square, uppercase (theme .btn)</p>
+      <div class="sg-demo">
+        <div class="sg-btns">
+          <button type="button" class="btn btn--solid btn--primary" data-sg-probe="btn-primary">Add to cart</button>
+          <button type="button" class="btn btn--solid btn--secondary" data-sg-probe="btn-signal">Checkout</button>
+          <button type="button" class="btn btn--outline btn--primary">View specs</button>
+          <button type="button" class="btn btn--solid btn--primary" disabled>Sold out</button>
+        </div>
+        <ul class="sg-btnnotes body-x-small sg-muted" role="list">
+          <li>Solid · theme Primary button</li>
+          <li>Scarlet · theme Secondary button, one per view</li>
+          <li>Outline · secondary actions</li>
+          <li>Disabled · Bone ground, muted text</li>
+        </ul>
+      </div>
+      <div class="sg-demo sg-demo--green" data-theme="green">
+        <div class="sg-btns">
+          <button type="button" class="btn btn--solid btn--primary">Add to cart</button>
+          <button type="button" class="btn btn--solid btn--secondary">Checkout</button>
+          <button type="button" class="btn btn--outline btn--primary">View specs</button>
+          <button type="button" class="btn btn--solid btn--primary" disabled>Sold out</button>
+        </div>
+        <p class="body-x-small sg-muted">The same buttons on a green section.</p>
+      </div>
+
+      <div class="sg-split sg-split--even">
+        <div class="sg-stack">
+          <p class="subheading sg-label">Text call to action</p>
+          <p><a class="ds-cta" href="#sg-forms">Read the field guide</a></p>
+          <p class="body-x-small sg-muted">Uppercase link with a 2px scarlet underline. For links that act.</p>
+          <p><a class="btn btn--text btn--primary" href="#sg-forms"><span>Read the field guide</span></a></p>
+          <p class="body-x-small sg-muted">The theme's text button, restyled to match.</p>
+        </div>
+        <div>
+          <p class="subheading sg-label">Quantity</p>
+          <div class="ds-qty" data-sg-qty>
+            <button type="button" aria-label="Decrease quantity" data-sg-qty-step="-1" disabled>{%- render 'potager-icon', name: 'minus' -%}</button>
+            <input type="number" value="1" min="1" max="6" aria-label="Quantity" inputmode="numeric">
+            <button type="button" aria-label="Increase quantity" data-sg-qty-step="1">{%- render 'potager-icon', name: 'plus' -%}</button>
+          </div>
+          <p class="body-x-small sg-muted sg-gap-top">48px tall to sit level with the add-to-cart button. 2px radius.</p>
+        </div>
+      </div>
+
+      <p class="subheading sg-label">Form fields</p>
+      <div class="sg-forms">
+        <div class="ds-field">
+          <label class="ds-field__label" for="sg-email">Email</label>
+          <input class="ds-field__input" id="sg-email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="sg-email-hint" data-sg-probe="input">
+          <p class="ds-field__hint" id="sg-email-hint">We send one seasonal note a week.</p>
+        </div>
+        <div class="ds-field ds-field--error">
+          <label class="ds-field__label" for="sg-postcode">Postcode</label>
+          <input class="ds-field__input" id="sg-postcode" type="text" value="9412" aria-invalid="true" aria-describedby="sg-postcode-hint">
+          <p class="ds-field__hint" id="sg-postcode-hint">Error: enter all five digits.</p>
+        </div>
+        <div class="ds-field">
+          <label class="ds-field__label" for="sg-handle">Handle length</label>
+          <div class="ds-select">
+            <select class="ds-field__select" id="sg-handle">
+              <option>330mm</option>
+              <option>380mm</option>
+            </select>
+            {%- render 'potager-icon', name: 'chevron-down' -%}
+          </div>
+        </div>
+        <div class="sg-checks">
+          <label class="ds-check"><input type="checkbox" name="sg-note" checked> Email me the seasonal note</label>
+          <label class="ds-check"><input type="checkbox" name="sg-gift"> This is a gift</label>
+        </div>
+      </div>
+      <p class="body-x-small sg-muted sg-reading">
+        Inputs: 1px green border, 2px radius, 16px text. Errors: the word "Error" plus a 2px scarlet border, never colour alone. Selects
+        use the chevron icon. Checkboxes fill green when checked, never scarlet. No toggle switches.
+      </p>
+    </div>
+  </section>
+
+  {%- comment -%} Header and product {%- endcomment -%}
+  <section class="sg-sec" id="sg-product">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Header and product</p>
+        <h2 class="heading-large">Header, product card, product details</h2>
+        <p class="body-large sg-lede">
+          Desktop header: wordmark left, text links, utility icons right. Bone or green background, hairline bottom edge, no shadow.
+          Mobile: menu icon left, wordmark centred, cart right.
+        </p>
+      </div>
+
+      <div class="sg-frame">
+        <nav class="ds-nav" aria-label="Header example">
+          <button type="button" class="ds-iconbtn ds-nav__menu" aria-label="Menu">{%- render 'potager-icon', name: 'menu' -%}</button>
+          <a class="ds-wordmark" href="#sg-product">{{ wordmark }}</a>
+          <ul class="ds-nav__links">
+            <li><a href="#sg-product">Shop</a></li>
+            <li><a href="#sg-product">Journal</a></li>
+            <li><a href="#sg-product">About</a></li>
+          </ul>
+          <div class="ds-nav__utils">
+            <a class="ds-iconbtn" href="#sg-product" aria-label="Search">{%- render 'potager-icon', name: 'search' -%}</a>
+            <a class="ds-iconbtn" href="#sg-product" aria-label="Account">{%- render 'potager-icon', name: 'user' -%}</a>
+            <a class="ds-iconbtn ds-nav__cart" href="#sg-product" aria-label="Cart, 2 items">{%- render 'potager-icon', name: 'shopping-bag' -%}<span>2</span></a>
+          </div>
+        </nav>
+      </div>
+      <div class="sg-frame" data-theme="green">
+        <nav class="ds-nav" aria-label="Header example on green">
+          <button type="button" class="ds-iconbtn ds-nav__menu" aria-label="Menu">{%- render 'potager-icon', name: 'menu' -%}</button>
+          <a class="ds-wordmark" href="#sg-product">{{ wordmark }}</a>
+          <ul class="ds-nav__links">
+            <li><a href="#sg-product">Shop</a></li>
+            <li><a href="#sg-product">Journal</a></li>
+            <li><a href="#sg-product">About</a></li>
+          </ul>
+          <div class="ds-nav__utils">
+            <a class="ds-iconbtn" href="#sg-product" aria-label="Search">{%- render 'potager-icon', name: 'search' -%}</a>
+            <a class="ds-iconbtn" href="#sg-product" aria-label="Account">{%- render 'potager-icon', name: 'user' -%}</a>
+            <a class="ds-iconbtn ds-nav__cart" href="#sg-product" aria-label="Cart, 2 items">{%- render 'potager-icon', name: 'shopping-bag' -%}<span>2</span></a>
+          </div>
+        </nav>
+      </div>
+
+      <div class="sg-product">
+        <article class="ds-card sg-product__card">
+          <div class="ds-ph">PHOTO 4:5 · bud scissors on Bone ground</div>
+          <div class="ds-card__body">
+            <p class="ds-eyebrow">Bud scissors</p>
+            <h3 class="ds-card__name">Kuroco 1022</h3>
+            <div class="ds-card__row">
+              <span class="ds-price">$[00]</span>
+              <a class="ds-cta" href="#sg-product">View</a>
+            </div>
+          </div>
+        </article>
+
+        <div class="sg-product__details">
+          <p class="subheading sg-label">Product details · accordion</p>
+          <div class="ds-acc">
+            <details class="ds-acc__item" open>
+              <summary>
+                Specifications
+                {%- render 'potager-icon', name: 'plus', class: 'ds-acc__plus' -%}
+                {%- render 'potager-icon', name: 'minus', class: 'ds-acc__minus' -%}
+              </summary>
+              <div class="ds-acc__body">
+                <dl class="ds-specs">
+                  <div class="ds-specs__row"><dt>Blade</dt><dd>[Steel grade], hand-sharpened</dd></div>
+                  <div class="ds-specs__row"><dt>Length</dt><dd>[000] mm</dd></div>
+                  <div class="ds-specs__row"><dt>Made by</dt><dd>Yoshioka Hamono, Japan</dd></div>
+                </dl>
+              </div>
+            </details>
+            <details class="ds-acc__item">
+              <summary>
+                Care and sharpening
+                {%- render 'potager-icon', name: 'plus', class: 'ds-acc__plus' -%}
+                {%- render 'potager-icon', name: 'minus', class: 'ds-acc__minus' -%}
+              </summary>
+              <div class="ds-acc__body">
+                <p>Wipe the blades after each use. Oil the pivot monthly. Hone with a fine stone when the cut starts to drag.</p>
+              </div>
+            </details>
+            <details class="ds-acc__item">
+              <summary>
+                Shipping and returns
+                {%- render 'potager-icon', name: 'plus', class: 'ds-acc__plus' -%}
+                {%- render 'potager-icon', name: 'minus', class: 'ds-acc__minus' -%}
+              </summary>
+              <div class="ds-acc__body">
+                <p>[Shipping and returns copy to be confirmed.]</p>
+              </div>
+            </details>
+          </div>
+          <div class="sg-price">
+            <p class="subheading sg-label">Price</p>
+            <span class="ds-price">$[00] <span class="ds-price__note">per pair</span></span>
+          </div>
+        </div>
+      </div>
+      <p class="body-x-small sg-muted sg-reading">
+        Product card: 4:5 image, Bone-raised body, eyebrow category, Fraunces name and price, hairline above the price row. No badges, no
+        shadows, no hover zoom. Accordion: hairline rows, eyebrow-style titles, plus turns to minus, first row open. Spec rows use a label
+        column and a value column.
+      </p>
+
+      <p class="subheading sg-label">Note blocks · product page modules</p>
+      <div class="sg-grid sg-grid--notes">
+        <div class="ds-note"><p class="ds-eyebrow">How we use it</p><p>We keep a pair at the potting bench for deadheading and harvest. [Copy to come.]</p></div>
+        <div class="ds-note"><p class="ds-eyebrow">Where the job ends</p><p>Stems up to [0] mm. Past that, reach for the pruners.</p></div>
+        <div class="ds-note"><p class="ds-eyebrow">Why it matters to the plant</p><p>[A checked, sourced claim goes here.]</p></div>
+        <div class="ds-note"><p class="ds-eyebrow">Care</p><p>Wipe, dry, oil the pivot. Hone when the cut drags.</p></div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Footer and sections {%- endcomment -%}
+  <section class="sg-sec" id="sg-sections">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Footer and sections</p>
+        <h2 class="heading-large">Footer, full-bleed sections, gradients</h2>
+        <p class="body-large sg-lede">
+          The footer is always green, with a deep green base row. Underlined single-line signup, no boxed input. Text links, not coloured
+          social logos. No payment badges.
+        </p>
+      </div>
+    </div>
+
+    <footer class="ds-footer" data-theme="green" aria-label="Footer example">
+      <div class="ds-footer__main">
+        <div class="ds-footer__brand">
+          <a class="ds-wordmark" href="#sg-sections">{{ wordmark }}</a>
+          <p class="ds-footer__lede">Tools for the working garden. One seasonal note a week.</p>
+          <form class="ds-footer__signup" onsubmit="return false;">
+            <label class="visually-hidden" for="sg-signup">Email address</label>
+            <input id="sg-signup" type="email" placeholder="Email address" autocomplete="email">
+            <button type="submit" aria-label="Sign up">{%- render 'potager-icon', name: 'arrow-right' -%}</button>
+          </form>
+        </div>
+        <div>
+          <h3>Shop</h3>
+          <ul role="list">
+            <li><a href="#sg-sections">Pruning and Cutting</a></li>
+            <li><a href="#sg-sections">Pruners</a></li>
+            <li><a href="#sg-sections">Shears and scissors</a></li>
+            <li><a href="#sg-sections">Hedge shears</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>About</h3>
+          <ul role="list">
+            <li><a href="#sg-sections">Our story</a></li>
+            <li><a href="#sg-sections">Journal</a></li>
+            <li><a href="#sg-sections">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Help</h3>
+          <ul role="list">
+            <li><a href="#sg-sections">Shipping and returns</a></li>
+            <li><a href="#sg-sections">Care and sharpening</a></li>
+            <li><a href="#sg-sections">FAQ</a></li>
+            <li><a href="#sg-sections">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-footer__base">
+        <span>&copy; {{ 'now' | date: '%Y' }} {{ legal_name }}</span>
+        <span><a href="#sg-sections">Privacy</a> · <a href="#sg-sections">Terms</a> · <a href="#sg-sections">Accessibility</a></span>
+      </div>
+    </footer>
+
+    <div class="sg-bands">
+      <div class="ds-band" data-theme="green">
+        <div class="ds-band__inner">
+          <p class="ds-eyebrow">Section band · green</p>
+          <h2 class="heading-large">Cutting tools for the working garden.</h2>
+          <p class="body-medium">A full-bleed section with generous padding: 96px top and bottom, 64px at the sides. Alternate green and Bone bands down a page.</p>
+          <a class="ds-cta" href="#sg-sections">Read the field guide</a>
+        </div>
+      </div>
+      <div class="ds-band" data-theme="bone">
+        <div class="ds-band__inner">
+          <p class="ds-eyebrow">Section band · Bone</p>
+          <h2 class="heading-large">Made at the bench, not in the brochure.</h2>
+          <p class="body-medium">Keep the split near 62% green and 33% Bone across a whole page. Never shrink the padding to fit more in.</p>
+          <a class="ds-cta" href="#sg-sections">Our story</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-container">
+      <div class="sg-grid sg-grid--gradients">
+        <div class="sg-gradient" data-theme="green"><p class="subheading">Flat green</p><p class="body-x-small">Full-bleed section</p></div>
+        <div class="sg-gradient ds-tonal" data-theme="green"><p class="subheading">Tonal gradient</p><p class="body-x-small">Matte, diagonal</p></div>
+        <div class="sg-gradient ds-spot" data-theme="green"><p class="subheading">Spot gradient</p><p class="body-x-small">Behind a hero object</p></div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Icons {%- endcomment -%}
+  <section class="sg-sec" id="sg-icons">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Iconography</p>
+        <h2 class="heading-large">Functional icons, one set, one weight</h2>
+        <p class="body-large sg-lede">
+          Lucide, restyled: 1.5px stroke, square caps, mitered joins, no fill, drawn at 20px. Icons take the text colour. The theme's
+          own UI icons now render from this set.
+        </p>
+      </div>
+      <ul class="sg-icons" role="list">
+        {%- for icon_name in icon_names -%}
+          <li class="sg-icon">
+            <span class="ds-iconbtn" aria-hidden="true">{%- render 'potager-icon', name: icon_name -%}</span>
+            <span class="body-x-small sg-mono">{{ icon_name }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <ul class="sg-icons sg-icons--green" role="list" data-theme="green">
+        {%- for icon_name in icon_names -%}
+          <li class="sg-icon">
+            <span class="ds-iconbtn" aria-hidden="true">{%- render 'potager-icon', name: icon_name -%}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <div class="sg-split sg-split--even">
+        <div>
+          <p class="subheading sg-label">Use</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>Search, account, cart (with count) in the header. Menu and close on mobile.</li>
+            <li>Plus and minus in quantity steppers and accordions. Chevrons in selects. Arrow in the email signup.</li>
+            <li>44px minimum touch target around every icon button.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="subheading sg-label">Don't</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>No icons as decoration, feature badges or spot art. No emoji.</li>
+            <li>Don't fill icons, change the stroke weight, or colour them scarlet.</li>
+            <li>Navigation links stay as text, never icons.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Imagery {%- endcomment -%}
+  <section class="sg-sec" id="sg-imagery">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Imagery</p>
+        <h2 class="heading-large">Placeholder ratios until photography lands</h2>
+        <p class="body-large sg-lede">
+          Build every layout with labelled placeholders on Bone ground at these ratios, so final images drop in without layout changes.
+        </p>
+      </div>
+      <div class="sg-imagery">
+        <figure class="sg-imagery__hero">
+          <div class="ds-ph" style="aspect-ratio: 16 / 9;">HERO 16:9 · desktop</div>
+          <figcaption class="body-x-small sg-muted">Hero · 16:9 desktop, 4:5 crop on mobile</figcaption>
+        </figure>
+        <figure>
+          <div class="ds-ph" style="aspect-ratio: 4 / 5;">PRODUCT 4:5</div>
+          <figcaption class="body-x-small sg-muted">Product grid and gallery · 4:5</figcaption>
+        </figure>
+        <figure>
+          <div class="ds-ph" style="aspect-ratio: 3 / 2;">EDITORIAL 3:2</div>
+          <figcaption class="body-x-small sg-muted">Editorial, collection banners, journal · 3:2</figcaption>
+        </figure>
+      </div>
+      <div class="sg-split sg-split--even">
+        <div>
+          <p class="subheading sg-label">Direction</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>Tools in hand or in use. Hands only, no faces.</li>
+            <li>Product shots on Bone ground or deep green, matte. Never a white background.</li>
+            <li>One directional light, hard shadow. No glow or colour washes.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="subheading sg-label">Build notes</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>Square corners, no borders or shadows on images. No hover zoom.</li>
+            <li>Upload images at 2× display size. Product gallery supports 6 images per product.</li>
+            <li>Short silent video loops (5–10 sec) should be supported in the hero.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Logo {%- endcomment -%}
+  <section class="sg-sec" id="sg-logo">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Logo</p>
+        <h2 class="heading-large">Temporary wordmark</h2>
+        <p class="body-large sg-lede">
+          The wordmark set in Fraunces 500 stands in until the final mark is delivered. The final files drop into the same three slots:
+          header logo, square mark, favicon. Nothing else in the build references the name.
+        </p>
+      </div>
+      <div class="sg-grid sg-grid--logos">
+        <div class="sg-logo" data-theme="bone"><span class="ds-wordmark">{{ wordmark }}</span><p class="body-x-small sg-muted">Header logo on Bone</p></div>
+        <div class="sg-logo" data-theme="green"><span class="ds-wordmark">{{ wordmark }}</span><p class="body-x-small sg-muted">Header and footer on green</p></div>
+        <div class="sg-logo" data-theme="bone"><span class="sg-mark">{{ wordmark | slice: 0 }}</span><p class="body-x-small sg-muted">Square mark</p></div>
+      </div>
+      <p class="body-x-small sg-muted sg-reading">
+        Header logo height: 28px desktop, 24px mobile. One colour only: green on Bone, Bone on green. Never scarlet. Clear space: at least
+        the height of the "o" on all sides. The wordmark text is a setting on this section, not part of the code.
+      </p>
+    </div>
+  </section>
+
+  {%- comment -%} Checklist {%- endcomment -%}
+  <section class="sg-sec" id="sg-checklist">
+    <div class="ds-container">
+      <div class="sg-sec__head">
+        <p class="subheading">Checklist</p>
+        <h2 class="heading-large">What makes it look expensive</h2>
+      </div>
+      <div class="sg-split sg-split--even">
+        <div>
+          <p class="subheading sg-label">Do</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>Bone page background, green text. Check every theme default that falls back to white or black.</li>
+            <li>Large, calm full-bleed green sections.</li>
+            <li>More space between sections than the theme's default.</li>
+            <li>One scarlet action per screen.</li>
+            <li>1px hairlines to divide content.</li>
+            <li>Square corners. 2px only on inputs.</li>
+            <li>Restyle every theme button, input and icon to these tokens.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="subheading sg-label">Don't</p>
+          <ul class="sg-list body-medium" role="list">
+            <li>No pure white (#FFFFFF) or pure black (#000000) anywhere.</li>
+            <li>No drop shadows on cards, headers, drawers or images.</li>
+            <li>No "Sale" badges, countdown timers or urgency pop-ups.</li>
+            <li>No rounded pills, glass effects or glossy gradients.</li>
+            <li>No large scarlet fills, and no lighter tints of scarlet.</li>
+            <li>No hover zoom or image swaps on product cards.</li>
+            <li>No theme default icons or button styles.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-sg]');
+    if (!root) return;
+
+    function toHex(value) {
+      var c = String(value).match(/^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/);
+      if (c) value = 'rgba(' + [c[1], c[2], c[3]].map(function (n) { return Math.round(parseFloat(n) * 255); }).join(', ') + ', ' + (c[4] === undefined ? 1 : c[4]) + ')';
+      var m = String(value).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/);
+      if (!m) return String(value).trim();
+      if (m[4] !== undefined && parseFloat(m[4]) < 1) return 'rgba(' + m[1] + ', ' + m[2] + ', ' + m[3] + ', ' + parseFloat(m[4]) + ')';
+      return '#' + [m[1], m[2], m[3]].map(function (n) { return ('0' + parseInt(n, 10).toString(16)).slice(-2); }).join('').toUpperCase();
+    }
+    function round(n) { return Math.round(n * 100) / 100; }
+    function family(cs) { return cs.fontFamily.split(',')[0].replace(/["']/g, '').trim(); }
+    function spec(el, noLineHeight) {
+      var cs = getComputedStyle(el);
+      var size = parseFloat(cs.fontSize);
+      var out = family(cs) + ' ' + cs.fontWeight + ' · ' + round(size);
+      if (!noLineHeight) out += ' / ' + round(parseFloat(cs.lineHeight) / size);
+      var ls = cs.letterSpacing === 'normal' ? 0 : Math.round((parseFloat(cs.letterSpacing) / size) * 100);
+      if (ls) out += ' · ' + (ls > 0 ? '+' : '') + ls + '%';
+      if (cs.textTransform === 'uppercase') out += ' · caps';
+      return out;
+    }
+    function mark(target, ok, actual, expected) {
+      if (!target) return;
+      target.textContent = (ok ? 'Matches · ' : 'Differs · ') + actual + (ok ? '' : ' (expected ' + expected + ')');
+      target.className = target.className.replace(/\bsg-(ok|bad)\b/g, '').trim() + (ok ? ' sg-ok' : ' sg-bad');
+    }
+
+    function run() {
+      var mobile = window.matchMedia('(max-width: 767px)').matches;
+      var total = 0, passed = 0;
+
+      root.querySelectorAll('[data-sg-spec]').forEach(function (el) {
+        var expected = (mobile && el.dataset.expectMobile) || el.dataset.expect;
+        var actual = spec(el, el.hasAttribute('data-sg-nolh'));
+        var ok = actual === expected;
+        total++; if (ok) passed++;
+        mark(el.parentElement.querySelector('[data-result]'), ok, actual, expected);
+      });
+
+      root.querySelectorAll('[data-sg-color]').forEach(function (el) {
+        var expected = el.dataset.sgColor.toUpperCase();
+        var actual = toHex(getComputedStyle(el).backgroundColor);
+        var ok = actual === expected;
+        total++; if (ok) passed++;
+        mark(el.parentElement.querySelector('[data-result]'), ok, actual, expected);
+      });
+
+      root.querySelectorAll('[data-check]').forEach(function (row) {
+        var sel = row.dataset.check;
+        var el = sel === ':root' ? document.documentElement : document.querySelector(sel);
+        if (!el) return;
+        var cs = getComputedStyle(el);
+        var actual;
+        if (row.dataset.var) actual = cs.getPropertyValue(row.dataset.var).trim();
+        else if (row.dataset.prop === 'font') actual = family(cs) + ' ' + cs.fontWeight;
+        else actual = toHex(cs[row.dataset.prop]);
+        var expected = row.dataset.expect;
+        var ok = actual.replace(/\s+/g, ' ').toLowerCase() === expected.toLowerCase();
+        total++; if (ok) passed++;
+        mark(row.querySelector('[data-result]'), ok, actual, expected);
+      });
+
+      var summary = root.querySelector('[data-sg-summary]');
+      if (summary) summary.textContent = passed + ' of ' + total + ' live checks match the tokens at this screen width (' + (mobile ? 'mobile' : 'desktop') + ' sizes).';
+    }
+
+    root.querySelectorAll('[data-sg-qty]').forEach(function (qty) {
+      var input = qty.querySelector('input');
+      var buttons = qty.querySelectorAll('[data-sg-qty-step]');
+      function sync() {
+        var v = parseInt(input.value, 10) || 1;
+        buttons[0].disabled = v <= parseInt(input.min, 10);
+        buttons[1].disabled = v >= parseInt(input.max, 10);
+      }
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var v = (parseInt(input.value, 10) || 1) + parseInt(b.dataset.sgQtyStep, 10);
+          input.value = Math.min(parseInt(input.max, 10), Math.max(parseInt(input.min, 10), v));
+          sync();
+        });
+      });
+      input.addEventListener('change', sync);
+      sync();
+    });
+
+    var timer;
+    window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(run, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
+  })();
+</script>
+
+{% stylesheet %}
+  .sg { padding-bottom: var(--space-6); }
+  .sg .ds-container { max-width: var(--container-max); }
+  .sg p { margin: 0; }
+  .sg h1, .sg h2, .sg h3 { margin: 0; }
+  .sg-muted { color: var(--ink-muted); }
+  .sg-mono { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .sg-tabular { font-variant-numeric: lining-nums tabular-nums; }
+  .sg-reading { max-width: var(--container-reading); }
+  .sg-gap-top { margin-top: var(--space-2) !important; }
+  .sg-label { margin: var(--space-4) 0 var(--space-2) !important; }
+
+  .sg-hero { padding-top: var(--space-7); padding-bottom: var(--space-6); }
+  .sg-hero__title { margin: var(--space-2) 0 var(--space-3) !important; }
+  .sg-lede { max-width: var(--container-reading); color: var(--ink-muted); }
+  .sg-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-top: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--hairline); }
+  .sg-toc a { font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+  .sg-toc a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  .sg-summary { margin-top: var(--space-3) !important; }
+
+  .sg-sec { padding: var(--space-6) 0; border-top: 1px solid var(--hairline); }
+  .sg-sec__head { max-width: var(--container-reading); margin-bottom: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+  .sg-subhead { margin-top: var(--space-5) !important; margin-bottom: var(--space-1) !important; }
+
+  .sg-split { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--space-5); margin-top: var(--space-4); }
+  .sg-split--even { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .sg-rules { display: flex; flex-direction: column; gap: var(--space-3); }
+
+  .sg-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+  .sg-table th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--label); padding: 0 var(--space-2) var(--space-1) 0; border-bottom: 1px solid var(--hairline); }
+  .sg .sg-table th, .sg .sg-table td { border: 0; border-bottom: 1px solid var(--hairline); background: none; }
+  .sg-table td { padding: 12px var(--space-2) 12px 0; vertical-align: top; }
+  .sg-table td:first-child { font-weight: 500; }
+  .sg-table--compact td { padding-top: 10px; padding-bottom: 10px; }
+  .sg-ok { color: var(--ink-muted); }
+  .sg-ok::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: var(--ink); vertical-align: 1px; }
+  .sg-bad { color: var(--signal-press); font-weight: 600; }
+  .sg-bad::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: var(--signal); vertical-align: 1px; }
+
+  .sg-grid { display: grid; gap: var(--space-3); }
+  .sg-grid--swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: var(--space-4); }
+  .sg-grid--schemes { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--space-3); gap: 0; border: 1px solid var(--hairline); }
+  .sg-grid--notes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sg-grid--gradients { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--space-4); }
+  .sg-grid--logos { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: var(--space-3); }
+
+  .sg-ratio { display: flex; height: 56px; margin: var(--space-2) 0 var(--space-1); }
+  .sg-swatch { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .sg-swatch[data-theme="green"] { padding: 12px; }
+  .sg-swatch__chip { aspect-ratio: 3 / 2; border: 1px solid var(--hairline); }
+  .sg-swatch figcaption { display: flex; flex-direction: column; gap: 2px; }
+  .sg-swatch__name { font-weight: 600; font-size: 14px; }
+
+  .sg-scheme { padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); min-height: 200px; }
+  .sg-scheme .subheading { color: inherit; opacity: 0.75; }
+  .sg-scheme__name { margin-bottom: var(--space-2) !important; }
+  .sg-scheme__btns { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: auto; }
+
+  .sg-type { border-top: 1px solid var(--hairline); margin-bottom: var(--space-4); }
+  .sg-type__row { display: grid; grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--hairline); align-items: start; }
+  .sg-type__meta { display: flex; flex-direction: column; gap: var(--space-1); }
+  .sg-type__sample { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); min-width: 0; }
+  .sg-spec { margin-top: var(--space-1) !important; }
+
+  .sg-spaces { list-style: none; margin: 0 0 var(--space-2); padding: 0; border-top: 1px solid var(--hairline); }
+  .sg-space { display: grid; grid-template-columns: 120px 150px minmax(0, 1fr); gap: var(--space-2); align-items: center; padding: 10px 0; border-bottom: 1px solid var(--hairline); }
+  .sg-space__bar { display: block; height: 12px; background: var(--green); max-width: 150px; }
+  .sg-edges { display: flex; gap: var(--space-3); margin-bottom: var(--space-3); }
+  .sg-edge { display: flex; flex-direction: column; gap: var(--space-1); flex: 1; }
+  .sg-edge__box { height: 72px; background: var(--surface-raised); border: 1px solid var(--ink); border-radius: var(--radius-0); }
+  .sg-edge__box--input { border-radius: var(--radius-1); background: var(--surface); }
+  .sg-productgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3); }
+  .sg-productgrid .ds-ph { aspect-ratio: 4 / 5; }
+
+  .sg-demo { padding: var(--space-4); border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: var(--space-2); }
+  .sg-demo--green { border-color: transparent; margin-top: var(--space-3); }
+  .sg-btns { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .sg-btnnotes { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); list-style: none; margin: 0; padding: 0; }
+  .sg-forms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) var(--space-5); margin-bottom: var(--space-3); }
+  .sg-forms .ds-field__input, .sg-forms .ds-field__select { margin: 0; max-width: none; }
+  .sg-stack { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+  .sg-stack .body-x-small { margin-bottom: var(--space-2); }
+  .sg-checks { display: flex; flex-direction: column; gap: var(--space-2); justify-content: center; }
+  .sg .ds-check input { padding: 0; }
+  .sg .ds-qty input { margin: 0; padding: 0; border-radius: 0; border-top: 0; border-bottom: 0; }
+
+  .sg-frame { border: 1px solid var(--hairline); margin-bottom: var(--space-3); }
+  .sg-frame .ds-nav__links a:hover, .sg-frame .ds-iconbtn:hover { color: var(--ink); }
+  .sg-product { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-5); margin: var(--space-4) 0 var(--space-3); align-items: start; }
+  .sg-product__card { max-width: 360px; }
+  .sg-product__details .sg-label:first-child { margin-top: 0 !important; }
+  .sg-price { margin-top: var(--space-3); }
+
+  .sg-bands { margin: var(--space-4) 0 0; }
+  .sg-gradient { padding: var(--space-4) var(--space-3); min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+
+  .sg-icons { list-style: none; margin: 0; padding: var(--space-3); display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); border: 1px solid var(--hairline); }
+  .sg-icons--green { border-color: transparent; margin-top: var(--space-2); }
+  .sg-icon { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .sg-list { margin: 0; padding: 0 0 0 1.1em; display: flex; flex-direction: column; gap: var(--space-1); }
+
+  .sg-imagery { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-3); align-items: end; }
+  .sg-imagery figure { margin: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+
+  .sg-logo { min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-2); border: 1px solid var(--hairline); }
+  .sg-mark { display: grid; place-items: center; width: 72px; height: 72px; background: var(--green); color: var(--bone-page); font-family: var(--font-display); font-size: 44px; font-weight: 500; line-height: 1; }
+
+  @media only screen and (max-width: 989px) {
+    .sg-grid--swatches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sg-grid--notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sg-productgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sg-productgrid .ds-ph:nth-child(4) { display: none; }
+    .sg-icons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .sg-split { grid-template-columns: 1fr; }
+  }
+  @media only screen and (max-width: 767px) {
+    .sg-hero { padding-top: var(--space-6); padding-bottom: var(--space-5); }
+    .sg-sec { padding: var(--space-5) 0; }
+    .sg-split--even, .sg-forms, .sg-product, .sg-imagery { grid-template-columns: 1fr; }
+    .sg-grid--swatches, .sg-grid--schemes, .sg-grid--gradients, .sg-grid--logos, .sg-grid--notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sg-productgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sg-productgrid .ds-ph:nth-child(3) { display: none; }
+    .sg-type__row { grid-template-columns: 1fr; gap: var(--space-2); }
+    .sg-space { grid-template-columns: 110px minmax(0, 1fr); }
+    .sg-space .sg-muted { grid-column: 1 / -1; }
+    .sg-table th:nth-child(2), .sg-table td:nth-child(2) { display: none; }
+    .sg-demo { padding: var(--space-3); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Styleguide",
+  "tag": "section",
+  "class": "section-potager-styleguide",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Living reference for the Potager design system. Values come from Theme settings and assets/potager.css."
+    },
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Wordmark text",
+      "default": "Potager",
+      "info": "Temporary brand name. Replace when the final name is confirmed."
+    },
+    {
+      "type": "text",
+      "id": "legal_name",
+      "label": "Legal name in footer example",
+      "default": "Potager Labs LLC"
+    }
+  ]
+}
+{% endschema %}
