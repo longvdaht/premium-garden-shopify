@@ -161,6 +161,25 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .icon.ds-icon :is(circle,ellipse,g,line,path,polygon,polyline,rect){fill:none;stroke:currentColor;stroke-width:1.5;}
 .icon.ds-icon{--icon-size:20px;}
 
+/* Collection title: the page headline (display-xl). The section renders it
+   with the theme's h3 size and has no size setting. */
+.collection__title .hero__title{font-size:var(--font-heading-x-large);line-height:1.05;letter-spacing:-0.01em}
+@media only screen and (max-width:767px){.collection__title .hero__title{line-height:1.1}}
+
+/* Product card (theme default card, used on collections): Inter name, muted
+   tabular price. No badges, no hover swap, no quick add (Theme settings). */
+.product-card__title{font-weight:500}
+.product-card .price,.product-card [class*="price"]{color:var(--ink-muted)}
+
+/* Filter checkboxes (collection sidebar): 20px square, 1px ink border, 2px
+   radius; checked fills ink with a Bone check, never scarlet. The theme drew
+   a 1em box filled with --accent and an inset shadow. */
+/* filters.css loads after this file, so these rules carry an extra body selector. */
+body :is(.link--remove,.link--add,.link--disable) :is(a,label){padding-left:32px}
+body .sidebar__item :is(a,label)::after{width:20px;height:20px;border:1px solid var(--ink);border-radius:var(--radius-1);background-color:var(--surface)}
+body .sidebar__item.link--remove a::after,body .sidebar__item input:checked ~ label::after{background:var(--ink) url("potager-check.svg") center/14px no-repeat;border-color:var(--ink)}
+body .sidebar__item.link--disable :is(a,label)::after{border-color:var(--hairline);background-color:var(--surface-sunk)}
+
 /* 5. ds-* component library (bundle.css v1, unchanged) ------------------- */
 .ds-container{max-width:var(--container-max);margin-inline:auto;padding-inline:var(--gutter-mobile);box-sizing:border-box}
 @media (min-width:768px){.ds-container{padding-inline:var(--gutter-desktop)}}
