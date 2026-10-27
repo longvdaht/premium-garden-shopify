@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "styleguide": {
+      "type": "potager-styleguide",
+      "settings": {
+        "wordmark": "Potager",
+        "legal_name": "Potager Labs LLC"
+      }
+    }
+  },
+  "order": ["styleguide"]
+}

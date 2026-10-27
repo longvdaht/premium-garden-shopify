@@ -12,13 +12,55 @@
   assign icon_key = name | default: '' | strip
   assign icon_style = settings.icon_style | default: 'regular' | strip
 
+  comment
+    Potager design system: functional UI icons use the supplied Lucide set (snippets/potager-icon.liquid).
+    The theme name is kept as a class (icon-<name>) so existing theme CSS hooks still apply.
+  endcomment
+  case icon_key
+    when 'magnifying-glass'
+      assign potager_icon = 'search'
+    when 'user'
+      assign potager_icon = 'user'
+    when 'shopping-bag'
+      assign potager_icon = 'shopping-bag'
+    when 'list', 'hamburger'
+      assign potager_icon = 'menu'
+    when 'x'
+      assign potager_icon = 'x'
+    when 'plus'
+      assign potager_icon = 'plus'
+    when 'minus'
+      assign potager_icon = 'minus'
+    when 'caret-down'
+      assign potager_icon = 'chevron-down'
+    when 'caret-up'
+      assign potager_icon = 'chevron-up'
+    when 'caret-right'
+      assign potager_icon = 'chevron-right'
+    when 'caret-left'
+      assign potager_icon = 'chevron-left'
+    when 'check'
+      assign potager_icon = 'check'
+    when 'instagram-logo'
+      assign potager_icon = 'instagram'
+    when 'arrow-right', 'mail', 'truck', 'search', 'menu', 'chevron-down', 'chevron-right', 'chevron-left', 'chevron-up', 'instagram'
+      assign potager_icon = icon_key
+    else
+      assign potager_icon = ''
+  endcase
+
   capture icon_html
-    case icon_style
-      when 'regular', blank
-        render 'icons-regular', name: icon_key
-      when 'light'
-        render 'icons-light', name: icon_key
-    endcase
+    if potager_icon != blank
+      assign potager_icon_class = 'icon icon-' | append: icon_key
+      render 'potager-icon', name: potager_icon, class: potager_icon_class
+    else
+      case icon_style
+        when 'regular', blank
+          render 'icons-regular', name: icon_key
+        when 'light'
+          render 'icons-light', name: icon_key
+      endcase
+    endif
   endcapture
 
   unless icon_html contains 'class='
