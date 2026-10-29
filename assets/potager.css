@@ -184,11 +184,16 @@ body .sidebar__item.link--disable :is(a,label)::after{border-color:var(--hairlin
    theme separator at 15% green = the hairline), no shadow. Wordmark left,
    text links, utility icons right. Mobile: menu left, wordmark centre, cart right. */
 .header__wrapper{--bg:var(--surface)}
-.header__desktop .navtext{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.header__desktop .navlink--toplevel .navtext{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
 .navlink--toplevel .navtext::after{height:2px;bottom:-6px;background-color:var(--signal)}
 .header__desktop .menu__item.is-active>.navlink--toplevel .navtext::after,
 .header__desktop .navlink--toplevel[aria-current="page"] .navtext::after{transform:scaleX(1)}
 .header__desktop__buttons .navlink,.header__mobile__button .navlink,.header__mobile__hamburger{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+/* Sticky header: the theme caps the stuck (fixed) header at
+   calc(100vw - var(--scrollbar-width)). Where 100vw already excludes the
+   scrollbar, that subtracts it twice and leaves a gap on the right. Anchoring
+   to both edges always matches the visible page, with or without a scrollbar. */
+.js__header__stuck{left:0;right:0;width:auto;max-width:none}
 /* Cart count in the eyebrow style beside the bag, not a coloured bubble */
 .navlink--cart--icon .header__cart__status__holder{gap:4px}
 .navlink--cart--icon .header__cart__status{position:static;order:2;min-width:0;height:auto;padding:0;border-radius:0;background:none;color:var(--ink);font-size:11px;font-weight:600;letter-spacing:.14em;line-height:1}
@@ -198,8 +203,9 @@ body .sidebar__item.link--disable :is(a,label)::after{border-color:var(--hairlin
 @media only screen and (max-width:767px){.header__logo__text{font-size:24px}}
 /* Dropdown (Shop): Bone, hairline edges, square, no shadow */
 .header__dropdown{--bg:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
-.header__dropdown .navlink--child{font-family:var(--font-sans);font-size:15px;letter-spacing:0;text-transform:none;--link:var(--ink)}
-.header__dropdown .navlink--child:hover{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:5px}
+.header__dropdown :is(.navlink--child,.navlink--grandchild){--link:var(--ink);--link-hover:var(--ink)}
+.header__dropdown :is(.navlink--child,.navlink--grandchild) .navtext{font-family:var(--font-sans);font-size:15px;font-weight:400;line-height:1.4;letter-spacing:0;text-transform:none;color:var(--ink)}
+.header__dropdown :is(.navlink--child,.navlink--grandchild):hover .navtext{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:5px}
 /* Mobile bar: search and account move into the menu drawer */
 @media only screen and (max-width:749px){
   .header__mobile__left .header__mobile__button:has(header-search-popdown),
