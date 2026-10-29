@@ -239,10 +239,11 @@
         -%}
       {%- else -%}
         {%- liquid
+          assign wordmark = section.settings.wordmark_text | default: shop.name
           assign classes = ''
-          assign title_length = shop.name | size
+          assign title_length = wordmark | size
           assign oneword = true
-          if shop.name contains ' ' or shop.name contains '-'
+          if wordmark contains ' ' or wordmark contains '-'
             assign oneword = false
           endif
           if title_length > 15
@@ -253,7 +254,7 @@
           endif
         -%}
         <div class="header__logo__text {{ classes }}">
-          <span>{{ shop.name }}</span>
+          <span>{{ wordmark | escape }}</span>
         </div>
       {%- endif -%}
 

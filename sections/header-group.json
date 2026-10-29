@@ -53,7 +53,8 @@
           "block_order": [
             "text",
             "text-2"
-          ]
+          ],
+          "disabled": true
         },
         "toolbar": {
           "type": "_header-toolbar",
@@ -81,7 +82,7 @@
           "static": true,
           "settings": {
             "main_menu_linklist": "main-menu",
-            "highlight_item": "Sale",
+            "highlight_item": "",
             "highlight_item_color": "#d02e2e"
           },
           "blocks": {
@@ -230,15 +231,19 @@
           ]
         }
       },
-      "block_order": ["announcement", "toolbar", "menu"],
+      "block_order": [
+        "announcement",
+        "toolbar",
+        "menu"
+      ],
       "settings": {
-        "header_sticky": false,
-        "show_separator_line": false,
-        "separator_opacity": 100,
+        "header_sticky": true,
+        "show_separator_line": true,
+        "separator_opacity": 15,
         "show_icons": true,
         "icon_as_circle": false,
-        "logo_max_limit": 120,
-        "logo_max_limit_mobile": 120,
+        "logo_max_limit": 90,
+        "logo_max_limit_mobile": 75,
         "enable_search": true,
         "show_social_icons": false,
         "show_locale_selector": false,
@@ -250,8 +255,9 @@
         "transparent_article": false,
         "transparent_page": false,
         "transparent_product_page": false,
-        "padding_top": 15,
-        "padding_bottom": 15
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "wordmark_text": "Potager"
       }
     },
     "mobile-menu": {
@@ -287,9 +293,16 @@
             "pin_to_bottom": true,
             "padding_bottom": 14
           }
+        },
+        "search": {
+          "type": "search",
+          "settings": {
+            "padding_bottom": 14
+          }
         }
       },
       "block_order": [
+        "search",
         "menu",
         "socials",
         "localization"

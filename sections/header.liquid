@@ -10,9 +10,13 @@
   {% content_for "block", type: "_header-menu", id: "menu" %}
 {%- endcapture -%}
 
+{%- comment -%}
+  Potager: wordmark left, menu, utility icons right (Style Guide p.07, Nav note).
+  Full-width bar, not the floating card.
+{%- endcomment -%}
 {% render 'header',
-  header_style: 'logo_center_menu_left',
-  is_floating: true,
+  header_style: 'logo_beside',
+  is_floating: false,
   announcement_html: announcement_html,
   toolbar_html: toolbar_html,
   menu_block_html: menu_block_html
@@ -20,7 +24,7 @@
 
 {% schema %}
 {
-  "name": "Header - Floating",
+  "name": "Header",
   "class": "page-header",
   "settings": [
     {
@@ -74,6 +78,13 @@
       "id": "logo",
       "label": "Image",
       "info": "300 x 90px .jpg recommended. [Learn more](http://presidiodev.com/link/headlands/images)"
+    },
+    {
+      "type": "text",
+      "id": "wordmark_text",
+      "label": "Wordmark text",
+      "default": "Potager",
+      "info": "Shown in Fraunces when no logo image is set. Temporary brand name; replace it, or upload the final logo above."
     },
     {
       "type": "header",
