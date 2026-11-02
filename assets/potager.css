@@ -382,3 +382,15 @@ body .sidebar__item.link--disable :is(a,label)::after{border-color:var(--hairlin
   .ds-nav__utils{justify-self:end}
   .ds-nav__utils .ds-iconbtn:not(.ds-nav__cart){display:none}
 }
+
+/* Mobile menu socials (wireframe 00.5): one row of monochrome icons with
+   44px tap targets under a hairline, names kept for screen readers only.
+   header-dropdown.css loads after this file, hence the body prefix and the
+   !important on position (the theme sets it with !important). */
+body .mobile-menu__block--socials .social-link svg{width:20px;height:20px}
+body .mobile-menu__block--socials .social-link svg:not(.ds-icon){width:22px;height:22px;fill:currentColor}
+body .mobile-menu__block--socials{border-top:1px solid var(--hairline);padding-top:8px;padding-bottom:8px}
+body .mobile-menu__block--socials .socials--mobile-menu{display:flex;flex-direction:row;align-items:center;gap:4px;margin:0 0 0 -12px}
+body .mobile-menu__block--socials .socials--mobile-menu>li{margin:0}
+body .mobile-menu__block--socials .social-link{width:44px;height:44px;justify-content:center;gap:0;color:var(--ink)}
+body .mobile-menu__block--socials .icon-fallback-text{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
