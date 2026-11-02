@@ -1,0 +1,88 @@
+{%- comment -%}
+  Potager footer (wireframe F, 00.5): deep green band.
+  Brand column (wordmark, tagline, email sign-up, social icons), then one
+  column per Link list block (Shop, About, Help), then a base row with the
+  copyright and the legal menu. Styles: assets/potager.css (.ds-footer).
+{%- endcomment -%}
+{%- liquid
+  assign scheme = section.settings.color_scheme | default: 'scheme-4'
+  assign wordmark = section.settings.wordmark_text | default: shop.name
+  assign form_id = 'FooterNewsletter-' | append: section.id
+-%}
+
+<footer class="ds-footer potager-footer color-{{ scheme }}" data-theme="green">
+  <div class="ds-footer__main">
+    <div class="ds-footer__brand">
+      <a href="{{ routes.root_url }}" class="ds-wordmark">{{ wordmark }}</a>
+
+      {%- if section.settings.tagline != blank -%}
+        <p class="ds-footer__lede">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.show_newsletter -%}
+        {%- form 'customer', id: form_id, class: 'potager-footer__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          {%- if form.posted_successfully? -%}
+            <p class="potager-footer__note" role="status">{{ 'general.newsletter_form.thank_you' | t }}</p>
+          {%- else -%}
+            <div class="ds-footer__signup">
+              <label for="FooterEmail-{{ section.id }}" class="visually-hidden">{{ section.settings.newsletter_placeholder }}</label>
+              <input
+                type="email"
+                id="FooterEmail-{{ section.id }}"
+                name="contact[email]"
+                placeholder="{{ section.settings.newsletter_placeholder }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+                {% if form.errors %}aria-invalid="true" aria-describedby="FooterEmailError-{{ section.id }}"{% endif %}
+              >
+              <button type="submit" aria-label="{{ 'general.newsletter_form.submit' | t }}">
+                {%- render 'potager-icon', name: 'arrow-right' -%}
+              </button>
+            </div>
+            {%- if form.errors -%}
+              <p class="potager-footer__note potager-footer__note--error" id="FooterEmailError-{{ section.id }}">
+                {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+              </p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      {%- endif -%}
+
+      {%- if section.settings.show_social -%}
+        {%- render 'social-icons', modifier: 'potager-footer__social' -%}
+      {%- endif -%}
+    </div>
+
+    {%- for block in section.blocks -%}
+      {%- assign menu = linklists[block.settings.linklist] -%}
+      <nav class="potager-footer__col" aria-label="{{ block.settings.title | default: menu.title | escape }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.title != blank -%}
+          <h3>{{ block.settings.title }}</h3>
+        {%- endif -%}
+        {%- if menu.links.size > 0 -%}
+          <ul>
+            {%- for link in menu.links -%}
+              <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </nav>
+    {%- endfor -%}
+  </div>
+
+  <div class="ds-footer__base">
+    {%- assign year = 'now' | date: '%Y' -%}
+    <span>{{ section.settings.copyright_text | default: shop.name | replace: '[year]', year }}</span>
+    {%- assign legal = linklists[section.settings.legal_menu] -%}
+    {%- if legal.links.size > 0 -%}
+      <ul class="potager-footer__legal">
+        {%- for link in legal.links -%}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</footer>

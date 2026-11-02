@@ -5,53 +5,42 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "social": {
-          "type": "social",
-          "settings": {
-            "title": "About the Brand",
-            "text": "<p>We make performance pieces that feel like self-care: sculpting without squeezing, breathable without being sheer, and elevated enough to wear all day.<\/p>",
-            "column_width": 40
-          }
-        },
-        "divider": {
-          "type": "divider",
-          "settings": {
-            "show_line": false,
-            "column_width": 40
-          }
-        },
-        "links": {
+        "shop": {
           "type": "linklist",
           "settings": {
-            "linklist": "bestsellers",
-            "title": "Shop our collections",
-            "heading_font_size": "heading-x-small",
-            "column_width": 20
+            "title": "Shop",
+            "linklist": "footer-shop"
           }
         },
-        "newsletter": {
-          "type": "newsletter",
+        "about": {
+          "type": "linklist",
           "settings": {
-            "title": "Join our newsletter",
-            "button_text": "Subscribe",
-            "button_type": "btn--primary",
-            "button_size": "",
-            "button_style": "btn--solid"
+            "title": "About",
+            "linklist": "footer-about"
+          }
+        },
+        "help": {
+          "type": "linklist",
+          "settings": {
+            "title": "Help",
+            "linklist": "footer-help"
           }
         }
       },
       "block_order": [
-        "social",
-        "divider",
-        "links",
-        "newsletter"
+        "shop",
+        "about",
+        "help"
       ],
       "settings": {
-        "logo_image_width": 150,
-        "overlay_opacity": 75,
-        "overlay_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40
+        "wordmark_text": "Potager",
+        "tagline": "Tools for the working garden. One seasonal note a week.",
+        "show_newsletter": true,
+        "newsletter_placeholder": "Email address",
+        "show_social": true,
+        "copyright_text": "© [year] Potager Labs LLC",
+        "legal_menu": "footer-legal",
+        "color_scheme": "scheme-4"
       }
     }
   },
