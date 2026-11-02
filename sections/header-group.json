@@ -94,39 +94,7 @@
             "highlight_item": "",
             "highlight_item_color": "#d02e2e"
           },
-          "blocks": {
-            "header_image_wRjzdE": {
-              "type": "_header-image",
-              "name": "Menu image",
-              "settings": {
-                "position": "1",
-                "aspect_ratio": 0.5,
-                "wide_image": true,
-                "overlay_opacity": 0,
-                "overlay_color": "#000",
-                "link": "",
-                "text_color": ""
-              },
-              "blocks": {
-                "heading_yRmKBU": {
-                  "type": "heading",
-                  "settings": {
-                    "text": "Heading",
-                    "heading_font_size": "heading-medium",
-                    "padding_bottom": 0,
-                    "heading_tag": "automatic"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "heading_yRmKBU"
-              ]
-            }
-          },
-          "block_order": [
-            "header_image_wRjzdE"
-          ]
+          "blocks": {}
         }
       },
       "settings": {
