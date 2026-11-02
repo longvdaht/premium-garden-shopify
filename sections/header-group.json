@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "Header",
@@ -7,9 +16,9 @@
       "blocks": {
         "announcement": {
           "type": "_header-announcement",
+          "disabled": true,
           "static": true,
           "settings": {
-            "show_border": false,
             "layout": "slider",
             "slider_speed": 7,
             "text_alignment": "center",
@@ -17,6 +26,7 @@
             "marquee_speed": 100,
             "message_spacing": 10,
             "text_font_size": "body-small",
+            "use_nav_font": true,
             "color_scheme": "scheme-2",
             "border_color": "",
             "padding_top": 0,
@@ -53,8 +63,7 @@
           "block_order": [
             "text",
             "text-2"
-          ],
-          "disabled": true
+          ]
         },
         "toolbar": {
           "type": "_header-toolbar",
@@ -112,136 +121,20 @@
               "block_order": [
                 "heading-1"
               ]
-            },
-            "image-2": {
-              "type": "_header-image",
-              "settings": {
-                "position": "2",
-                "aspect_ratio": 1,
-                "wide_image": false,
-                "overlay_opacity": 5,
-                "overlay_color": "#000000",
-                "link": "",
-                "text_color": "#fcfbf9"
-              },
-              "blocks": {
-                "heading-2": {
-                  "type": "heading",
-                  "settings": {
-                    "text": "Product title",
-                    "heading_font_size": "heading-medium",
-                    "padding_bottom": 0,
-                    "heading_tag": "automatic"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "heading-2"
-              ]
-            },
-            "image-3": {
-              "type": "_header-image",
-              "settings": {
-                "position": "2",
-                "aspect_ratio": 1,
-                "wide_image": false,
-                "overlay_opacity": 5,
-                "overlay_color": "#000000",
-                "link": "",
-                "text_color": "#fcfbf9"
-              },
-              "blocks": {
-                "heading-3": {
-                  "type": "heading",
-                  "settings": {
-                    "text": "Product title",
-                    "heading_font_size": "heading-medium",
-                    "padding_bottom": 0,
-                    "heading_tag": "automatic"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "heading-3"
-              ]
-            },
-            "image-4": {
-              "type": "_header-image",
-              "settings": {
-                "position": "2",
-                "aspect_ratio": 1,
-                "wide_image": false,
-                "overlay_opacity": 5,
-                "overlay_color": "#000000",
-                "link": "",
-                "text_color": "#fcfbf9"
-              },
-              "blocks": {
-                "heading-4": {
-                  "type": "heading",
-                  "settings": {
-                    "text": "Product title",
-                    "heading_font_size": "heading-medium",
-                    "padding_bottom": 0,
-                    "heading_tag": "automatic"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "heading-4"
-              ]
-            },
-            "image-5": {
-              "type": "_header-image",
-              "settings": {
-                "position": "2",
-                "aspect_ratio": 1,
-                "wide_image": false,
-                "overlay_opacity": 5,
-                "overlay_color": "#000000",
-                "link": "",
-                "text_color": "#fcfbf9"
-              },
-              "blocks": {
-                "heading-5": {
-                  "type": "heading",
-                  "settings": {
-                    "text": "Product title",
-                    "heading_font_size": "heading-medium",
-                    "padding_bottom": 0,
-                    "heading_tag": "automatic"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "heading-5"
-              ]
             }
           },
           "block_order": [
-            "image-1",
-            "image-2",
-            "image-3",
-            "image-4",
-            "image-5"
+            "image-1"
           ]
         }
       },
-      "block_order": [
-        "announcement",
-        "toolbar",
-        "menu"
-      ],
       "settings": {
         "header_sticky": true,
         "show_separator_line": true,
         "separator_opacity": 15,
         "show_icons": true,
         "icon_as_circle": false,
+        "wordmark_text": "Potager",
         "logo_max_limit": 90,
         "logo_max_limit_mobile": 75,
         "enable_search": true,
@@ -256,20 +149,25 @@
         "transparent_page": false,
         "transparent_product_page": false,
         "padding_top": 24,
-        "padding_bottom": 24,
-        "wordmark_text": "Potager"
+        "padding_bottom": 24
       }
     },
     "mobile-menu": {
       "type": "mobile-menu",
       "blocks": {
+        "search": {
+          "type": "search",
+          "settings": {
+            "padding_bottom": 14
+          }
+        },
         "menu": {
           "type": "menu",
           "settings": {
             "mobile_menu_linklist": "",
             "text_font_size": "body-large",
             "highlight_item": "Sale",
-            "highlight_item_color": "#D02E2E",
+            "highlight_item_color": "#d02e2e",
             "padding": true,
             "padding_bottom": 14
           }
@@ -291,12 +189,6 @@
             "show_country_flag": true,
             "width": "full",
             "pin_to_bottom": true,
-            "padding_bottom": 14
-          }
-        },
-        "search": {
-          "type": "search",
-          "settings": {
             "padding_bottom": 14
           }
         }
