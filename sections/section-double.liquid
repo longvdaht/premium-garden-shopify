@@ -1596,6 +1596,39 @@
       ]
     },
     {
+      "type": "specs",
+      "name": "Spec list",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "rows",
+          "label": "Rows",
+          "default": "Yoshioka Hamono | Bud shears · Miki, Japan",
+          "info": "One row per line: Label | Value. Example: Yoshioka Hamono | Bud shears · Miki, Japan"
+        },
+        {
+          "type": "checkbox",
+          "id": "pin_to_bottom",
+          "label": "Pin to bottom",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
+    {
       "type": "code",
       "name": "Custom code",
       "settings": [

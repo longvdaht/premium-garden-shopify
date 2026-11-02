@@ -745,6 +745,32 @@
               >
                 {{ block.settings.code }}
               </div>
+
+            {%- when 'specs' -%}
+              {%- comment -%} Potager spec list: one row per line, "Label | Value" {%- endcomment -%}
+              {%- assign spec_lines = block.settings.rows | newline_to_br | split: '<br />' -%}
+              {%- if block.settings.rows != blank -%}
+                {%- assign animation_order = animation_order | plus: 1 -%}
+                <dl
+                  class="ds-specs block-padding"
+                  data-aos="hero"
+                  data-aos-anchor="{{ animation_anchor }}"
+                  data-aos-order="{{ animation_order }}"
+                  style="{{ block_style }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- for line in spec_lines -%}
+                    {%- assign row = line | strip_newlines | strip -%}
+                    {%- if row != blank -%}
+                      {%- assign parts = row | split: '|' -%}
+                      <div class="ds-specs__row">
+                        <dt>{{ parts[0] | strip }}</dt>
+                        <dd>{{ parts | slice: 1, 10 | join: '|' | strip }}</dd>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </dl>
+              {%- endif -%}
           {%- endcase -%}
         {%- endcapture -%}
 

@@ -424,3 +424,42 @@ body .potager-footer .potager-footer__legal{flex-direction:row;flex-wrap:wrap;ga
   .potager-footer .ds-footer__main{padding:var(--space-5) var(--pf-inline);row-gap:var(--space-4)}
   .potager-footer .ds-footer__base{flex-direction:column;align-items:flex-start;gap:var(--space-1)}
 }
+
+/* About / Brand Story (templates/page.about.json, wireframe 06). Scoped to the
+   template's section ids (about_*), so other rich text sections keep the
+   theme's boxed layout. */
+[id*="__about_"] .index-rte .hero__content__wrapper,
+[id*="__about_"] .rich-text-columns__wrapper{background:none}
+[id*="__about_"] .rich-text-columns__wrapper{padding-inline:0}
+[id*="__about_hero"] .hero__content,
+[id*="__about_choose_intro"] .hero__content{margin-inline:0 auto;padding-inline:0}
+[id*="__about_hero"] .hero__rte{color:var(--ink-muted)}
+/* Our story: page content in a 720px reading column, hairline above the label */
+[id*="__about_story"] .hero__content__wrapper{max-width:calc(720px + 2 * var(--gutter-desktop));overflow:visible}
+[id*="__about_story"] .hero__content{padding-inline:0}
+[id*="__about_story"] .hero__subheading{padding-top:var(--space-3);border-top:1px solid var(--hairline)}
+[id*="__about_story"] .rte{font-size:16px;line-height:1.6}
+[id*="__about_story"] .rte>*+*{margin-top:var(--space-2)}
+[id*="__about_story"] .rte h2{margin:var(--space-1) 0 var(--space-2);font-family:var(--font-display);font-size:var(--FONT-HEADING-LARGE);font-weight:500;line-height:1.1;letter-spacing:-.01em}
+/* Byline: the paragraph straight after the headline */
+[id*="__about_story"] .rte h2+p{margin-top:0;font-size:13px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
+[id*="__about_story"] .rte h2+p em{font-style:normal}
+/* Lede: the paragraph after the byline */
+[id*="__about_story"] .rte h2+p+p{margin-top:var(--space-3);font-size:20px;line-height:1.6}
+/* Pull quote: Fraunces 28px between hairlines */
+[id*="__about_story"] .rte blockquote{margin:var(--space-5) 0;padding:var(--space-3) 0;border:0;border-block:1px solid var(--hairline);font-family:var(--font-display);font-size:28px;font-weight:400;font-style:normal;line-height:1.3;color:var(--ink)}
+[id*="__about_story"] .rte blockquote p{margin:0;font:inherit}
+/* Story images widen to 1040px; an italic-only paragraph under one is its caption */
+[id*="__about_story"] .rte p:has(>img){margin-block:var(--space-5) 0}
+[id*="__about_story"] .rte img{display:block;width:min(1040px,calc(100vw - 2 * var(--gutter-desktop)));max-width:none;height:auto;margin-left:50%;transform:translateX(-50%)}
+[id*="__about_story"] .rte p:has(>img)+p:has(>em:only-child){width:min(1040px,calc(100vw - 2 * var(--gutter-desktop)));margin-left:50%;transform:translateX(-50%);margin-top:var(--space-1);margin-bottom:var(--space-5);font-size:13px;line-height:1.5;color:var(--ink-muted)}
+[id*="__about_story"] .rte p:has(>img)+p>em:only-child{font-style:normal}
+/* Makers: spec list on green */
+[id*="__about_makers"] .ds-specs{width:100%}
+[id*="__about_makers"] .brick__block__text{--text-width:100%;padding:0 0 0 var(--space-5)}
+@media (max-width:767px){[id*="__about_makers"] .brick__block__text{padding:var(--space-4) 0 0}}
+@media (max-width:767px){
+  [id*="__about_story"] .rte h2{font-size:32px}
+  [id*="__about_story"] .rte blockquote{font-size:24px;margin:var(--space-4) 0}
+  [id*="__about_story"] .rte img,[id*="__about_story"] .rte p:has(>img)+p:has(>em:only-child){width:calc(100vw - 2 * var(--gutter-mobile))}
+}

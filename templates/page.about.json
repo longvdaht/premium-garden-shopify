@@ -1,0 +1,330 @@
+{
+  "name": "About",
+  "sections": {
+    "about_hero": {
+      "type": "section-rich-text",
+      "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "About",
+            "padding_bottom": 24
+          }
+        },
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "Tools for the working garden.",
+            "heading_font_size": "heading-x-large",
+            "heading_tag": "h1",
+            "padding_bottom": 24
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>[Two-line brand statement: what we sell, who it is for, and the standard we hold it to.]</p>",
+            "text_font_size": "body-large",
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "title",
+        "text"
+      ],
+      "settings": {
+        "align_text": "text-left",
+        "width": "wrapper",
+        "content_width": 60,
+        "color_scheme": "scheme-7",
+        "padding_top": 144,
+        "padding_bottom": 144,
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
+      }
+    },
+    "about_banner": {
+      "type": "section-hero",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "width": "wrapper--full",
+        "height": "image-height",
+        "mobile_height": "image-height--mobile",
+        "color_scheme": "scheme-1",
+        "overlay_opacity": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "show_placeholder": true
+      }
+    },
+    "about_statement": {
+      "type": "section-rich-text-columns",
+      "blocks": {
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "We stock fewer tools, and we stand behind each one.",
+            "heading_font_size": "heading-large",
+            "position": "left",
+            "padding_bottom": 0
+          }
+        },
+        "lede": {
+          "type": "text",
+          "settings": {
+            "text": "<p>[Lede paragraph: why the shop exists.]</p>",
+            "text_font_size": "body-large",
+            "position": "right",
+            "padding_bottom": 24
+          }
+        },
+        "body": {
+          "type": "text",
+          "settings": {
+            "text": "<p>[Body copy to come: two or three short paragraphs on how the shop works.]</p>",
+            "text_font_size": "body-medium",
+            "position": "right",
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "lede",
+        "body"
+      ],
+      "settings": {
+        "left_column_width": 50,
+        "right_column_width": 50,
+        "align_text": "text-left",
+        "width": "wrapper",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 0,
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
+      }
+    },
+    "about_story": {
+      "type": "main-page",
+      "settings": {
+        "subheading": "Our story",
+        "show_title": false,
+        "show_content": true,
+        "text_font_size": "body-medium",
+        "align_text": "text-left",
+        "width": "wrapper--narrow",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "about_choose_intro": {
+      "type": "section-rich-text",
+      "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "How we choose",
+            "padding_bottom": 16
+          }
+        },
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "Three tests before a tool makes the shelf",
+            "heading_font_size": "heading-large",
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "title"
+      ],
+      "settings": {
+        "align_text": "text-left",
+        "width": "wrapper",
+        "content_width": 60,
+        "color_scheme": "scheme-2",
+        "padding_top": 96,
+        "padding_bottom": 0,
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
+      }
+    },
+    "about_choose": {
+      "type": "section-text-columns-with-media",
+      "blocks": {
+        "material": {
+          "type": "image",
+          "settings": {
+            "title": "Material",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[What the steel, wood and fittings have to be.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "",
+            "image_aspect_ratio": 0.7,
+            "mobile_image_aspect_ratio": 0.7
+          }
+        },
+        "maker": {
+          "type": "image",
+          "settings": {
+            "title": "Maker",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[Who makes it, and how long they have made one thing.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "",
+            "image_aspect_ratio": 0.7,
+            "mobile_image_aspect_ratio": 0.7
+          }
+        },
+        "use": {
+          "type": "image",
+          "settings": {
+            "title": "Use",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[We use it in our own garden for a season first.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "",
+            "image_aspect_ratio": 0.7,
+            "mobile_image_aspect_ratio": 0.7
+          }
+        }
+      },
+      "block_order": [
+        "material",
+        "maker",
+        "use"
+      ],
+      "settings": {
+        "title": "",
+        "width": "wrapper",
+        "layout": "grid",
+        "grid": 3,
+        "layout_mobile": "1",
+        "color_scheme": "scheme-2",
+        "padding_top": 48,
+        "padding_bottom": 96
+      }
+    },
+    "about_makers": {
+      "type": "section-double",
+      "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Where things are made",
+            "padding_bottom": 16
+          }
+        },
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "Made by people who make one thing well",
+            "heading_font_size": "heading-large",
+            "padding_bottom": 32
+          }
+        },
+        "specs": {
+          "type": "specs",
+          "settings": {
+            "rows": "Yoshioka Hamono | Bud shears · Miki, Japan\n[Maker] | [Tool] · [Town, country]\n[Maker] | [Tool] · [Town, country]",
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "title",
+        "specs"
+      ],
+      "settings": {
+        "image_width": "one-half",
+        "text_alignment": "text-left",
+        "layout": "",
+        "width": "wrapper",
+        "height": "image-height",
+        "mobile_height": "image-height--mobile",
+        "color_scheme": "scheme-4",
+        "padding_top": 96,
+        "padding_bottom": 96,
+        "show_placeholder": true
+      }
+    },
+    "about_onward": {
+      "type": "section-multicolumn",
+      "blocks": {
+        "shop": {
+          "type": "text",
+          "settings": {
+            "column_width": 33,
+            "title": "The tools",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[One line.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "Shop the tools",
+            "button_url": "shopify://collections/all",
+            "button_type": "btn--primary",
+            "button_style": "btn--text"
+          }
+        },
+        "guides": {
+          "type": "text",
+          "settings": {
+            "column_width": 33,
+            "title": "How-tos and notes",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[One line.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "Read the guides",
+            "button_url": "/blogs/guides",
+            "button_type": "btn--primary",
+            "button_style": "btn--text"
+          }
+        },
+        "faq": {
+          "type": "text",
+          "settings": {
+            "column_width": 33,
+            "title": "Questions",
+            "heading_font_size": "heading-medium",
+            "text": "<p>[One line.]</p>",
+            "text_font_size": "body-medium",
+            "button_text": "Read the FAQ",
+            "button_url": "/pages/faq",
+            "button_type": "btn--primary",
+            "button_style": "btn--text"
+          }
+        }
+      },
+      "block_order": [
+        "shop",
+        "guides",
+        "faq"
+      ],
+      "settings": {
+        "title": "",
+        "width": "wrapper",
+        "layout_mobile": "1",
+        "color_scheme": "scheme-2",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": [
+    "about_hero",
+    "about_banner",
+    "about_statement",
+    "about_story",
+    "about_choose_intro",
+    "about_choose",
+    "about_makers",
+    "about_onward"
+  ]
+}
