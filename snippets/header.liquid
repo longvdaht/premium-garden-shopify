@@ -432,15 +432,6 @@
       </div>
     {%- endif -%}
 
-    {%- if shop.customer_accounts_enabled -%}
-      <div class="header__desktop__button">
-        <a href="{{ routes.account_url }}" class="navlink{% if show_icons == false %} navlink--toplevel{% endif %}" title="{{ 'customer.account.title' | t }}">
-          {%- render 'icon', name: 'user' -%}
-          <span class="{% if show_icons == false %}navtext{% else %}visually-hidden{% endif %}">{{ 'layout.header.account' | t }}</span>
-        </a>
-      </div>
-    {%- endif -%}
-
     {%- if section.settings.enable_search -%}
       <div class="header__desktop__button">
         <header-search-popdown data-easing="cubic-bezier(0.2, 0, 0, 1)" data-duration="400">
@@ -465,6 +456,15 @@
             <span class="underlay" data-popdown-underlay></span>
           </details>
         </header-search-popdown>
+      </div>
+    {%- endif -%}
+
+    {%- if shop.customer_accounts_enabled -%}
+      <div class="header__desktop__button">
+        <a href="{{ routes.account_url }}" class="navlink{% if show_icons == false %} navlink--toplevel{% endif %}" title="{{ 'customer.account.title' | t }}">
+          {%- render 'icon', name: 'user' -%}
+          <span class="{% if show_icons == false %}navtext{% else %}visually-hidden{% endif %}">{{ 'layout.header.account' | t }}</span>
+        </a>
       </div>
     {%- endif -%}
 
