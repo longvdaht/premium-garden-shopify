@@ -1070,8 +1070,9 @@
 {%- endunless -%}
 
 {{ 'theme.css' | asset_url | stylesheet_tag }}
-{%- comment -%} Potager design system layer: tokens and theme restyles. Must load after theme.css. {%- endcomment -%}
+{%- comment -%} Keep the core Potager styles in the main stylesheet and load homepage-only overrides separately. {%- endcomment -%}
 {{ 'potager.css' | asset_url | stylesheet_tag }}
+{{ 'potager-home.css' | asset_url | stylesheet_tag }}
 
 {%- if settings.show_siblings or settings.enable_swatches -%}
   {%- capture css_swatches -%}
