@@ -42,7 +42,7 @@
       "newsletter_email": "Email",
       "name": "Name",
       "submit": "Join",
-      "placeholder": "Email Address",
+      "placeholder": "Email address",
       "thank_you": "Thanks for signing up!",
       "thank_you_with_code_html": "Thanks for signing up! Use the code <span>Discount10</span> for 10% off.",
       "error_message": "This customer is already subscribed!",

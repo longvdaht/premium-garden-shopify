@@ -21,6 +21,9 @@
   assign blocks_code = ''
   assign blocks_width = 0
   assign newsletter_block = ''
+  # Potager: the Newsletter block renders inside the Social (brand) column
+  assign newsletter_placeholder = '####footer-newsletter@@@@'
+  assign newsletter_in_social = false
 -%}
 
 {%- style -%}
@@ -202,6 +205,10 @@
                             <div class="rte footer__social__text">{{ text }}</div>
                           {%- endif -%}
 
+                          {%- comment -%} Potager: email sign-up in the brand column {%- endcomment -%}
+                          {%- assign newsletter_in_social = true -%}
+                          {{ newsletter_placeholder }}
+
                           {%- render 'social-icons' enable_follow_on_shop: block.settings.enable_follow_on_shop -%}
                         </div>
                       </div>
@@ -270,7 +277,8 @@
                         {%- endif -%}
 
                         <div class="footer__newsletter__aside">
-                          {%- render 'newsletter-form' block: block, footer: newsletter_position_footer -%}
+                          {%- assign newsletter_placeholder_text = 'general.newsletter_form.placeholder' | t -%}
+                          {%- render 'newsletter-form' block: block, footer: newsletter_position_footer, placeholder: newsletter_placeholder_text -%}
 
                           {%- if show_social_links -%}
                             {%- render 'social-icons' modifier: 'socials--newsletter' -%}
@@ -298,6 +306,8 @@
                 assign inline_blocks = ' footer__block--divider--inline'
               endif
 
+              assign blocks_code = blocks_code | replace: newsletter_placeholder, newsletter_block
+
               if one_third_block_count == blocks_size
                 echo blocks_code | replace: inline_blocks_placeholder, inline_blocks | replace: '--desktop-width: 33%;', '--desktop-width: 33.333333%;'
               else
@@ -308,7 +318,7 @@
         </collapsible-elements>
       {%- endif -%}
 
-      {%- if footer_style == 'floating' and newsletter_block != '' -%}
+      {%- if footer_style == 'floating' and newsletter_block != '' and newsletter_in_social == false -%}
         <div class="footer__newsletter__container">
           {{ newsletter_block }}
         </div>
@@ -318,11 +328,14 @@
     {%- if footer_style == 'floating' -%}
       <div class="footer__bar">
         <ul class="supporting-menu">
-          <li>
-            <a href="{{ shop.secure_url }}"
-              >&copy; {{ shop.name }}
-              {{ 'now' | date: '%Y' -}}
-            </a>
+          {%- comment -%} Potager: copyright from the section setting; Powered by Shopify removed {%- endcomment -%}
+          {%- assign year = 'now' | date: '%Y' -%}
+          <li class="supporting-menu__copyright">
+            {%- if section.settings.copyright_text != blank -%}
+              {{ section.settings.copyright_text | replace: '[year]', year }}
+            {%- else -%}
+              &copy; {{ shop.name }} {{ year }}
+            {%- endif -%}
           </li>
 
           {% for link in linklists[section.settings.supporting_menu_linklist].links %}
@@ -330,25 +343,6 @@
               <a href="{{ link.url }}">{{ link.title }}</a>
             </li>
           {% endfor %}
-
-          <!-- The following lines fix Lighthouse security warnings on the Shopify link. -->
-          {%- liquid
-            assign powered_by_link_html = powered_by_link
-            if powered_by_link_html contains 'rel="'
-              assign powered_link_rel_text = powered_by_link_html | split: 'rel="'
-              assign powered_link_rel_text = powered_link_rel_text[1] | split: '"' | first
-              assign powered_link_rel = 'rel="' | append: powered_link_rel_text | append: '"'
-              assign powered_by_link_html = powered_by_link_html | replace_first: powered_link_rel, ''
-            endif
-            if powered_by_link_html contains '<a '
-              assign powered_by_link_html = powered_by_link_html | replace: '<a ', '<a rel="noopener" '
-            endif
-            assign powered_by_link = powered_by_link_html
-          -%}
-
-          <!-- Remove the following line to delete 'Powered by Shopify' from your footer -->
-          <li data-powered-link>{{ powered_by_link }}</li>
-          <!-- Do not delete below this line -->
         </ul>
       </div>
     {%- endif -%}

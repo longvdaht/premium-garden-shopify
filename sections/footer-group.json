@@ -5,42 +5,77 @@
     "footer": {
       "type": "footer",
       "blocks": {
+        "brand": {
+          "type": "social",
+          "settings": {
+            "title": "Potager",
+            "heading_font_size": "heading-medium",
+            "text": "<p>Tools for the working garden. One seasonal note a week.</p>",
+            "column_width": 40,
+            "enable_follow_on_shop": false,
+            "enable_accordion": false
+          }
+        },
         "shop": {
           "type": "linklist",
           "settings": {
+            "linklist": "footer-shop",
             "title": "Shop",
-            "linklist": "footer-shop"
+            "heading_font_size": "heading-mini",
+            "column_width": 20,
+            "enable_accordion": false
           }
         },
         "about": {
           "type": "linklist",
           "settings": {
+            "linklist": "footer-about",
             "title": "About",
-            "linklist": "footer-about"
+            "heading_font_size": "heading-mini",
+            "column_width": 20,
+            "enable_accordion": false
           }
         },
         "help": {
           "type": "linklist",
           "settings": {
+            "linklist": "footer-help",
             "title": "Help",
-            "linklist": "footer-help"
+            "heading_font_size": "heading-mini",
+            "column_width": 20,
+            "enable_accordion": false
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "title": "",
+            "heading_font_size": "heading-x-small",
+            "button_text": "Join",
+            "show_arrow": true,
+            "terms": false,
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--text",
+            "color_scheme": "scheme-4"
           }
         }
       },
       "block_order": [
+        "brand",
         "shop",
         "about",
-        "help"
+        "help",
+        "newsletter"
       ],
       "settings": {
-        "wordmark_text": "Potager",
-        "tagline": "Tools for the working garden. One seasonal note a week.",
-        "show_newsletter": true,
-        "newsletter_placeholder": "Email address",
-        "show_social": true,
+        "logo_image_width": 150,
+        "supporting_menu_linklist": "footer-legal",
         "copyright_text": "© [year] Potager Labs LLC",
-        "legal_menu": "footer-legal",
-        "color_scheme": "scheme-4"
+        "color_scheme": "scheme-4",
+        "border_color": "",
+        "padding_top": 96,
+        "padding_bottom": 0
       }
     }
   },
