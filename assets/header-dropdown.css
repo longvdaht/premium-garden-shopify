@@ -301,17 +301,26 @@
   transition-delay: 0s;
 }
 
+/* Potager: the simple dropdown (Shop) is a full-width panel under the header
+   line, collections in one column at the page container's left edge. */
+.parent > .header__dropdown {
+  left: 0;
+  right: 0;
+}
 .parent .header__dropdown__wrapper {
-  padding: 15px;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--space-4) var(--gutter-desktop);
 }
 .parent .header__dropdown__inner {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
 }
 .parent .navlink--child {
-  padding: 5px 0;
+  padding: 0;
   display: inline-block;
-  margin-right: auto;
 }
 
 .sliderule__panel {
@@ -754,24 +763,39 @@ mobile-menu:has(header-search-popdown.is-open) .mobile-menu__block:not(.mobile-m
   flex: 0 0 var(--image-size);
 }
 
-.mobile-menu__block--socials .socials--mobile-menu {
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: var(--font-body-small);
-  font-weight: var(--FONT-WEIGHT-BODY-BOLD);
+/* Potager: one row of monochrome icons with 44px tap targets under a
+   hairline; the platform names stay for screen readers only
+   (.icon-fallback-text keeps the theme's visually hidden style). */
+.mobile-menu__block--socials {
+  border-top: 1px solid var(--hairline);
+  padding-block: 8px;
 }
-.mobile-menu__block--socials .icon-fallback-text {
-  clip-path: none;
-  position: relative !important;
-  overflow: visible;
-  display: block;
-  height: auto;
-  width: auto;
+.mobile-menu__block--socials .socials--mobile-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 0 -12px;
+}
+.mobile-menu__block--socials .socials--mobile-menu > li {
+  margin: 0;
 }
 .mobile-menu__block--socials .social-link {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--ink);
+}
+.mobile-menu__block--socials .social-link svg {
+  width: 20px;
+  height: 20px;
+}
+.mobile-menu__block--socials .social-link svg:not(.ds-icon) {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
 }
 
 mobile-menu .drawer__inner {

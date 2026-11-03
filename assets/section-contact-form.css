@@ -19,3 +19,59 @@
 .contact-form .custom-form__block {
   margin-bottom: 20px;
 }
+
+/* Potager ------------------------------------------------------------- */
+/* Contact form (wireframe 08): labels above the fields, a two-column field
+   grid, the scarlet Send message (the page's one scarlet action), and the
+   "Facts" blocks rendered beside the form. */
+.index-contact .contact__layout{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--space-5);align-items:start}
+.index-contact .contact-form{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin:0}
+.index-contact .contact-form>*{grid-column:1/-1;margin:0}
+.index-contact .custom-form__block:has(>input[type=text]),
+.index-contact .custom-form__block:has(>input[type=email]),
+.index-contact .custom-form__block--group:has(select){grid-column:auto}
+/* Labels above the fields */
+.index-contact .custom-form__label{display:block;margin:0 0 var(--space-1);font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--label)}
+.index-contact .custom-form__block--group{border:0;padding:0;min-width:0}
+.index-contact :is(input.field,textarea.field,select.field){box-sizing:border-box;width:100%;height:auto;margin:0;padding:14px var(--space-2);border:1px solid var(--ink);border-radius:var(--radius-1);background:var(--surface);font-family:var(--font-sans);font-size:16px;line-height:1.6;color:var(--ink);box-shadow:none}
+.index-contact :is(input.field,textarea.field)::placeholder{color:transparent;-webkit-text-fill-color:transparent}
+.index-contact :is(input.field,textarea.field,select.field):focus{border:1px solid var(--ink)}
+.index-contact textarea.field{min-height:180px;resize:vertical}
+.index-contact select.field{appearance:none;-webkit-appearance:none;padding-right:48px;background:var(--surface) url("potager-chevron-down.svg") right 16px center/20px no-repeat;cursor:pointer}
+.index-contact :is(input.field,textarea.field,select.field):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+.index-contact .checkbox label{font-size:16px;line-height:1.5;color:var(--ink)}
+/* Send message + reply note */
+.index-contact .custom-form__block:has(>button[type=submit]){display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3)}
+.index-contact button[type=submit]{flex:none;min-height:48px;padding:16px var(--space-4);border:1px solid var(--signal);border-radius:0;background:var(--signal);color:var(--on-signal)}
+.index-contact button[type=submit]:hover{border-color:var(--signal-press);background:var(--signal-press)}
+.index-contact button[type=submit]:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+.index-contact .contact__submit-note{margin:0;font-size:13px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
+.index-contact .custom-form__required-text{display:none}
+.index-contact .form__legal{font-size:12px;line-height:1.5;color:var(--ink-muted)}
+/* Messages: errors start with the theme's error list in a 2px scarlet frame */
+.index-contact .errors{padding:var(--space-2);border:2px solid var(--signal);font-size:15px;line-height:1.5;color:var(--ink)}
+.index-contact .errors ul{margin:0;padding-left:var(--space-2)}
+.index-contact .form-success{padding:var(--space-2);border:1px solid var(--ink);font-size:15px;line-height:1.5}
+/* Facts column */
+.index-contact .contact__aside{display:flex;flex-direction:column;gap:var(--space-4)}
+.index-contact .contact__note{padding-top:var(--space-2);border-top:1px solid var(--hairline)}
+.index-contact .contact__note-title{margin:0 0 var(--space-1);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--label)}
+.index-contact .contact__note .rte p{margin:0 0 var(--space-1);font-size:16px;line-height:1.6}
+.index-contact .contact__note .rte p:has(>a:only-child){margin:var(--space-1) 0 0}
+.index-contact .contact__note .rte a{display:inline-block;padding-bottom:3px;border-bottom:2px solid var(--signal);font-size:12px;font-weight:600;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+.index-contact .contact__note .rte a:hover{border-bottom-color:var(--signal-press)}
+/* The theme underlines links with a background line; the CTA border and the
+   plain social line replace it here */
+.index-contact :is(.contact__note .rte a,.contact__social a){background-image:none;text-decoration:none}
+.index-contact .contact__social a:hover span{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:5px}
+.index-contact .contact__social{margin:0}
+.index-contact .contact__social,
+.index-contact .contact__social a{display:inline-flex;align-items:center;gap:var(--space-1);font-size:15px;line-height:1.4;color:var(--ink);text-decoration:none}
+.index-contact .contact__social svg{width:20px;height:20px;flex:none}
+@media (max-width:767px){
+  .index-contact .contact__layout{grid-template-columns:1fr;gap:var(--space-5)}
+  .index-contact .contact-form{grid-template-columns:1fr}
+  .index-contact .custom-form__block:has(>input[type=text]),
+  .index-contact .custom-form__block:has(>input[type=email]),
+  .index-contact .custom-form__block--group:has(select){grid-column:1/-1}
+}

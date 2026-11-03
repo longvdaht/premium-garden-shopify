@@ -93,7 +93,7 @@
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
-              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="visually-hidden">{{ title }}</label>
+              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <input
                 type="email"
                 class="input field"
@@ -114,7 +114,7 @@
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
-              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="visually-hidden">{{ title }}</label>
+              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <textarea
                 rows="10"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
@@ -133,7 +133,7 @@
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
-              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="visually-hidden">{{ title }}</label>
+              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <input
                 type="text"
                 class="contactFormText input field"
@@ -154,7 +154,7 @@
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
-              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="visually-hidden">{{ title }}</label>
+              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <textarea
                 rows="10"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
@@ -173,7 +173,7 @@
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
-              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="visually-hidden">{{ title }}</label>
+              <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <input
                 type="tel"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
@@ -430,7 +430,7 @@
         data-aos-anchor="{{ animation_anchor }}"
         data-aos-order="{{ animation_order }}"
       >
-        <button type="submit" class="btn btn--primary btn--solid btn--full">
+        <button type="submit" class="btn btn--primary btn--solid">
           {{ 'contact.form.send' | t }}
         </button>
         {%- if section.settings.submit_note != blank -%}

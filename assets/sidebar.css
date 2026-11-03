@@ -104,3 +104,46 @@
   visibility: visible;
   transform: scaleX(1);
 }
+
+/* Potager ------------------------------------------------------------- */
+/* Sidebar section (FAQ, wireframe 07): topic list built from Header blocks,
+   questions as Accordion blocks. Hairline rows, small-caps questions, plus
+   turns to minus; on mobile the topics scroll sideways above the questions. */
+.section-sidebar .section-sidebar__aside{flex:0 0 33.333%;max-width:33.333%}
+.section-sidebar .section-sidebar__content{flex:1 1 auto}
+.section-sidebar .widget__links{margin:0;padding:0;list-style:none}
+.section-sidebar .widget__links li{margin:0;border-bottom:1px solid var(--hairline)}
+.section-sidebar .widget__link{display:block;width:100%;padding:12px 0;font-family:var(--font-sans);font-size:12px;font-weight:500;line-height:1.6;letter-spacing:.14em;text-transform:uppercase;text-align:left;color:var(--ink)}
+.section-sidebar .widget__link::after{display:none}
+.section-sidebar .widget__link:hover,
+.section-sidebar .widget__link.is-selected{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:6px}
+.section-sidebar .widget__link:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+/* Topic headings. The theme's topic links scroll a heading to the very top,
+   behind the sticky header; extra top padding (offset by a negative margin)
+   makes the jump, and the scroll spy, stop just below the header. */
+.section-sidebar .section-sidebar__title{--pf-jump:var(--header-height, 94px);margin:calc(var(--space-5) - var(--pf-jump)) 0 0;padding:var(--pf-jump) 0 var(--space-2);border-bottom:1px solid var(--hairline);font-family:var(--font-display);font-weight:500;line-height:1.2;pointer-events:none}
+.section-sidebar .section-sidebar__title:first-child{margin-top:calc(0px - var(--pf-jump))}
+.section-sidebar .accordion{margin:0;border:0;border-bottom:1px solid var(--hairline)}
+.section-sidebar .accordion__title{min-height:56px;align-items:center;padding:var(--space-2) var(--space-4) var(--space-2) 0;font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.section-sidebar .accordion__title svg{display:none}
+/* Plus that turns to minus, drawn in CSS */
+.section-sidebar .accordion__title::before,
+.section-sidebar .accordion__title::after{content:"";position:absolute;right:4px;top:50%;width:14px;height:1.5px;background:var(--ink);transition:transform .2s}
+.section-sidebar .accordion__title::after{transform:rotate(90deg)}
+.section-sidebar .accordion[open] .accordion__title::after{transform:rotate(0)}
+.section-sidebar .accordion__title:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.section-sidebar .accordion__content{max-width:var(--container-reading);padding:0 0 var(--space-3);font-size:16px;line-height:1.6;color:var(--ink)}
+.section-sidebar .accordion__content p{margin:0 0 var(--space-1)}
+@media (prefers-reduced-motion:reduce){.section-sidebar .accordion__title::after{transition:none}}
+@media (max-width:749px){
+  /* Topics scroll sideways above the questions */
+  .section-sidebar .section-sidebar__body{flex-direction:column}
+  .section-sidebar .section-sidebar__aside{flex:none;max-width:none;margin:0 0 var(--space-4);padding:0}
+  .section-sidebar .section-sidebar__widget{position:static;padding:0}
+  .section-sidebar .widget__links{display:flex;gap:var(--space-3);overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--hairline);scrollbar-width:none}
+  .section-sidebar .widget__links::-webkit-scrollbar{display:none}
+  .section-sidebar .widget__links li{border:0;flex:none}
+  .section-sidebar .widget__link{width:auto}
+  .section-sidebar .section-sidebar__content{padding:0}
+  .section-sidebar .section-sidebar__title{margin-top:calc(var(--space-4) - var(--pf-jump))}
+}

@@ -2,8 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  padding: var(--rte-content-padding-top, var(--outer)) var(--outer) var(--rte-content-padding-bottom, var(--outer));
-  background: var(--bg-accent);
+  /* Potager: no tinted panel, content on the container edge */
+  padding: var(--rte-content-padding-top, var(--outer)) 0 var(--rte-content-padding-bottom, var(--outer));
   gap: var(--gap);
   overflow-wrap: break-word;
 }
