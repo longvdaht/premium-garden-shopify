@@ -402,11 +402,16 @@ body .mobile-menu__block--socials .icon-fallback-text{position:absolute!importan
    template's section ids (about_*), so other rich text sections keep the
    theme's boxed layout. */
 [id*="__about_"] .index-rte .hero__content__wrapper,
-[id*="__about_"] .rich-text-columns__wrapper{background:none}
-[id*="__about_"] .rich-text-columns__wrapper{padding-inline:0}
+[id*="__about_"] .rich-text-columns__wrapper,
+[id*="__faq_"] .index-rte .hero__content__wrapper,
+[id*="__faq_"] .rich-text-columns__wrapper{background:none}
+[id*="__about_"] .rich-text-columns__wrapper,
+[id*="__faq_"] .rich-text-columns__wrapper{padding-inline:0}
 [id*="__about_hero"] .hero__content,
-[id*="__about_choose_intro"] .hero__content{margin-inline:0 auto;padding-inline:0}
-[id*="__about_hero"] .hero__rte{color:var(--ink-muted)}
+[id*="__about_choose_intro"] .hero__content,
+[id*="__faq_hero"] .hero__content{margin-inline:0 auto;padding-inline:0}
+[id*="__about_hero"] .hero__rte,
+[id*="__faq_hero"] .hero__rte{color:var(--ink-muted)}
 /* Our story: page content in a 720px reading column, hairline above the label */
 [id*="__about_story"] .hero__content__wrapper{max-width:calc(720px + 2 * var(--gutter-desktop));overflow:visible}
 [id*="__about_story"] .hero__content{padding-inline:0}
@@ -490,4 +495,47 @@ body .site-footer-wrapper .supporting-menu li:not(.supporting-menu__copyright)+l
   body .site-footer-wrapper .footer__block--social .footer__block__title{font-size:24px}
   body .site-footer-wrapper--floating .footer__bar{padding:var(--space-3) var(--gutter-mobile)}
   body .site-footer-wrapper .supporting-menu__copyright{flex-basis:100%;margin-bottom:var(--space-1)}
+}
+
+/* FAQ (templates/page.faq.json, wireframe 07). Hero and contact band share the
+   About rules above. Topics and questions: the theme's Sidebar section, with
+   the topic list built from Header blocks and questions as Accordion blocks. */
+[id*="__faq_hero"] .hero__rte a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+body [id*="__faq_topics"] .section-sidebar__aside{flex:0 0 33.333%;max-width:33.333%}
+body [id*="__faq_topics"] .section-sidebar__content{flex:1 1 auto}
+body [id*="__faq_topics"] .widget__links{margin:0;padding:0;list-style:none}
+body [id*="__faq_topics"] .widget__links li{margin:0;border-bottom:1px solid var(--hairline)}
+body [id*="__faq_topics"] .widget__link{display:block;width:100%;padding:12px 0;font-family:var(--font-sans);font-size:12px;font-weight:500;line-height:1.6;letter-spacing:.14em;text-transform:uppercase;text-align:left;color:var(--ink)}
+body [id*="__faq_topics"] .widget__link::after{display:none}
+body [id*="__faq_topics"] .widget__link:hover,
+body [id*="__faq_topics"] .widget__link.is-selected{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:6px}
+body [id*="__faq_topics"] .widget__link:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+/* Topic headings. The theme's topic links scroll a heading to the very top,
+   behind the sticky header; extra top padding (offset by a negative margin)
+   makes the jump, and the scroll spy, stop just below the header. */
+body [id*="__faq_topics"] .section-sidebar__title{--pf-jump:var(--header-height, 94px);margin:calc(var(--space-5) - var(--pf-jump)) 0 0;padding:var(--pf-jump) 0 var(--space-2);border-bottom:1px solid var(--hairline);font-family:var(--font-display);font-weight:500;line-height:1.2;pointer-events:none}
+body [id*="__faq_topics"] .section-sidebar__title:first-child{margin-top:calc(0px - var(--pf-jump))}
+body [id*="__faq_topics"] .accordion{margin:0;border:0;border-bottom:1px solid var(--hairline)}
+body [id*="__faq_topics"] .accordion__title{min-height:56px;align-items:center;padding:var(--space-2) var(--space-4) var(--space-2) 0;font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+body [id*="__faq_topics"] .accordion__title svg{display:none}
+/* Plus that turns to minus, drawn in CSS */
+body [id*="__faq_topics"] .accordion__title::before,
+body [id*="__faq_topics"] .accordion__title::after{content:"";position:absolute;right:4px;top:50%;width:14px;height:1.5px;background:var(--ink);transition:transform .2s}
+body [id*="__faq_topics"] .accordion__title::after{transform:rotate(90deg)}
+body [id*="__faq_topics"] .accordion[open] .accordion__title::after{transform:rotate(0)}
+body [id*="__faq_topics"] .accordion__title:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+body [id*="__faq_topics"] .accordion__content{max-width:var(--container-reading);padding:0 0 var(--space-3);font-size:16px;line-height:1.6;color:var(--ink)}
+body [id*="__faq_topics"] .accordion__content p{margin:0 0 var(--space-1)}
+@media (prefers-reduced-motion:reduce){body [id*="__faq_topics"] .accordion__title::after{transition:none}}
+@media (max-width:749px){
+  /* Topics scroll sideways above the questions (the theme hides them on mobile) */
+  body [id*="__faq_topics"] .section-sidebar__body{flex-direction:column}
+  body [id*="__faq_topics"] .section-sidebar__aside.desktop{display:block!important;flex:none;max-width:none;margin:0 0 var(--space-4);padding:0}
+  body [id*="__faq_topics"] .section-sidebar__widget{position:static;padding:0}
+  body [id*="__faq_topics"] .widget__links{display:flex;gap:var(--space-3);overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--hairline);scrollbar-width:none}
+  body [id*="__faq_topics"] .widget__links::-webkit-scrollbar{display:none}
+  body [id*="__faq_topics"] .widget__links li{border:0;flex:none}
+  body [id*="__faq_topics"] .widget__link{width:auto}
+  body [id*="__faq_topics"] .section-sidebar__content{padding:0}
+  body [id*="__faq_topics"] .section-sidebar__title{margin-top:calc(var(--space-4) - var(--pf-jump))}
 }

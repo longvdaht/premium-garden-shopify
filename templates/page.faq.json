@@ -1,0 +1,228 @@
+{
+  "name": "FAQ",
+  "sections": {
+    "faq_hero": {
+      "type": "section-rich-text",
+      "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Help",
+            "padding_bottom": 24
+          }
+        },
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "Questions",
+            "heading_font_size": "heading-x-large",
+            "heading_tag": "h1",
+            "padding_bottom": 24
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Short answers about orders, shipping, returns and care. If it is not here, <a href=\"/pages/contact\" title=\"Contact\">write to us</a>.</p>",
+            "text_font_size": "body-large",
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "title",
+        "text"
+      ],
+      "settings": {
+        "align_text": "text-left",
+        "width": "wrapper",
+        "content_width": 60,
+        "color_scheme": "scheme-6",
+        "padding_top": 96,
+        "padding_bottom": 96,
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
+      }
+    },
+    "faq_topics": {
+      "type": "section-sidebar-sticky",
+      "blocks": {
+        "orders": {
+          "type": "header",
+          "settings": {
+            "title": "Orders and shipping"
+          }
+        },
+        "orders_q1": {
+          "type": "accordion",
+          "settings": {
+            "title": "When will my order ship?",
+            "content": "<p>Orders ship within [0] business days. We use USPS Ground Advantage and UPS Ground, and email tracking when the parcel leaves.</p>"
+          }
+        },
+        "orders_q2": {
+          "type": "accordion",
+          "settings": {
+            "title": "Do you ship outside the US?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "orders_q3": {
+          "type": "accordion",
+          "settings": {
+            "title": "Can I change my order after placing it?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "returns": {
+          "type": "header",
+          "settings": {
+            "title": "Returns"
+          }
+        },
+        "returns_q1": {
+          "type": "accordion",
+          "settings": {
+            "title": "What is your return policy?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "returns_q2": {
+          "type": "accordion",
+          "settings": {
+            "title": "How do I start a return?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "care": {
+          "type": "header",
+          "settings": {
+            "title": "Care and sharpening"
+          }
+        },
+        "care_q1": {
+          "type": "accordion",
+          "settings": {
+            "title": "How do I sharpen my pruners?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "care_q2": {
+          "type": "accordion",
+          "settings": {
+            "title": "How should I store tools over winter?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "care_q3": {
+          "type": "accordion",
+          "settings": {
+            "title": "Do you sharpen tools?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "products": {
+          "type": "header",
+          "settings": {
+            "title": "Products and makers"
+          }
+        },
+        "products_q1": {
+          "type": "accordion",
+          "settings": {
+            "title": "Who makes your tools?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        },
+        "products_q2": {
+          "type": "accordion",
+          "settings": {
+            "title": "Are replacement parts available?",
+            "content": "<p>[Answer to be written by the client.]</p>"
+          }
+        }
+      },
+      "block_order": [
+        "orders",
+        "orders_q1",
+        "orders_q2",
+        "orders_q3",
+        "returns",
+        "returns_q1",
+        "returns_q2",
+        "care",
+        "care_q1",
+        "care_q2",
+        "care_q3",
+        "products",
+        "products_q1",
+        "products_q2"
+      ],
+      "settings": {
+        "heading_font_size": "heading-medium",
+        "width": "wrapper",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "faq_contact": {
+      "type": "section-rich-text-columns",
+      "blocks": {
+        "title": {
+          "type": "heading",
+          "settings": {
+            "title": "Still have a question?",
+            "heading_font_size": "heading-large",
+            "position": "left",
+            "padding_bottom": 0
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Write to us and we will answer within [one] business day.</p>",
+            "text_font_size": "body-medium",
+            "position": "right",
+            "padding_bottom": 24
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "position": "right",
+            "button_text": "Contact us",
+            "button_url": "/pages/contact",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
+            "padding_bottom": 0
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "left_column_width": 50,
+        "right_column_width": 50,
+        "align_text": "text-left",
+        "width": "wrapper",
+        "color_scheme": "scheme-2",
+        "padding_top": 96,
+        "padding_bottom": 96,
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
+      }
+    }
+  },
+  "order": [
+    "faq_hero",
+    "faq_topics",
+    "faq_contact"
+  ]
+}
