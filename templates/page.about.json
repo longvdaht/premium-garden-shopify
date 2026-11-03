@@ -296,7 +296,7 @@
             "text": "<p>[One line.]</p>",
             "text_font_size": "body-medium",
             "button_text": "Read the FAQ",
-            "button_url": "/pages/faq",
+            "button_url": "/pages/faqs",
             "button_type": "btn--primary",
             "button_style": "btn--text"
           }

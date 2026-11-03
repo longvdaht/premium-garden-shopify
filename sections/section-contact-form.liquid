@@ -2,6 +2,13 @@
 
 {%- liquid
   assign content_section_blocks = section.blocks | reject: 'type', 'shape-divider' | reject: 'type', 'badges'
+  # Potager: facts column beside the form (Facts: spec list / text / social line blocks)
+  assign has_aside = false
+  for block in content_section_blocks
+    if block.type contains 'aside_'
+      assign has_aside = true
+    endif
+  endfor
   assign shape_divider_blocks = section.blocks | where: 'type', 'shape-divider'
   assign badge_blocks = section.blocks | where: 'type', 'badges'
   assign color_scheme = 'color-' | append: section.settings.color_scheme
@@ -49,6 +56,7 @@
       </{{ heading_tag }}>
     {%- endif -%}
 
+    {%- if has_aside -%}<div class="contact__layout">{%- endif -%}
     {%- form 'contact', id: 'contact-us-page', class: 'contact-form' -%}
       {%- if form.posted_successfully? -%}
         <p class="form-success">
@@ -425,6 +433,9 @@
         <button type="submit" class="btn btn--primary btn--solid btn--full">
           {{ 'contact.form.send' | t }}
         </button>
+        {%- if section.settings.submit_note != blank -%}
+          <p class="contact__submit-note">{{ section.settings.submit_note }}</p>
+        {%- endif -%}
       </div>
 
       {%- if has_required_field -%}
@@ -452,6 +463,55 @@
         </div>
       {%- endif -%}
     {%- endform -%}
+
+    {%- if has_aside -%}
+      <aside class="contact__aside">
+        {%- for block in content_section_blocks -%}
+          {%- case block.type -%}
+            {%- when 'aside_specs' -%}
+              {%- assign spec_lines = block.settings.rows | newline_to_br | split: '<br />' -%}
+              <dl class="ds-specs contact__aside-block" {{ block.shopify_attributes }}>
+                {%- for line in spec_lines -%}
+                  {%- assign row = line | strip_newlines | strip -%}
+                  {%- if row != blank -%}
+                    {%- assign parts = row | split: '|' -%}
+                    <div class="ds-specs__row">
+                      <dt>{{ parts[0] | strip }}</dt>
+                      <dd>{{ parts | slice: 1, 10 | join: '|' | strip }}</dd>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </dl>
+
+            {%- when 'aside_text' -%}
+              <div class="contact__note contact__aside-block" {{ block.shopify_attributes }}>
+                {%- if block.settings.title != blank -%}
+                  <p class="contact__note-title">{{ block.settings.title }}</p>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="rte">{{ block.settings.text }}</div>
+                {%- endif -%}
+              </div>
+
+            {%- when 'aside_social' -%}
+              {%- if block.settings.handle != blank -%}
+                <p class="contact__social contact__aside-block" {{ block.shopify_attributes }}>
+                  {%- if settings.instagram_link != blank -%}
+                    <a href="{{ settings.instagram_link }}" target="_blank" rel="noopener">
+                      {%- render 'potager-icon', name: 'instagram' -%}
+                      <span>{{ block.settings.handle }}</span>
+                    </a>
+                  {%- else -%}
+                    {%- render 'potager-icon', name: 'instagram' -%}
+                    <span>{{ block.settings.handle }}</span>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+      </aside>
+    {%- endif -%}
+    {%- if has_aside -%}</div>{%- endif -%}
   </div>
   {%- render 'badge-blocks', mode: 'host', blocks: badge_blocks -%}
   {%- render 'shape-dividers', mode: 'host' -%}
@@ -509,6 +569,12 @@
       "label": "Show hCAPTCHA terms",
       "default": true,
       "info": "Recommended if your online store preferences have spam protection enabled."
+    },
+    {
+      "type": "text",
+      "id": "submit_note",
+      "label": "Note beside the button",
+      "info": "For example, how soon you reply."
     },
     {
       "type": "header",
@@ -857,6 +923,62 @@
           "type": "text",
           "id": "label-six",
           "label": "Option six"
+        }
+      ]
+    },
+    {
+      "type": "aside_specs",
+      "name": "Facts: spec list",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Facts column"
+        },
+        {
+          "type": "textarea",
+          "id": "rows",
+          "label": "Rows",
+          "default": "Email | hello@example.com",
+          "info": "Shown beside the form. One row per line: Label | Value."
+        }
+      ]
+    },
+    {
+      "type": "aside_text",
+      "name": "Facts: text",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Facts column"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Before you write"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Most answers about delivery and returns are already written down.</p>"
+        }
+      ]
+    },
+    {
+      "type": "aside_social",
+      "name": "Facts: social line",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Facts column"
+        },
+        {
+          "type": "text",
+          "id": "handle",
+          "label": "Handle",
+          "default": "@handle",
+          "info": "Links to the Instagram URL in Theme settings > Social media."
         }
       ]
     },
@@ -1215,7 +1337,11 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "aside", "footer"]
+    "groups": [
+      "header",
+      "aside",
+      "footer"
+    ]
   }
 }
 {% endschema %}

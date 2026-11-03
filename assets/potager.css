@@ -539,3 +539,69 @@ body [id*="__faq_topics"] .accordion__content p{margin:0 0 var(--space-1)}
   body [id*="__faq_topics"] .section-sidebar__content{padding:0}
   body [id*="__faq_topics"] .section-sidebar__title{margin-top:calc(var(--space-4) - var(--pf-jump))}
 }
+
+/* Contact (templates/page.contact.json, wireframe 08). Title block shares the
+   FAQ/About hero rules. Form: the theme's Contact form section with labels
+   shown above the fields, a two-column field grid and the scarlet Send
+   message (the page's one scarlet action). Facts column: the section's
+   "Facts" blocks, rendered beside the form. */
+[id*="__contact_hero"] .index-rte .hero__content__wrapper{background:none}
+[id*="__contact_hero"] .hero__content{margin-inline:0 auto;padding-inline:0}
+[id*="__contact_hero"] .hero__rte{color:var(--ink-muted)}
+[id*="__contact_shipping"] .brick__block__text{--text-width:100%;padding:0 0 0 var(--space-5)}
+body [id*="__contact_form"] .contact__layout{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--space-5);align-items:start}
+body [id*="__contact_form"] .contact-form{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin:0}
+body [id*="__contact_form"] .contact-form>*{grid-column:1/-1;margin:0}
+body [id*="__contact_form"] .custom-form__block:has(>input[type=text]),
+body [id*="__contact_form"] .custom-form__block:has(>input[type=email]),
+body [id*="__contact_form"] .custom-form__block--group:has(select){grid-column:auto}
+/* Labels above the fields (the theme keeps them visually hidden) */
+body [id*="__contact_form"] .custom-form__block>label.visually-hidden,
+body [id*="__contact_form"] .custom-form__label{position:static!important;display:block;width:auto!important;height:auto!important;margin:0 0 var(--space-1);clip:auto;clip-path:none;overflow:visible;white-space:normal;font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--label)}
+body [id*="__contact_form"] .custom-form__block--group{border:0;padding:0;min-width:0}
+body [id*="__contact_form"] :is(input.field,textarea.field,select.field){box-sizing:border-box;width:100%;height:auto;margin:0;padding:14px var(--space-2);border:1px solid var(--ink);border-radius:var(--radius-1);background:var(--surface);font-family:var(--font-sans);font-size:16px;line-height:1.6;color:var(--ink);box-shadow:none}
+body [id*="__contact_form"] :is(input.field,textarea.field)::placeholder{color:transparent;-webkit-text-fill-color:transparent}
+body [id*="__contact_form"] :is(input.field,textarea.field,select.field):focus{border:1px solid var(--ink)}
+body [id*="__contact_form"] textarea.field{min-height:180px;resize:vertical}
+body [id*="__contact_form"] select.field{appearance:none;-webkit-appearance:none;padding-right:48px;background:var(--surface) url("potager-chevron-down.svg") right 16px center/20px no-repeat;cursor:pointer}
+body [id*="__contact_form"] :is(input.field,textarea.field,select.field):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+/* Checkbox in the style guide's check style */
+body [id*="__contact_form"] .custom-form__block.checkbox{display:flex;align-items:flex-start;gap:12px}
+body [id*="__contact_form"] .checkbox input{appearance:none;-webkit-appearance:none;position:static;flex:none;width:20px;height:20px;margin:2px 0 0;border:1px solid var(--ink);border-radius:var(--radius-1);background:var(--surface);cursor:pointer;opacity:1}
+body [id*="__contact_form"] .checkbox input:checked{background:var(--ink) url("potager-check.svg") center/14px no-repeat}
+body [id*="__contact_form"] .checkbox input:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+body [id*="__contact_form"] .checkbox label{margin:0;padding:0;font-size:16px;line-height:1.5;color:var(--ink);cursor:pointer}
+body [id*="__contact_form"] .checkbox label::before,
+body [id*="__contact_form"] .checkbox label::after{display:none}
+/* Send message + reply note */
+body [id*="__contact_form"] .custom-form__block:has(>button[type=submit]){display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3)}
+body [id*="__contact_form"] button[type=submit]{flex:none;width:auto!important;min-width:0;max-width:none;min-height:48px;padding:16px var(--space-4);border:1px solid var(--signal);border-radius:0;background:var(--signal);color:var(--on-signal)}
+body [id*="__contact_form"] button[type=submit]:hover{border-color:var(--signal-press);background:var(--signal-press)}
+body [id*="__contact_form"] button[type=submit]:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+body [id*="__contact_form"] .contact__submit-note{margin:0;font-size:13px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
+body [id*="__contact_form"] .custom-form__required-text{display:none}
+body [id*="__contact_form"] .form__legal{font-size:12px;line-height:1.5;color:var(--ink-muted)}
+/* Messages: errors start with the theme's error list in a 2px scarlet frame */
+body [id*="__contact_form"] .errors{padding:var(--space-2);border:2px solid var(--signal);font-size:15px;line-height:1.5;color:var(--ink)}
+body [id*="__contact_form"] .errors ul{margin:0;padding-left:var(--space-2)}
+body [id*="__contact_form"] .form-success{padding:var(--space-2);border:1px solid var(--ink);font-size:15px;line-height:1.5}
+/* Facts column */
+body [id*="__contact_form"] .contact__aside{display:flex;flex-direction:column;gap:var(--space-4)}
+body [id*="__contact_form"] .contact__note{padding-top:var(--space-2);border-top:1px solid var(--hairline)}
+body [id*="__contact_form"] .contact__note-title{margin:0 0 var(--space-1);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--label)}
+body [id*="__contact_form"] .contact__note .rte p{margin:0 0 var(--space-1);font-size:16px;line-height:1.6}
+body [id*="__contact_form"] .contact__note .rte p:has(>a:only-child){margin:var(--space-1) 0 0}
+body [id*="__contact_form"] .contact__note .rte a{display:inline-block;padding-bottom:3px;border-bottom:2px solid var(--signal);font-size:12px;font-weight:600;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+body [id*="__contact_form"] .contact__note .rte a:hover{border-bottom-color:var(--signal-press)}
+body [id*="__contact_form"] .contact__social{margin:0}
+body [id*="__contact_form"] .contact__social,
+body [id*="__contact_form"] .contact__social a{display:inline-flex;align-items:center;gap:var(--space-1);font-size:15px;line-height:1.4;color:var(--ink);text-decoration:none}
+body [id*="__contact_form"] .contact__social svg{width:20px;height:20px;flex:none}
+@media (max-width:767px){
+  body [id*="__contact_form"] .contact__layout{grid-template-columns:1fr;gap:var(--space-5)}
+  body [id*="__contact_form"] .contact-form{grid-template-columns:1fr}
+  body [id*="__contact_form"] .custom-form__block:has(>input[type=text]),
+  body [id*="__contact_form"] .custom-form__block:has(>input[type=email]),
+  body [id*="__contact_form"] .custom-form__block--group:has(select){grid-column:1/-1}
+  [id*="__contact_shipping"] .brick__block__text{padding:var(--space-4) 0 0}
+}

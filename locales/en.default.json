@@ -479,7 +479,7 @@
       "message": "Message",
       "phone": "Phone Number",
       "subject": "Subject",
-      "send": "Send",
+      "send": "Send message",
       "select_default": "Please select",
       "required_field_text": "Fields marked with an asterisk (*) are required.",
       "post_success": "Thanks for contacting us. We'll get back to you as soon as possible."
