@@ -1,37 +1,37 @@
 /* ==========================================================================
-   Homepage-only styles
-   Scoped under .template-index with global section classes.
+   Global section styles
+   Scoped globally across all pages with section classes.
    Split from potager-layout.css for clean ownership and easier maintenance.
    Typography is handled by theme settings schema / theme.css.
    ========================================================================== */
 
 /* 1. Hero (01.1): Desktop 16:9 media with green panel shifted downward; mobile 4:5 with green panel below */
-.template-index .index-hero .hero__images {
+.index-hero .hero__images {
   background-color: var(--bone-ground);
 }
 /* When no actual image is uploaded yet, keep background neutral bone-ground without broken placeholder icons */
-.template-index .index-hero .hero__split-image--blank img,
-.template-index .index-hero .hero__images .is-loading img {
+.index-hero .hero__split-image--blank img,
+.index-hero .hero__images .is-loading img {
   opacity: 0;
 }
 
-.template-index .index-hero .hero__content__wrapper {
+.index-hero .hero__content__wrapper {
   display: flex;
 }
 
 @media (min-width: 769px) {
-  .template-index .index-hero .hero__content__wrapper {
+  .index-hero .hero__content__wrapper {
     max-width: var(--width-normal, var(--container-max));
     margin-inline: auto;
     padding-inline: var(--outer, var(--gutter-desktop));
     align-items: flex-end;
     padding-bottom: clamp(40px, 6vw, 80px);
   }
-  .template-index .index-hero .hero__images {
+  .index-hero .hero__images {
     aspect-ratio: 16/9;
     min-height: 480px;
   }
-  .template-index .index-hero .hero__content {
+  .index-hero .hero__content {
     background: var(--green);
     color: var(--bone-page);
     width: clamp(500px, 50vw, 680px);
@@ -45,12 +45,12 @@
     align-items: flex-start;
     box-shadow: 0 12px 32px rgba(22, 39, 28, 0.12);
   }
-  .template-index .index-hero .hero__title {
+  .index-hero .hero__title {
     color: var(--bone-page);
     margin: 0;
     max-width: 460px;
   }
-  .template-index .index-hero .hero__description {
+  .index-hero .hero__description {
     color: var(--ink-muted);
     margin: 0;
     max-width: 440px;
@@ -58,21 +58,21 @@
 }
 
 @media (max-width: 768px) {
-  .template-index .index-hero {
+  .index-hero {
     display: flex;
     flex-direction: column;
   }
-  .template-index .index-hero .hero__wrapper {
+  .index-hero .hero__wrapper {
     display: flex;
     flex-direction: column;
   }
-  .template-index .index-hero .hero__images {
+  .index-hero .hero__images {
     aspect-ratio: 4/5;
     position: relative;
     height: auto;
     width: 100%;
   }
-  .template-index .index-hero .hero__content__wrapper {
+  .index-hero .hero__content__wrapper {
     position: static;
     transform: none;
     width: 100%;
@@ -81,7 +81,7 @@
     padding: 0;
     padding-inline: 0;
   }
-  .template-index .index-hero .hero__content {
+  .index-hero .hero__content {
     background: var(--green);
     color: var(--bone-page);
     width: 100%;
@@ -90,25 +90,25 @@
     box-sizing: border-box;
     gap: var(--space-2);
   }
-  .template-index .index-hero .hero__title {
+  .index-hero .hero__title {
     color: var(--bone-page);
   }
-  .template-index .index-hero .hero__description {
+  .index-hero .hero__description {
     color: var(--ink-muted);
   }
 }
 
 /* 2. Facts strip (01.2): 3 short facts between thin lines, no icons */
-.template-index .section-columns {
+.section-columns--with-dividers {
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
   background-color: var(--bone-page);
   padding-block: 0;
 }
-.template-index .section-columns .grid-item {
+.section-columns--with-dividers .grid-item {
   box-sizing: border-box;
 }
-.template-index .section-columns .column__heading {
+.section-columns--with-dividers .column__heading {
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 600;
@@ -117,60 +117,60 @@
   color: var(--label);
   margin: 0 0 var(--space-1);
 }
-.template-index .section-columns .column__text {
+.section-columns--with-dividers .column__text {
   color: var(--ink);
   margin: 0;
   max-width: 360px;
 }
 @media (min-width: 750px) {
-  .template-index .section-columns .multicolumn {
+  .section-columns--with-dividers .multicolumn {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0;
   }
-  .template-index .section-columns .grid-item {
+  .section-columns--with-dividers .grid-item {
     padding: var(--space-4) var(--space-3);
     border-right: 1px solid var(--hairline);
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  .template-index .section-columns .grid-item:first-child {
+  .section-columns--with-dividers .grid-item:first-child {
     padding-left: var(--space-4);
     padding-right: var(--space-2);
   }
-  .template-index .section-columns .grid-item:last-child {
+  .section-columns--with-dividers .grid-item:last-child {
     border-right: none;
     padding-left: var(--space-2);
     padding-right: var(--space-4);
   }
 }
 @media (max-width: 749px) {
-  .template-index .section-columns .grid-item {
+  .section-columns--with-dividers .grid-item {
     padding: var(--space-3) var(--space-2);
     border-bottom: 1px solid var(--hairline);
   }
-  .template-index .section-columns .grid-item:last-child {
+  .section-columns--with-dividers .grid-item:last-child {
     border-bottom: none;
   }
 }
 
 /* 3 & 4. Shelf (01.3) & Bundles (01.4) */
-.template-index .index-products .grid__heading-holder--inline {
+.index-products .grid__heading-holder--inline {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: var(--space-4);
 }
 
-.template-index .index-products .grid__heading-text {
+.index-products .grid__heading-text {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   margin: 0;
 }
 
-.template-index .index-products.color-scheme-1 .grid__heading-text::before {
+.index-products.color-scheme-1 .grid__heading-text::before {
   content: "THE SHELF";
   display: block;
   font-family: var(--font-sans);
@@ -182,7 +182,7 @@
   margin: 0;
 }
 
-.template-index .index-products.color-scheme-4 .grid__heading-text::before {
+.index-products.color-scheme-4 .grid__heading-text::before {
   content: "BUNDLES";
   display: block;
   font-family: var(--font-sans);
@@ -195,12 +195,12 @@
   margin: 0;
 }
 
-.template-index .index-products .grid__heading,
-.template-index .index-products .section__header .hero__title {
+.index-products .grid__heading,
+.index-products .section__header .hero__title {
   margin: 0;
 }
 
-.template-index .index-products .grid__heading-actions {
+.index-products .grid__heading-actions {
   display: flex;
   align-items: flex-start;
   align-self: flex-start;
@@ -211,9 +211,9 @@
 }
 
 /* Ensure SHOP ALL & VIEW THE PRODUCT are on 1 line and have only 1 clean underline */
-.template-index .index-products .grid__heading-actions .btn--text,
-.template-index .clickable-details .btn--text,
-.template-index .clickable-details .hero__description a {
+.index-products .grid__heading-actions .btn--text,
+.clickable-details .btn--text,
+.clickable-details .hero__description a {
   white-space: nowrap;
   padding: 0 0 1px 0;
   border: none;
@@ -224,79 +224,79 @@
   display: inline-block;
   line-height: 1;
 }
-.template-index .index-products .grid__heading-actions .btn--text {
+.index-products .grid__heading-actions .btn--text {
   transform: translateY(-6px);
 }
-.template-index .clickable-details .btn--text,
-.template-index .clickable-details .hero__description a {
+.clickable-details .btn--text,
+.clickable-details .hero__description a {
   color: var(--ink);
   margin-top: var(--space-2);
 }
-.template-index .index-products .grid__heading-actions .btn--text span,
-.template-index .clickable-details .btn--text span,
-.template-index .clickable-details .hero__description a span {
+.index-products .grid__heading-actions .btn--text span,
+.clickable-details .btn--text span,
+.clickable-details .hero__description a span {
   background: none !important;
   background-image: none !important;
   padding: 0;
   line-height: inherit;
   white-space: nowrap;
 }
-.template-index .index-products .grid__heading-actions .btn--text:hover,
-.template-index .clickable-details .btn--text:hover,
-.template-index .clickable-details .hero__description a:hover {
+.index-products .grid__heading-actions .btn--text:hover,
+.clickable-details .btn--text:hover,
+.clickable-details .hero__description a:hover {
   border-bottom-color: var(--signal-press);
   background: none !important;
   background-image: none !important;
 }
-.template-index .index-products.color-scheme-4 .grid__heading-actions .btn--text {
+.index-products.color-scheme-4 .grid__heading-actions .btn--text {
   color: var(--bone-page);
 }
 
 /* Product placeholder cards when no images or products are uploaded yet:
    In wireframe: solid Bone ground box (no product photo), and clean name & price */
-.template-index .index-products .svg-placeholder,
-.template-index .clickable-details .look__image-container,
-.template-index .index-image-text .image__hero__frame {
+.index-products .svg-placeholder,
+.clickable-details .look__image-container,
+.index-image-text .image__hero__frame {
   background-color: var(--bone-ground);
 }
-.template-index .index-products .svg-placeholder svg {
+.index-products .svg-placeholder svg {
   display: none; /* Hide Shopify placeholder bag/shoe illustrations */
 }
 /* Match wireframe card: 4:5 ratio on Bone ground, clean name & price */
-.template-index .index-products .product-card__image,
-.template-index .index-products .product-card__media {
+.index-products .product-card__image,
+.index-products .product-card__media {
   aspect-ratio: 4/5;
   background-color: var(--bone-ground);
 }
-.template-index .index-products .badge-box-container,
-.template-index .index-products .quick-add__holder,
-.template-index .index-products .quick-add-stacked,
-.template-index .index-products .quick-add-button,
-.template-index .index-products .product-card__swatches__holder,
-.template-index .index-products .product-card__tags,
-.template-index .index-products .product-card__cutline {
+.index-products .badge-box-container,
+.index-products .quick-add__holder,
+.index-products .quick-add-stacked,
+.index-products .quick-add-button,
+.index-products .product-card__swatches__holder,
+.index-products .product-card__tags,
+.index-products .product-card__cutline {
   display: none;
 }
-.template-index .index-products .product-card__title {
+.index-products .product-card__title {
   margin-top: var(--space-2);
   display: block;
 }
 
-.template-index .index-products .product-card__price__holder {
+.index-products .product-card__price__holder {
   display: block;
   margin-top: 2px;
 }
 
-.template-index .index-products .product-card__price {
+.index-products .product-card__price {
   display: block;
 }
 
 /* 5. Product Highlight (01.5): Wireframe Section 5 - 2-column layout (Left: title/text/button, Right: 4:5 Bone card with hotspots) */
-.template-index .clickable-details {
+.clickable-details {
   background-color: var(--bone-page);
 }
 
-.template-index .clickable-details .wrapper {
+.clickable-details .wrapper {
   max-width: var(--container-max);
   margin-inline: auto;
   padding-inline: var(--gutter-desktop);
@@ -304,7 +304,7 @@
 }
 
 @media (min-width: 990px) {
-  .template-index .clickable-details .wrapper {
+  .clickable-details .wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(40px, 5vw, 80px);
@@ -312,7 +312,7 @@
   }
 }
 
-.template-index .clickable-details .hero__content__wrapper {
+.clickable-details .hero__content__wrapper {
   text-align: left;
   margin: 0;
   padding: 0;
@@ -323,7 +323,7 @@
   min-height: auto;
 }
 
-.template-index .clickable-details .hero__content {
+.clickable-details .hero__content {
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -337,35 +337,35 @@
 }
 
 
-.template-index .clickable-details .hero__title {
+.clickable-details .hero__title {
   color: var(--ink);
   margin: 0;
   text-align: left;
   white-space: nowrap;
 }
 
-.template-index .clickable-details .hero__description {
+.clickable-details .hero__description {
   color: var(--ink-muted);
   margin: 0;
   text-align: left;
 }
 
-.template-index .clickable-details .hero__description p {
+.clickable-details .hero__description p {
   margin: 0 0 var(--space-2) 0;
 }
 
-.template-index .clickable-details .hero__description p:last-child {
+.clickable-details .hero__description p:last-child {
   margin-bottom: 0;
 }
 
 
-.template-index .clickable-details .look__product {
+.clickable-details .look__product {
   width: 100%;
   margin: 0;
 }
 
 /* Hide image data / photo and display clean Bone ground placeholder card with 4:5 ratio */
-.template-index .clickable-details .look__image-container {
+.clickable-details .look__image-container {
   aspect-ratio: 4/5;
   background-color: var(--bone-ground) !important;
   border-radius: 0;
@@ -374,26 +374,26 @@
   overflow: visible;
 }
 
-.template-index .clickable-details .look__image-container img,
-.template-index .clickable-details .look__image-container picture,
-.template-index .clickable-details .look__image-container svg:not(.icon) {
+.clickable-details .look__image-container img,
+.clickable-details .look__image-container picture,
+.clickable-details .look__image-container svg:not(.icon) {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
 }
 
 /* Remove glass reflection shimmer animation and loading overlays */
-.template-index .clickable-details .look__image-container .image__hero__frame,
-.template-index .clickable-details .look__image-container .image__hero__pane,
-.template-index .clickable-details .look__image-container .lazy-image {
+.clickable-details .look__image-container .image__hero__frame,
+.clickable-details .look__image-container .image__hero__pane,
+.clickable-details .look__image-container .lazy-image {
   background: transparent !important;
   background-color: transparent !important;
 }
 
-.template-index .clickable-details .look__image-container .lazy-image--backfill::after,
-.template-index .clickable-details .look__image-container [class*="loading"]::after,
-.template-index .clickable-details .look__image-container [class*="backfill"]::after,
-.template-index .clickable-details .look__image-container [class*="hero"]::after {
+.clickable-details .look__image-container .lazy-image--backfill::after,
+.clickable-details .look__image-container [class*="loading"]::after,
+.clickable-details .look__image-container [class*="backfill"]::after,
+.clickable-details .look__image-container [class*="hero"]::after {
   content: none !important;
   display: none !important;
   animation: none !important;
@@ -401,7 +401,7 @@
 }
 
 /* Hotspots: 3 PIVOT pins & popup card matching wireframe */
-.template-index .clickable-details .hotspots {
+.clickable-details .hotspots {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -409,7 +409,7 @@
   pointer-events: none;
 }
 
-.template-index .clickable-details .hotspot-item {
+.clickable-details .hotspot-item {
   position: absolute;
   z-index: 5;
   pointer-events: auto;
@@ -419,7 +419,7 @@
   margin-block-start: -12px;
 }
 
-.template-index .clickable-details .hotspot__button {
+.clickable-details .hotspot__button {
   background: transparent;
   border: none;
   padding: 0;
@@ -435,13 +435,13 @@
 }
 
 /* Remove default theme halo and padding distortion on .hotspot */
-.template-index .clickable-details .hotspot::before,
-.template-index .clickable-details .hotspot::after {
+.clickable-details .hotspot::before,
+.clickable-details .hotspot::after {
   display: none !important;
   content: none !important;
 }
 
-.template-index .clickable-details .hotspot {
+.clickable-details .hotspot {
   position: relative;
   top: auto;
   left: auto;
@@ -460,7 +460,7 @@
   box-sizing: border-box;
 }
 
-.template-index .clickable-details .hotspot__icon-toggle {
+.clickable-details .hotspot__icon-toggle {
   width: 24px;
   height: 24px;
   min-width: 24px;
@@ -475,18 +475,18 @@
   transition: transform 0.2s ease;
 }
 
-.template-index .clickable-details .hotspot__button:hover .hotspot__icon-toggle,
-.template-index .clickable-details .hotspot__button.is-active .hotspot__icon-toggle {
+.clickable-details .hotspot__button:hover .hotspot__icon-toggle,
+.clickable-details .hotspot__button.is-active .hotspot__icon-toggle {
   transform: scale(1.1);
 }
 
-.template-index .clickable-details .hotspot__icon-toggle svg,
-.template-index .clickable-details .hotspot__icon-toggle .icon {
+.clickable-details .hotspot__icon-toggle svg,
+.clickable-details .hotspot__icon-toggle .icon {
   display: none !important;
 }
 
 /* White popup card */
-.template-index .clickable-details .hotspot__content {
+.clickable-details .hotspot__content {
   background: var(--bone-page);
   border: 1px solid var(--hairline);
   border-radius: 0;
@@ -497,7 +497,7 @@
   text-align: left;
 }
 
-.template-index .clickable-details .hotspot__title {
+.clickable-details .hotspot__title {
   color: var(--label);
   font-family: var(--font-sans);
   font-size: 11px;
@@ -508,8 +508,8 @@
   line-height: 1.3;
 }
 
-.template-index .clickable-details .hotspot__text,
-.template-index .clickable-details .hotspot__text p {
+.clickable-details .hotspot__text,
+.clickable-details .hotspot__text p {
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 13px;
@@ -518,63 +518,63 @@
 }
 
 /* Ensure info-bubble displays inside image on both desktop and mobile */
-.template-index .clickable-details .look__product .hotspot__info-bubble {
+.clickable-details .look__product .hotspot__info-bubble {
   display: grid !important;
 }
 
-.template-index .clickable-details .hotspot__button:hover .hotspot__info-bubble,
-.template-index .clickable-details .hotspot__button.is-active .hotspot__info-bubble,
-.template-index .clickable-details .hotspot__button.is-selected .hotspot__info-bubble {
+.clickable-details .hotspot__button:hover .hotspot__info-bubble,
+.clickable-details .hotspot__button.is-active .hotspot__info-bubble,
+.clickable-details .hotspot__button.is-selected .hotspot__info-bubble {
   opacity: 1 !important;
   visibility: unset !important;
   pointer-events: auto !important;
 }
 
-.template-index .clickable-details .hotspot-item:has(.is-active),
-.template-index .clickable-details .hotspot-item:has(.is-selected) {
+.clickable-details .hotspot-item:has(.is-active),
+.clickable-details .hotspot-item:has(.is-selected) {
   z-index: 10;
 }
 
 @media (max-width: 989px) {
-  .template-index .clickable-details .wrapper {
+  .clickable-details .wrapper {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
     padding-inline: var(--gutter-mobile);
   }
 
-  .template-index .clickable-details .hero__content__wrapper {
+  .clickable-details .hero__content__wrapper {
     width: 100%;
   }
 
-  .template-index .clickable-details .hero__content {
+  .clickable-details .hero__content {
     max-width: 100%;
   }
 
-  .template-index .clickable-details .look__product {
+  .clickable-details .look__product {
     width: 100%;
   }
 
   /* Hide the separate mobile content below the image */
-  .template-index .clickable-details .look__contents.mobile {
+  .clickable-details .look__contents.mobile {
     display: none !important;
   }
 }
 
 @media (max-width: 768px) {
-  .template-index .clickable-details .hotspot__content {
+  .clickable-details .hotspot__content {
     max-width: min(200px, calc(100vw - 80px));
     padding: 10px 14px;
   }
 }
 
 /* 6. Who We Are (01.6): Wireframe Section 6 - scheme 7 Green spot / deep green background, 2-column layout (Left: 4:5 hero card on Bone ground, Right: content) */
-.template-index .index-image-text {
+.index-image-text.color-scheme-7 {
   background-color: var(--green);
   color: var(--bone-page);
 }
 
-.template-index .index-image-text .brick__section {
+.index-image-text .brick__section {
   max-width: var(--container-max);
   margin-inline: auto;
   box-sizing: border-box;
@@ -582,7 +582,7 @@
 }
 
 @media (min-width: 990px) {
-  .template-index .index-image-text .brick__section {
+  .index-image-text .brick__section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(40px, 5vw, 80px);
@@ -591,8 +591,8 @@
 }
 
 /* Left: 4:5 image frame - hide image data, style as Bone ground card (same pink/beige as above cards) without PHOTO 4:5 text */
-.template-index .index-image-text .brick__block--images,
-.template-index .index-image-text .brick__block__image {
+.index-image-text .brick__block--images,
+.index-image-text .brick__block__image {
   width: 100%;
   max-width: 100%;
   margin: 0;
@@ -600,7 +600,7 @@
   background: transparent;
 }
 
-.template-index .index-image-text .image__hero__frame {
+.index-image-text .image__hero__frame {
   aspect-ratio: 4/5;
   background-color: var(--bone-ground);
   border-radius: 0;
@@ -609,16 +609,16 @@
   overflow: visible;
 }
 
-.template-index .index-image-text .image__hero__frame img,
-.template-index .index-image-text .image__hero__frame picture,
-.template-index .index-image-text .image__hero__frame svg {
+.index-image-text .image__hero__frame img,
+.index-image-text .image__hero__frame picture,
+.index-image-text .image__hero__frame svg {
   display: none;
   opacity: 0;
   visibility: hidden;
 }
 
 /* Right: Content styling - remove any background wrapping the text and expand width */
-.template-index .index-image-text .brick__block--text {
+.index-image-text .brick__block--text {
   background: transparent;
   background-color: transparent;
   padding: 0;
@@ -629,7 +629,7 @@
   align-items: center;
 }
 
-.template-index .index-image-text .brick__block__text {
+.index-image-text .brick__block__text {
   --text-width: 100%;
   background: transparent;
   background-color: transparent;
@@ -639,7 +639,7 @@
   flex-basis: 100%;
 }
 
-.template-index .index-image-text .hero__content {
+.index-image-text .hero__content {
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -652,13 +652,12 @@
   background-color: transparent;
 }
 
-.template-index .index-image-text .hero__subheading {
+.index-image-text .hero__subheading {
   color: var(--ink-muted);
   margin: 0;
 }
 
-.template-index .index-image-text .hero__title {
-  color: var(--bone-page);
+.index-image-text .hero__title {
   margin: 0;
   text-align: left;
   width: 100%;
@@ -666,61 +665,73 @@
   word-break: normal;
 }
 
-.template-index .index-image-text .hero__rte,
-.template-index .index-image-text .hero__rte p {
+.index-image-text.color-scheme-7 .hero__title {
   color: var(--bone-page);
+}
+
+.index-image-text .hero__rte,
+.index-image-text .hero__rte p {
   margin: 0;
   text-align: left;
   width: 100%;
   max-width: 100%;
 }
 
+.index-image-text.color-scheme-7 .hero__rte,
+.index-image-text.color-scheme-7 .hero__rte p {
+  color: var(--bone-page);
+}
+
 /* CTA button: ABOUT THE SHOP with 2px Scarlet Underline */
-.template-index .index-image-text .hero__button-group,
-.template-index .index-image-text .hero__button {
+.index-image-text .hero__button-group,
+.index-image-text .hero__button {
   margin-top: var(--space-2);
 }
 
-.template-index .index-image-text .btn--text,
-.template-index .index-image-text .btn {
+.index-image-text .btn--text,
+.index-image-text .btn {
   display: inline-block;
   background: none;
   border: none;
   border-bottom: 2px solid var(--signal);
-  color: var(--bone-page);
+  color: inherit;
   padding: 0 0 3px 0;
   text-decoration: none;
   border-radius: 0;
 }
 
-.template-index .index-image-text .btn--text span,
-.template-index .index-image-text .btn span {
+.index-image-text.color-scheme-7 .btn--text,
+.index-image-text.color-scheme-7 .btn {
+  color: var(--bone-page);
+}
+
+.index-image-text .btn--text span,
+.index-image-text .btn span {
   background: none;
   padding: 0;
 }
 
-.template-index .index-image-text .btn--text:hover,
-.template-index .index-image-text .btn:hover {
+.index-image-text .btn--text:hover,
+.index-image-text .btn:hover {
   border-bottom-color: var(--signal-press);
-  color: var(--bone-page);
   background: none;
 }
 
 @media (max-width: 989px) {
-  .template-index .index-image-text .brick__section {
+  .index-image-text .brick__section {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
     padding-inline: var(--gutter-mobile);
   }
 
-  .template-index .index-image-text .brick__block__text {
+  .index-image-text .brick__block__text {
     max-width: 100%;
   }
 }
 
 /* 7. Guides (01.7): Section header with "ALL GUIDES" action, 3:2 cards, tag, title, reading time */
-.template-index .blog-section {
+.blog-section {
   background-color: var(--bone-page);
   max-width: var(--container-max);
   margin-inline: auto;
@@ -728,7 +739,7 @@
   position: relative;
 }
 
-.template-index .blog-section .page__heading.blog__title {
+.blog-section .page__heading.blog__title {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -736,12 +747,12 @@
   text-align: left;
 }
 
-.template-index .blog-section .page__heading.blog__title a {
+.blog-section .page__heading.blog__title a {
   color: var(--ink);
   text-decoration: none;
 }
 
-.template-index .blog-section .page__heading.blog__title::after {
+.blog-section .page__heading.blog__title::after {
   content: "ALL GUIDES";
   font-family: var(--font-sans);
   font-size: 11px;
@@ -754,7 +765,7 @@
   cursor: pointer;
 }
 
-.template-index .blog-section .article__image__outer {
+.blog-section .article__image__outer {
   position: relative;
   display: block;
   width: 100%;
@@ -762,7 +773,7 @@
   overflow: visible;
 }
 
-.template-index .blog-section .article__image {
+.blog-section .article__image {
   position: relative;
   display: block;
   width: 100%;
@@ -770,8 +781,8 @@
   overflow: visible;
 }
 
-.template-index .blog-section .article__image-link,
-.template-index .blog-section .image-wrapper {
+.blog-section .article__image-link,
+.blog-section .image-wrapper {
   display: block;
   width: 100%;
   aspect-ratio: 3/2;
@@ -780,14 +791,14 @@
   position: relative;
 }
 
-.template-index .blog-section .article__image-link img,
-.template-index .blog-section .article__image-link svg {
+.blog-section .article__image-link img,
+.blog-section .article__image-link svg {
   display: none;
   opacity: 0;
 }
 
-.template-index .blog-section .article__tags,
-.template-index .blog-section .article__image .article__tags {
+.blog-section .article__tags,
+.blog-section .article__image .article__tags {
   position: static;
   display: flex;
   flex-wrap: wrap;
@@ -799,8 +810,8 @@
   background: transparent;
 }
 
-.template-index .blog-section .article__tags a,
-.template-index .blog-section .article__tags .article__tag {
+.blog-section .article__tags a,
+.blog-section .article__tags .article__tag {
   color: var(--label);
   text-decoration: none;
   background: transparent;
@@ -810,25 +821,25 @@
 }
 
 /* Hide second onboarding tag if present */
-.template-index .blog-section .article--onboarding .article__tag:nth-child(n+2) {
+.blog-section .article--onboarding .article__tag:nth-child(n+2) {
   display: none;
 }
 
-.template-index .blog-section .article__title {
+.blog-section .article__title {
   margin: 0 0 6px 0;
 }
 
-.template-index .blog-section .article__title a {
+.blog-section .article__title a {
   color: var(--ink);
   text-decoration: none;
 }
 
-.template-index .blog-section .article__excerpt {
+.blog-section .article__excerpt {
   display: none;
 }
 
 /* Wireframe onboarding cards: Titles & 0 min read */
-.template-index .blog-section .article--onboarding .article__tag {
+.blog-section .article--onboarding .article__tag {
   position: relative;
   display: inline-block;
   color: transparent;
@@ -836,7 +847,7 @@
   line-height: 0;
   margin: 0;
 }
-.template-index .blog-section .article--onboarding .article__tag::after {
+.blog-section .article--onboarding .article__tag::after {
   content: attr(data-tag);
   display: block;
   font-family: var(--font-sans);
@@ -849,20 +860,20 @@
   white-space: nowrap;
   margin: 0;
 }
-.template-index .blog-section .article--onboarding:nth-child(1) .article__tag::after {
+.blog-section .article--onboarding:nth-child(1) .article__tag::after {
   content: "PRUNING";
 }
-.template-index .blog-section .article--onboarding:nth-child(2) .article__tag::after {
+.blog-section .article--onboarding:nth-child(2) .article__tag::after {
   content: "GROWING";
 }
-.template-index .blog-section .article--onboarding:nth-child(3) .article__tag::after {
+.blog-section .article--onboarding:nth-child(3) .article__tag::after {
   content: "GOODS";
 }
 
-.template-index .blog-section .article--onboarding .article__title {
+.blog-section .article--onboarding .article__title {
   margin: 0;
 }
-.template-index .blog-section .article--onboarding .article__title a {
+.blog-section .article--onboarding .article__title a {
   display: block;
   color: transparent;
   font-size: 0;
@@ -870,7 +881,7 @@
   text-decoration: none;
   margin: 0;
 }
-.template-index .blog-section .article--onboarding .article__title a::after {
+.blog-section .article--onboarding .article__title a::after {
   display: block;
   font-family: var(--font-display);
   font-size: 20px;
@@ -882,17 +893,17 @@
   word-break: normal;
   margin-top: -1px;
 }
-.template-index .blog-section .article--onboarding:nth-child(1) .article__title a::after {
+.blog-section .article--onboarding:nth-child(1) .article__title a::after {
   content: "Sharpening bud shears on a fine stone";
 }
-.template-index .blog-section .article--onboarding:nth-child(2) .article__title a::after {
+.blog-section .article--onboarding:nth-child(2) .article__title a::after {
   content: "Deadheading in late summer";
 }
-.template-index .blog-section .article--onboarding:nth-child(3) .article__title a::after {
+.blog-section .article--onboarding:nth-child(3) .article__title a::after {
   content: "How the blades are made";
 }
 
-.template-index .blog-section .article__text-wrapper::after {
+.blog-section .article__text-wrapper::after {
   content: "[0] min read";
   display: block;
   font-family: var(--font-sans);
@@ -902,7 +913,7 @@
 }
 
 @media (max-width: 768px) {
-  .template-index .blog-section .blog-listing {
+  .blog-section .blog-listing {
     grid-template-columns: 1fr;
     --columns: 1;
     row-gap: var(--space-4);
@@ -910,11 +921,11 @@
 }
 
 /* 8. Stay informed (01.8): Homepage Newsletter section */
-.template-index .index-newsletter {
+.index-newsletter {
   background-color: var(--bone-raised);
 }
 
-.template-index .index-newsletter .section-padding {
+.index-newsletter .section-padding {
   max-width: var(--container-max);
   margin-inline: auto;
   box-sizing: border-box;
@@ -923,19 +934,19 @@
 }
 
 @media (max-width: 767px) {
-  .template-index .index-newsletter .section-padding {
+  .index-newsletter .section-padding {
     padding-top: var(--space-5);
     padding-bottom: var(--space-5);
   }
 }
 
-.template-index .index-newsletter .brick__section {
+.index-newsletter .brick__section {
   background: transparent;
   display: block;
 }
 
-.template-index .index-newsletter .brick__block--text,
-.template-index .index-newsletter .brick__block__text {
+.index-newsletter .brick__block--text,
+.index-newsletter .brick__block__text {
   --text-width: 100%;
   background: transparent;
   padding: 0;
@@ -945,7 +956,7 @@
   margin: 0;
 }
 
-.template-index .index-newsletter .hero__content {
+.index-newsletter .hero__content {
   text-align: left;
   align-items: flex-start;
   width: 100%;
@@ -957,7 +968,7 @@
 }
 
 @media (min-width: 990px) {
-  .template-index .index-newsletter .hero__content {
+  .index-newsletter .hero__content {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     column-gap: clamp(40px, 6vw, 100px);
@@ -965,17 +976,17 @@
     align-items: center;
   }
 
-  .template-index .index-newsletter .hero__content > .hero__title {
+  .index-newsletter .hero__content > .hero__title {
     grid-column: 1;
     grid-row: 1;
   }
 
-  .template-index .index-newsletter .hero__content > .hero__rte {
+  .index-newsletter .hero__content > .hero__rte {
     grid-column: 1;
     grid-row: 2;
   }
 
-  .template-index .index-newsletter .hero__content > .newsletter__wrapper {
+  .index-newsletter .hero__content > .newsletter__wrapper {
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
@@ -983,13 +994,13 @@
   }
 }
 
-.template-index .index-newsletter .hero__title {
+.index-newsletter .hero__title {
   color: var(--ink);
   margin: 0 0 4px 0;
 }
 
-.template-index .index-newsletter .hero__rte,
-.template-index .index-newsletter .hero__rte p {
+.index-newsletter .hero__rte,
+.index-newsletter .hero__rte p {
   color: var(--ink-muted);
   margin: 0;
   width: 100%;
@@ -997,17 +1008,17 @@
 }
 
 /* Newsletter Input: Underlined field with right-arrow and helper text below */
-.template-index .index-newsletter .newsletter__wrapper {
+.index-newsletter .newsletter__wrapper {
   width: 100%;
 }
 
-.template-index .index-newsletter .newsletter-form {
+.index-newsletter .newsletter-form {
   max-width: 100%;
   margin: 0;
   width: 100%;
 }
 
-.template-index .index-newsletter .newsletter-form .input-group {
+.index-newsletter .newsletter-form .input-group {
   display: flex;
   align-items: center;
   width: 100%;
@@ -1017,12 +1028,12 @@
   background: transparent;
 }
 
-.template-index .index-newsletter .newsletter-form .input-group:focus-within {
+.index-newsletter .newsletter-form .input-group:focus-within {
   border-bottom-width: 1.5px;
   border-bottom-color: var(--ink);
 }
 
-.template-index .index-newsletter .newsletter-form input[type="email"] {
+.index-newsletter .newsletter-form input[type="email"] {
   background: transparent;
   border: none;
   box-shadow: none;
@@ -1033,13 +1044,13 @@
   outline: none;
 }
 
-.template-index .index-newsletter .newsletter-form input[type="email"]::placeholder {
+.index-newsletter .newsletter-form input[type="email"]::placeholder {
   color: var(--ink-muted);
   opacity: 1;
 }
 
-.template-index .index-newsletter .newsletter-form .input-group__btn,
-.template-index .index-newsletter .newsletter-form button {
+.index-newsletter .newsletter-form .input-group__btn,
+.index-newsletter .newsletter-form button {
   background: transparent;
   border: none;
   box-shadow: none;
@@ -1056,16 +1067,16 @@
   transition: transform 0.2s ease;
 }
 
-.template-index .index-newsletter .newsletter-form button:hover {
+.index-newsletter .newsletter-form button:hover {
   transform: translateX(3px);
 }
 
-.template-index .index-newsletter .newsletter-form button span {
+.index-newsletter .newsletter-form button span {
   display: none;
 }
 
 /* Ensure the arrow icon renders the long-tail right arrow matching the screenshot */
-.template-index .index-newsletter .newsletter-form button svg {
+.index-newsletter .newsletter-form button svg {
   width: 18px;
   height: 18px;
   display: block;
@@ -1074,7 +1085,7 @@
   stroke-width: 1.5;
 }
 
-.template-index .index-newsletter .newsletter-form button svg path {
+.index-newsletter .newsletter-form button svg path {
   d: path("M5 12h14M12 5l7 7-7 7");
   fill: none;
   stroke: var(--ink);
@@ -1083,7 +1094,7 @@
   stroke-linejoin: miter;
 }
 
-.template-index .index-newsletter .newsletter__wrapper::after {
+.index-newsletter .newsletter__wrapper::after {
   content: "One email a week. Unsubscribe any time.";
   display: block;
   font-family: var(--font-sans);

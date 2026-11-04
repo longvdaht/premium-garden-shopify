@@ -57,7 +57,7 @@
 
 <div
   id="{{ unique }}"
-  class="section-columns section-padding {{ color_scheme }}"
+  class="section-columns section-padding {{ color_scheme }}{% if section.settings.show_dividers %} section-columns--with-dividers{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="columns"
   {% if shape_divider_blocks != blank %}data-shape-divider-host{% endif %}
@@ -615,6 +615,12 @@
     {
       "type": "header",
       "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Show dividers",
+      "default": false
     },
     {
       "type": "select",

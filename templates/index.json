@@ -89,6 +89,7 @@
       ],
       "settings": {
         "title": "",
+        "show_dividers": true,
         "width": "wrapper",
         "layout_mobile": "1",
         "color_scheme": "scheme-1",
