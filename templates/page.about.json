@@ -1,5 +1,13 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "name": "About",
   "sections": {
     "about_hero": {
       "type": "section-rich-text",
@@ -16,8 +24,8 @@
           "settings": {
             "title": "Tools for the working garden.",
             "heading_font_size": "heading-x-large",
-            "heading_tag": "h1",
-            "padding_bottom": 24
+            "padding_bottom": 24,
+            "heading_tag": "h1"
           }
         },
         "text": {
@@ -37,8 +45,11 @@
       "settings": {
         "align_text": "text-left",
         "width": "wrapper",
+        "headings_inline": false,
         "content_width": 60,
         "color_scheme": "scheme-7",
+        "overlay_opacity": 0,
+        "show_overlay_text": false,
         "padding_top": 144,
         "padding_bottom": 144,
         "padding_top_content": 0,
@@ -47,14 +58,26 @@
     },
     "about_banner": {
       "type": "section-hero",
-      "blocks": {},
-      "block_order": [],
       "settings": {
+        "link": "",
+        "product": "",
+        "product_desktop_alignment_vertical": "bottom",
+        "product_desktop_alignment_horizontal": "center",
+        "upsell_color_scheme": "",
+        "upsell_button_type": "btn--secondary",
+        "upsell_button_size": "btn--small",
+        "upsell_button_style": "btn--outline",
         "width": "wrapper--full",
         "height": "image-height",
+        "flex_align_desktop": "align--middle-center-desktop",
+        "content_width": 50,
+        "mobile_image": "shopify://shop_images/about_banner.png",
         "mobile_height": "image-height--mobile",
+        "flex_align_mobile": "align--middle-center-mobile",
         "color_scheme": "scheme-1",
+        "show_text_background": false,
         "overlay_opacity": 0,
+        "show_overlay_text": false,
         "padding_top": 0,
         "padding_bottom": 0,
         "show_placeholder": true
@@ -69,7 +92,8 @@
             "title": "We stock fewer tools, and we stand behind each one.",
             "heading_font_size": "heading-large",
             "position": "left",
-            "padding_bottom": 0
+            "padding_bottom": 0,
+            "heading_tag": "automatic"
           }
         },
         "lede": {
@@ -101,6 +125,7 @@
         "right_column_width": 50,
         "align_text": "text-left",
         "width": "wrapper",
+        "align_text_mobile": "text-left--mobile",
         "color_scheme": "scheme-1",
         "padding_top": 96,
         "padding_bottom": 0,
@@ -113,13 +138,15 @@
       "settings": {
         "subheading": "Our story",
         "show_title": false,
+        "heading_font_size": "heading-large",
         "show_content": true,
         "text_font_size": "body-medium",
         "align_text": "text-left",
         "width": "wrapper--narrow",
         "color_scheme": "scheme-1",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "about_choose_intro": {
@@ -137,7 +164,8 @@
           "settings": {
             "title": "Three tests before a tool makes the shelf",
             "heading_font_size": "heading-large",
-            "padding_bottom": 0
+            "padding_bottom": 0,
+            "heading_tag": "automatic"
           }
         }
       },
@@ -148,8 +176,11 @@
       "settings": {
         "align_text": "text-left",
         "width": "wrapper",
+        "headings_inline": false,
         "content_width": 60,
         "color_scheme": "scheme-2",
+        "overlay_opacity": 0,
+        "show_overlay_text": false,
         "padding_top": 96,
         "padding_bottom": 0,
         "padding_top_content": 0,
@@ -162,37 +193,58 @@
         "material": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/masterial.png",
             "title": "Material",
             "heading_font_size": "heading-medium",
             "text": "<p>[What the steel, wood and fittings have to be.]</p>",
             "text_font_size": "body-medium",
             "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
             "image_aspect_ratio": 0.7,
-            "mobile_image_aspect_ratio": 0.7
+            "mobile_image_aspect_ratio": 0.7,
+            "heading_tag": "automatic"
           }
         },
         "maker": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/maker.png",
             "title": "Maker",
             "heading_font_size": "heading-medium",
             "text": "<p>[Who makes it, and how long they have made one thing.]</p>",
             "text_font_size": "body-medium",
             "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
             "image_aspect_ratio": 0.7,
-            "mobile_image_aspect_ratio": 0.7
+            "mobile_image_aspect_ratio": 0.7,
+            "heading_tag": "automatic"
           }
         },
         "use": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/use.png",
             "title": "Use",
             "heading_font_size": "heading-medium",
             "text": "<p>[We use it in our own garden for a season first.]</p>",
             "text_font_size": "body-medium",
             "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
             "image_aspect_ratio": 0.7,
-            "mobile_image_aspect_ratio": 0.7
+            "mobile_image_aspect_ratio": 0.7,
+            "heading_tag": "automatic"
           }
         }
       },
@@ -203,13 +255,18 @@
       ],
       "settings": {
         "title": "",
+        "heading_font_size": "heading-medium",
+        "align_heading": "text-left",
+        "align_text": "text-left",
         "width": "wrapper",
+        "align_columns": "flex-align-top",
         "layout": "grid",
         "grid": 3,
         "layout_mobile": "1",
         "color_scheme": "scheme-2",
         "padding_top": 48,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "about_makers": {
@@ -219,6 +276,7 @@
           "type": "subheading",
           "settings": {
             "subheading": "Where things are made",
+            "pin_to_bottom": false,
             "padding_bottom": 16
           }
         },
@@ -227,13 +285,16 @@
           "settings": {
             "title": "Made by people who make one thing well",
             "heading_font_size": "heading-large",
-            "padding_bottom": 32
+            "pin_to_bottom": false,
+            "padding_bottom": 32,
+            "heading_tag": "automatic"
           }
         },
         "specs": {
           "type": "specs",
           "settings": {
             "rows": "Yoshioka Hamono | Bud shears · Miki, Japan\n[Maker] | [Tool] · [Town, country]\n[Maker] | [Tool] · [Town, country]",
+            "pin_to_bottom": false,
             "padding_bottom": 0
           }
         }
@@ -244,13 +305,27 @@
         "specs"
       ],
       "settings": {
+        "image_shape_enable": false,
+        "image_crop": "none",
+        "image_shape": "scalloped-circle-1",
+        "image_2_shape_enable": false,
+        "image_2_crop": "none",
+        "image_2_shape": "scalloped-circle-1",
         "image_width": "one-half",
+        "product": "",
+        "upsell_color_scheme": "",
+        "upsell_button_type": "btn--secondary",
+        "upsell_button_size": "btn--small",
+        "upsell_button_style": "btn--outline",
         "text_alignment": "text-left",
         "layout": "",
         "width": "wrapper",
         "height": "image-height",
         "mobile_height": "image-height--mobile",
+        "reverse_blocks": false,
         "color_scheme": "scheme-4",
+        "content_bg": "",
+        "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
         "show_placeholder": true
@@ -270,7 +345,10 @@
             "button_text": "Shop the tools",
             "button_url": "shopify://collections/all",
             "button_type": "btn--primary",
-            "button_style": "btn--text"
+            "button_size": "",
+            "button_style": "btn--text",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         },
         "guides": {
@@ -284,7 +362,10 @@
             "button_text": "Read the guides",
             "button_url": "/blogs/guides",
             "button_type": "btn--primary",
-            "button_style": "btn--text"
+            "button_size": "",
+            "button_style": "btn--text",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         },
         "faq": {
@@ -298,7 +379,10 @@
             "button_text": "Read the FAQ",
             "button_url": "/pages/faqs",
             "button_type": "btn--primary",
-            "button_style": "btn--text"
+            "button_size": "",
+            "button_style": "btn--text",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         }
       },
@@ -309,11 +393,17 @@
       ],
       "settings": {
         "title": "",
+        "heading_font_size": "heading-medium",
+        "description": "",
+        "align_heading": "text-left",
+        "align_text": "text-left",
         "width": "wrapper",
+        "align_columns": "flex-align-top",
         "layout_mobile": "1",
         "color_scheme": "scheme-2",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     }
   },
