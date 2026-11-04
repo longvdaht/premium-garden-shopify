@@ -305,6 +305,7 @@
         "specs"
       ],
       "settings": {
+        "image_1": "shopify://shop_images/maker-banner.png",
         "image_shape_enable": false,
         "image_crop": "none",
         "image_shape": "scalloped-circle-1",
