@@ -244,6 +244,10 @@
 
   <{{ wrapper_tag }} class="product__wrapper {{ product_wrapper_modifier }}" data-product>
     <div class="product__wrapper__inner">
+      {%- comment -%} Potager: Shop / collection breadcrumb above the gallery {%- endcomment -%}
+      {%- if section.settings.show_breadcrumb -%}
+        {%- render 'product-breadcrumb', product: product -%}
+      {%- endif -%}
       <div class="product__page">
         <product-images-swiper
           class="{{ product_images_classlist }}"
@@ -794,6 +798,9 @@
                         attributes: image_badge_attributes
                       -%}
                     {%- endunless -%}
+
+                  {%- when 'specs' -%}
+                    {%- render 'product-specs', product: product, current_variant: current_variant, block: block, block_style: block_style -%}
 
                   {%- when 'sku' -%}
                     <div

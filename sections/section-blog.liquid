@@ -2,6 +2,34 @@
 {%- liquid
   assign blog = blogs[section.settings.blog_name]
   assign blog_title = section.settings.title
+
+  # Potager: "Guides for this product" (product template). Picked guides
+  # (product.metafields.content.related_articles) first; otherwise the newest
+  # guides tagged with one of the product's collections. No guides, no section.
+  assign use_product_guides = false
+  if section.settings.source == 'product' and product != blank
+    assign use_product_guides = true
+    assign guide_limit = section.settings.grid | times: section.settings.rows
+    assign product_guides = product.metafields.content.related_articles.value
+
+    if product_guides == blank or product_guides.size == 0
+      assign product_guides = blog.articles | where: 'id', 0
+      assign collection_handles = product.collections | map: 'handle'
+      for article in blog.articles limit: 50
+        if product_guides.size >= guide_limit
+          break
+        endif
+        for tag in article.tags
+          assign tag_handle = tag | handleize
+          if collection_handles contains tag_handle
+            assign one_article = blog.articles | where: 'id', article.id
+            assign product_guides = product_guides | concat: one_article
+            break
+          endif
+        endfor
+      endfor
+    endif
+  endif
   assign color_scheme = 'color-' | append: section.settings.color_scheme
   assign heading_tag = 'h2'
   assign articles_per_row = section.settings.grid
@@ -16,6 +44,9 @@
 
 -%}
 
+{%- if use_product_guides and product_guides.size == 0 -%}
+  {%- comment -%} Potager: no guides for this product, so the section stays blank {%- endcomment -%}
+{%- else -%}
 {%- render 'stylesheet', name: 'blog.css' -%}
 {%- render 'stylesheet', name: 'article.css' -%}
 
@@ -39,13 +70,23 @@
   {%- content_for 'blocks' -%}
 
   {% if blog_title != blank %}
+    {%- if section.settings.view_all_text != blank -%}<div class="blog__heading">{%- endif -%}
     <{{ heading_tag }} class="page__heading blog__title {{ section.settings.heading_font_size }}"
       ><a href="{{ blog.url | default: '#' }}">{{ blog_title }}</a></{{ heading_tag }}
     >
+    {%- if section.settings.view_all_text != blank -%}
+      <a href="{{ blog.url | default: '#' }}" class="ds-cta">{{ section.settings.view_all_text | escape }}</a>
+      </div>
+    {%- endif -%}
   {% endif %}
 
-  {%- render 'blog-posts', blog_articles: blog.articles, is_blog_page: false -%}
+  {%- if use_product_guides -%}
+    {%- render 'blog-posts', blog_articles: product_guides, is_blog_page: false, use_given_articles: true -%}
+  {%- else -%}
+    {%- render 'blog-posts', blog_articles: blog.articles, is_blog_page: false -%}
+  {%- endif -%}
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -64,6 +105,23 @@
       "type": "blog",
       "id": "blog_name",
       "label": "Blog"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Posts",
+      "default": "latest",
+      "options": [
+        {
+          "value": "latest",
+          "label": "Latest posts"
+        },
+        {
+          "value": "product",
+          "label": "Guides for this product"
+        }
+      ],
+      "info": "Guides for this product (product template only): the guides picked on the product, or else the newest guides tagged with one of its collections. Hidden when there are none."
     },
     {
       "type": "range",
@@ -87,17 +145,41 @@
       "default": "Blog posts"
     },
     {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all link text",
+      "info": "Shown next to the heading, links to the blog. Leave blank to hide."
+    },
+    {
       "type": "select",
       "id": "heading_font_size",
       "label": "Heading size",
       "default": "heading-medium",
       "options": [
-        {"value": "heading-mini", "label": "Mini"},
-        {"value": "heading-x-small", "label": "Extra small"},
-        {"value": "heading-small", "label": "Small"},
-        {"value": "heading-medium", "label": "Medium"},
-        {"value": "heading-large", "label": "Large"},
-        {"value": "heading-x-large", "label": "Extra large"}
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
       ]
     },
     {
@@ -106,12 +188,30 @@
       "label": "Title size",
       "default": "heading-small",
       "options": [
-        {"value": "heading-mini", "label": "Mini"},
-        {"value": "heading-x-small", "label": "Extra small"},
-        {"value": "heading-small", "label": "Small"},
-        {"value": "heading-medium", "label": "Medium"},
-        {"value": "heading-large", "label": "Large"},
-        {"value": "heading-x-large", "label": "Extra large"}
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
       ]
     },
     {
@@ -158,9 +258,18 @@
       "label": "Width",
       "default": "wrapper--full-padded",
       "options": [
-        {"value": "wrapper--full", "label": "Full width"},
-        {"value": "wrapper--full-padded", "label": "Full width padded"},
-        {"value": "wrapper", "label": "Normal"}
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
       ]
     },
     {
@@ -225,13 +334,34 @@
       "label": "Heading SEO tag",
       "default": "automatic",
       "options": [
-        {"value": "automatic", "label": "Automatic"},
-        {"value": "h1", "label": "H1"},
-        {"value": "h2", "label": "H2"},
-        {"value": "h3", "label": "H3"},
-        {"value": "h4", "label": "H4"},
-        {"value": "h5", "label": "H5"},
-        {"value": "h6", "label": "H6"}
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
       ]
     },
     {
@@ -240,13 +370,34 @@
       "label": "Title SEO tag",
       "default": "automatic",
       "options": [
-        {"value": "automatic", "label": "Automatic"},
-        {"value": "h1", "label": "H1"},
-        {"value": "h2", "label": "H2"},
-        {"value": "h3", "label": "H3"},
-        {"value": "h4", "label": "H4"},
-        {"value": "h5", "label": "H5"},
-        {"value": "h6", "label": "H6"}
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
       ]
     }
   ],
@@ -257,7 +408,11 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "aside", "footer"]
+    "groups": [
+      "header",
+      "aside",
+      "footer"
+    ]
   }
 }
 {% endschema %}

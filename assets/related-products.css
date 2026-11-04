@@ -20,3 +20,18 @@ recently-viewed {
   height: auto;
   display: block;
 }
+/* Potager: "Also in [collection]" heading with a View all link on the right */
+.related__heading--link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--grid-outer);
+  margin-bottom: var(--gap);
+  text-align: left;
+}
+
+.related__heading--link .tab__title {
+  padding: 0;
+  margin: 0;
+}

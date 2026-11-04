@@ -1,0 +1,92 @@
+{%- comment -%}
+  Potager: Specifications accordion (wireframe 03.1, Keith's spec sheet).
+  Variable specs come from product metafields listed in the block's
+  "Spec fields" setting (Label | namespace.key), shown only when filled and
+  capped at the block's limit. Then the fixed specs: Made by (custom.maker
+  metaobject: name, country; or the vendor) and SKU, which the theme updates
+  on variant change through #Sku-[section id].
+
+  @param {object} product
+  @param {object} current_variant
+  @param {object} block
+  @param {string} block_style
+{%- endcomment -%}
+{%- liquid
+  assign spec_lines = block.settings.rows | newline_to_br | split: '<br />'
+  assign spec_limit = block.settings.limit | default: 5
+  assign spec_count = 0
+
+  capture spec_rows
+    for line in spec_lines
+      if spec_count >= spec_limit
+        break
+      endif
+      assign row = line | strip_newlines | strip
+      if row == blank
+        continue
+      endif
+      assign parts = row | split: '|'
+      assign label = parts[0] | strip
+      assign path = parts[1] | strip
+      assign path_parts = path | split: '.'
+      assign mf = product.metafields[path_parts[0]][path_parts[1]]
+      if mf == blank or mf.value == blank
+        continue
+      endif
+
+      case mf.type
+        when 'dimension', 'weight', 'volume'
+          assign amount = mf.value.value
+          assign amount_int = amount | floor
+          if amount == amount_int
+            assign amount = amount_int
+          endif
+          assign value = amount | append: ' ' | append: mf.value.unit
+        when 'list.single_line_text_field'
+          assign value = mf.value | join: ', '
+        else
+          assign value = mf | metafield_text
+      endcase
+
+      assign spec_count = spec_count | plus: 1
+      echo '<div class="ds-specs__row"><dt>' | append: label | append: '</dt><dd>' | append: value | append: '</dd></div>'
+    endfor
+  endcapture
+
+  assign maker = product.metafields.custom.maker.value
+  assign maker_text = maker.name | default: product.vendor
+  if maker.country != blank
+    assign maker_text = maker_text | append: ', ' | append: maker.country
+  endif
+  if maker_text == shop.name
+    assign maker_text = ''
+  endif
+-%}
+
+<div class="product__block product__block--accordion product__specs block-padding" {{ block_style }} {{ block.shopify_attributes }}>
+  <collapsible-elements single="true">
+    <div class="product-accordion">
+      <details class="accordion" data-collapsible{% if block.settings.default_open %} open="true"{% endif %}>
+        <summary class="accordion__title" data-collapsible-trigger>
+          {{ block.settings.heading | default: 'Specifications' }}
+          {%- render 'icon', name: 'caret-down' -%}
+        </summary>
+        <div class="accordion__body" data-collapsible-body{% if block.settings.default_open %} style="height: auto;"{% endif %}>
+          <div class="accordion__content" data-collapsible-content>
+            <dl class="ds-specs">
+              {{- spec_rows -}}
+              {%- if block.settings.show_maker and maker_text != blank -%}
+                <div class="ds-specs__row"><dt>{{ 'products.product.made_by' | t }}</dt><dd>{{ maker_text }}</dd></div>
+              {%- endif -%}
+              {%- if block.settings.show_sku -%}
+                <div class="ds-specs__row{% if current_variant.sku == blank %} hidden{% endif %}" id="Sku-{{ section.id }}">
+                  <dt>{{ 'products.product.sku' | t }}</dt><dd>{{ current_variant.sku }}</dd>
+                </div>
+              {%- endif -%}
+            </dl>
+          </div>
+        </div>
+      </details>
+    </div>
+  </collapsible-elements>
+</div>

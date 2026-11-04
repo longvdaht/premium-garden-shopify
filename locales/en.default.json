@@ -32,6 +32,8 @@
     },
     "breadcrumbs": {
       "home": "Home",
+      "shop": "Shop",
+      "label": "Breadcrumb",
       "products": "Products",
       "go_back": "Back"
     },
@@ -334,6 +336,8 @@
       "read_more": "Read more",
       "view_product": "View Product",
       "see_all": "See All",
+      "view_all": "View all",
+      "shop_all": "Shop all",
       "to": "To",
       "complementary_products_title": "Pairs well with",
       "choose_product": "Choose a product",
@@ -367,6 +371,7 @@
       "subscription": "Subscription",
       "off": "off",
       "sku": "SKU",
+      "made_by": "Made by",
       "quantity": "Quantity",
       "quantity_rules": {
         "in_cart_html": "{{ quantity }} in cart",

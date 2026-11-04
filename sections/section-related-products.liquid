@@ -24,7 +24,15 @@
 {%- endif -%}
 
 {%- for block in content_section_blocks -%}
-  {%- if block.type == 'related' and product.collections.size > 0 -%}
+  {%- liquid
+    assign show_related = false
+    if block.type == 'related'
+      if product.collections.size > 0 or block.settings.source == 'collection'
+        assign show_related = true
+      endif
+    endif
+  -%}
+  {%- if show_related -%}
     {%- liquid
       assign has_related_products = true
       assign layout_mobile = section.settings.layout_mobile
@@ -32,17 +40,73 @@
       assign columns_mobile = layout_mobile | plus: 0
     -%}
 
+    {%- liquid
+      # Potager: "Product's collection" shows other products from the
+      # collection the shopper came from, or the product's first collection,
+      # falling back to Shop all. [collection] in the heading is its title.
+      assign related_collection = blank
+      if block.settings.source == 'collection'
+        assign related_collection = collection
+        if related_collection == blank
+          for c in product.collections
+            unless c.handle == 'all' or c.handle == 'frontpage'
+              assign related_collection = c
+              break
+            endunless
+          endfor
+        endif
+        if related_collection == blank
+          assign related_collection = collections.all
+        endif
+      endif
+      assign related_collection_title = related_collection.title
+      if related_collection.handle == 'all'
+        assign related_collection_title = 'products.general.shop_all' | t
+      endif
+    -%}
+
     {%- capture related -%}
-      <div data-related-section
-        data-limit="{{ block.settings.limit }}"
-        data-product-id="{{ product.id }}"
-        style="--column-count: {{ block.settings.limit | at_most: 4 }}; --COLUMNS-SMALL: {{ columns_small }}; --COLUMNS-MOBILE: {{ columns_mobile }};"
-        {{ block.shopify_attributes }}></div>
+      {%- if related_collection != blank -%}
+        {%- assign related_limit = block.settings.limit -%}
+        <div
+          class="grid-outer"
+          style="--column-count: {{ related_limit | at_most: 4 }}; --COLUMNS-SMALL: {{ columns_small }}; --COLUMNS-MOBILE: {{ columns_mobile }};"
+          {{ block.shopify_attributes }}
+        >
+          <grid-slider align-arrows>
+            <div
+              class="grid grid--slider{% if related_limit <= 4 %} grid--slider-disabled{% endif %}{% if layout_mobile == nil or layout_mobile == 'slider' %} grid--mobile-slider{% endif %}"
+              data-grid-slider
+              id="RelatedCollection--{{ section.id }}"
+            >
+              {%- liquid
+                assign related_count = 0
+                for related_product in related_collection.products
+                  if related_count >= related_limit
+                    break
+                  endif
+                  if related_product.id == product.id or related_product.tags contains 'hide'
+                    continue
+                  endif
+                  assign related_count = related_count | plus: 1
+                  render 'product-card', product: related_product, animation_delay: forloop.index0, animation_anchor: animation_anchor, index: related_count
+                endfor
+              -%}
+            </div>
+          </grid-slider>
+        </div>
+      {%- else -%}
+        <div data-related-section
+          data-limit="{{ block.settings.limit }}"
+          data-product-id="{{ product.id }}"
+          style="--column-count: {{ block.settings.limit | at_most: 4 }}; --COLUMNS-SMALL: {{ columns_small }}; --COLUMNS-MOBILE: {{ columns_mobile }};"
+          {{ block.shopify_attributes }}></div>
+      {%- endif -%}
     {%- endcapture -%}
 
     {%- capture related_title -%}
       {%- if block.settings.product_recommendations_heading != blank -%}
-        {{ block.settings.product_recommendations_heading }}
+        {{ block.settings.product_recommendations_heading | replace: '[collection]', related_collection_title }}
       {%- endif -%}
     {%- endcapture -%}
   {%- endif -%}
@@ -183,14 +247,19 @@
       {%- if related -%}
         <div class="tab-content tab-content-0 current tabs__recommendation" data-tab-index="0">
           {%- if related_title != blank and enable_tabs != true -%}
-            <{{ heading_tag }}
-              class="tab__title {{ heading_alignment }} {{ heading_size_class }}"
-              data-aos="hero"
-              data-aos-anchor="{{ animation_anchor }}"
-              data-aos-order="1"
-            >
-              {{ related_title }}
-            </{{ heading_tag }}>
+            <div class="related__heading{% if related_collection != blank %} related__heading--link{% endif %}">
+              <{{ heading_tag }}
+                class="tab__title {{ heading_alignment }} {{ heading_size_class }}"
+                data-aos="hero"
+                data-aos-anchor="{{ animation_anchor }}"
+                data-aos-order="1"
+              >
+                {{ related_title }}
+              </{{ heading_tag }}>
+              {%- if related_collection != blank -%}
+                <a href="{{ related_collection.url }}" class="ds-cta">{{ 'products.general.view_all' | t }}</a>
+              {%- endif -%}
+            </div>
           {%- endif -%}
 
           {{ related }}
@@ -242,8 +311,14 @@
       "label": "Alignment",
       "default": "text-center",
       "options": [
-        {"value": "text-left", "label": "Left"},
-        {"value": "text-center", "label": "Centered"}
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
       ]
     },
     {
@@ -252,12 +327,30 @@
       "label": "Heading size",
       "default": "heading-small",
       "options": [
-        {"value": "heading-mini", "label": "Mini"},
-        {"value": "heading-x-small", "label": "Extra small"},
-        {"value": "heading-small", "label": "Small"},
-        {"value": "heading-medium", "label": "Medium"},
-        {"value": "heading-large", "label": "Large"},
-        {"value": "heading-x-large", "label": "Extra large"}
+        {
+          "value": "heading-mini",
+          "label": "Mini"
+        },
+        {
+          "value": "heading-x-small",
+          "label": "Extra small"
+        },
+        {
+          "value": "heading-small",
+          "label": "Small"
+        },
+        {
+          "value": "heading-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "heading-large",
+          "label": "Large"
+        },
+        {
+          "value": "heading-x-large",
+          "label": "Extra large"
+        }
       ],
       "info": "Applies only when tabs are disabled"
     },
@@ -267,13 +360,34 @@
       "label": "Heading SEO tag",
       "default": "automatic",
       "options": [
-        {"value": "automatic", "label": "Automatic"},
-        {"value": "h1", "label": "H1"},
-        {"value": "h2", "label": "H2"},
-        {"value": "h3", "label": "H3"},
-        {"value": "h4", "label": "H4"},
-        {"value": "h5", "label": "H5"},
-        {"value": "h6", "label": "H6"}
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
       ]
     },
     {
@@ -337,6 +451,23 @@
       "name": "Related products",
       "limit": 1,
       "settings": [
+        {
+          "type": "select",
+          "id": "source",
+          "label": "Products from",
+          "default": "recommendations",
+          "options": [
+            {
+              "value": "recommendations",
+              "label": "Shopify recommendations"
+            },
+            {
+              "value": "collection",
+              "label": "Product's collection"
+            }
+          ],
+          "info": "Product's collection: other products from the product's collection, or Shop all. Use [collection] in the heading for its name."
+        },
         {
           "type": "text",
           "id": "product_recommendations_heading",

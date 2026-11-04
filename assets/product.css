@@ -103,6 +103,18 @@ body:has(.header-floating):has(.main-content > .shopify-section.section-floating
   margin: 0 0 0.5em;
 }
 
+/* Potager: Shop / Collection breadcrumb above the gallery */
+.product__breadcrumb {
+  --link: var(--ink-muted);
+  --link-hover: var(--ink);
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+}
+
+.product__breadcrumb__sep {
+  color: var(--hairline);
+}
+
 @media only screen and (min-width: 990px) {
   .form__width {
     max-width: 550px;

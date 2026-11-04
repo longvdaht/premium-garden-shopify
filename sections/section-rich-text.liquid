@@ -13,6 +13,19 @@
   assign headings_inline = section.settings.headings_inline | default: false
 -%}
 
+{%- liquid
+  assign show_section = true
+  if section.settings.hide_without_heading
+    assign show_section = false
+    for block in section.blocks
+      if block.type == 'heading' and block.settings.title != blank
+        assign show_section = true
+      endif
+    endfor
+  endif
+-%}
+{%- if show_section -%}
+
 {%- style -%}
   #Rte--{{ section.id }} {
     --PT: {{ section.settings.padding_top }}px;
@@ -312,6 +325,8 @@
   </div>
 </section>
 
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Rich text",
@@ -326,8 +341,14 @@
       "label": "Text alignment",
       "default": "text-left",
       "options": [
-        {"value": "text-left", "label": "Left"},
-        {"value": "text-center", "label": "Centered"}
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
       ]
     },
     {
@@ -340,10 +361,22 @@
       "label": "Width",
       "default": "wrapper--full-padded",
       "options": [
-        {"value": "wrapper--full", "label": "Full width"},
-        {"value": "wrapper--full-padded", "label": "Full width padded"},
-        {"value": "wrapper", "label": "Normal"},
-        {"value": "wrapper--narrow", "label": "Narrow"}
+        {
+          "value": "wrapper--full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper--full-padded",
+          "label": "Full width padded"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        },
+        {
+          "value": "wrapper--narrow",
+          "label": "Narrow"
+        }
       ]
     },
     {
@@ -356,6 +389,13 @@
       "label": "Headings inline",
       "default": false,
       "info": "Applies only when a subheading is followed by a heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_without_heading",
+      "label": "Hide section when heading is empty",
+      "info": "Useful when the heading is connected to a metafield.",
+      "default": false
     },
     {
       "type": "range",
@@ -476,12 +516,30 @@
           "label": "Heading size",
           "default": "heading-large",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -508,13 +566,34 @@
           "label": "Heading SEO tag",
           "default": "automatic",
           "options": [
-            {"value": "automatic", "label": "Automatic"},
-            {"value": "h1", "label": "H1"},
-            {"value": "h2", "label": "H2"},
-            {"value": "h3", "label": "H3"},
-            {"value": "h4", "label": "H4"},
-            {"value": "h5", "label": "H5"},
-            {"value": "h6", "label": "H6"}
+            {
+              "value": "automatic",
+              "label": "Automatic"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
           ]
         }
       ]
@@ -562,11 +641,26 @@
           "info": "Applies only when content in Text field is set to Paragraph.",
           "default": "body-medium",
           "options": [
-            {"value": "body-x-small", "label": "Extra small"},
-            {"value": "body-small", "label": "Small"},
-            {"value": "body-medium", "label": "Medium"},
-            {"value": "body-large", "label": "Large"},
-            {"value": "body-x-large", "label": "Extra large"}
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -602,12 +696,30 @@
           "label": "Text size",
           "default": "heading-large",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -620,8 +732,14 @@
           "label": "Type",
           "default": "highlight-color",
           "options": [
-            {"value": "italics", "label": "Italics (no decoration)"},
-            {"value": "highlight-color", "label": "Text color"}
+            {
+              "value": "italics",
+              "label": "Italics (no decoration)"
+            },
+            {
+              "value": "highlight-color",
+              "label": "Text color"
+            }
           ]
         },
         {
@@ -668,10 +786,22 @@
           "label": "Color",
           "default": "btn--primary",
           "options": [
-            {"value": "btn--black", "label": "Black"},
-            {"value": "btn--white", "label": "White"},
-            {"value": "btn--primary", "label": "Primary"},
-            {"value": "btn--secondary", "label": "Secondary"}
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
           ]
         },
         {
@@ -680,9 +810,18 @@
           "label": "Size",
           "default": "",
           "options": [
-            {"label": "Small", "value": "btn--small"},
-            {"label": "Medium", "value": ""},
-            {"label": "Large", "value": "btn--large"}
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
           ]
         },
         {
@@ -691,9 +830,18 @@
           "label": "Style",
           "default": "btn--solid",
           "options": [
-            {"label": "Solid", "value": "btn--solid"},
-            {"label": "Outline", "value": "btn--outline"},
-            {"label": "Text", "value": "btn--text"}
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            },
+            {
+              "label": "Text",
+              "value": "btn--text"
+            }
           ]
         },
         {
@@ -1101,7 +1249,11 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "aside", "footer"]
+    "groups": [
+      "header",
+      "aside",
+      "footer"
+    ]
   }
 }
 {% endschema %}

@@ -1,0 +1,25 @@
+{%- comment -%}
+  Potager: "Shop / Collection" breadcrumb above the product gallery (wireframe 03, note 1).
+  Uses the collection the shopper came from, or else the product's first
+  collection that is not Shop all. Shop links to /collections/all.
+
+  @param {object} product
+{%- endcomment -%}
+{%- liquid
+  assign crumb_collection = collection
+  if crumb_collection == blank
+    for c in product.collections
+      unless c.handle == 'all' or c.handle == 'frontpage'
+        assign crumb_collection = c
+        break
+      endunless
+    endfor
+  endif
+-%}
+<nav class="breadcrumbs breadcrumbs--no-padding product__breadcrumbs product__breadcrumb" aria-label="{{ 'general.breadcrumbs.label' | t }}">
+  <a href="{{ routes.all_products_collection_url }}">{{ 'general.breadcrumbs.shop' | t }}</a>
+  {%- if crumb_collection != blank -%}
+    <span class="product__breadcrumb__sep" aria-hidden="true">/</span>
+    <a href="{{ crumb_collection.url }}">{{ crumb_collection.title }}</a>
+  {%- endif -%}
+</nav>

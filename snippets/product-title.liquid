@@ -29,6 +29,23 @@
           <a href="{{ current_collection.url }}">{{ current_collection.title }}</a>
         </nav>
       {%- endif -%}
+    {%- when 'type_maker' -%}
+      {%- liquid
+        assign maker_name = product.metafields.custom.maker.value.name | default: product.vendor
+        assign label_parts = ''
+        if product.type != blank
+          assign label_parts = product.type
+        endif
+        if maker_name != blank and maker_name != shop.name
+          if label_parts != ''
+            assign label_parts = label_parts | append: ' · '
+          endif
+          assign label_parts = label_parts | append: maker_name
+        endif
+      -%}
+      {%- if label_parts != '' -%}
+        <p class="product__label subheading">{{ label_parts }}</p>
+      {%- endif -%}
     {%- when 'breadcrumb' -%}
       {% render 'breadcrumbs', breadcrumbs_modifier: 'breadcrumbs--no-padding product__breadcrumbs' %}
   {%- endcase -%}

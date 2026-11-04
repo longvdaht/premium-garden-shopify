@@ -8,6 +8,13 @@
   "class": "section-overlay-header section-floating",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true,
+      "info": "Shop / collection, above the gallery."
+    },
+    {
       "type": "header",
       "content": "Layout"
     },
@@ -57,12 +64,30 @@
       "label": "Product gallery",
       "default": "stacked",
       "options": [
-        {"value": "thumbnails", "label": "Thumbnails - Bottom"},
-        {"value": "thumbnails-left", "label": "Thumbnails - Left"},
-        {"value": "thumbnails-right", "label": "Thumbnails - Right"},
-        {"value": "stacked", "label": "Stacked"},
-        {"value": "grid-1", "label": "Mosaic"},
-        {"value": "grid-2", "label": "Grid"}
+        {
+          "value": "thumbnails",
+          "label": "Thumbnails - Bottom"
+        },
+        {
+          "value": "thumbnails-left",
+          "label": "Thumbnails - Left"
+        },
+        {
+          "value": "thumbnails-right",
+          "label": "Thumbnails - Right"
+        },
+        {
+          "value": "stacked",
+          "label": "Stacked"
+        },
+        {
+          "value": "grid-1",
+          "label": "Mosaic"
+        },
+        {
+          "value": "grid-2",
+          "label": "Grid"
+        }
       ],
       "info": "Desktop only"
     },
@@ -129,8 +154,14 @@
       "id": "video_size_mobile",
       "label": "Video size",
       "options": [
-        {"value": "cover", "label": "Stretch"},
-        {"value": "contain", "label": "Fit"}
+        {
+          "value": "cover",
+          "label": "Stretch"
+        },
+        {
+          "value": "contain",
+          "label": "Fit"
+        }
       ],
       "default": "cover",
       "visible_if": "{{ section.settings.image_aspect_ratio_mobile_enable }}"
@@ -198,10 +229,26 @@
           "label": "Navigation",
           "default": "none",
           "options": [
-            {"value": "none", "label": "None"},
-            {"value": "breadcrumb", "label": "Breadcrumb"},
-            {"value": "collection", "label": "Collection"},
-            {"value": "vendor", "label": "Vendor"}
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "breadcrumb",
+              "label": "Breadcrumb"
+            },
+            {
+              "value": "collection",
+              "label": "Collection"
+            },
+            {
+              "value": "vendor",
+              "label": "Vendor"
+            },
+            {
+              "value": "type_maker",
+              "label": "Product type · Maker"
+            }
           ]
         },
         {
@@ -210,12 +257,30 @@
           "label": "Heading size",
           "default": "heading-medium",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -245,11 +310,26 @@
           "label": "Text size",
           "default": "body-medium",
           "options": [
-            {"value": "body-x-small", "label": "Extra small"},
-            {"value": "body-small", "label": "Small"},
-            {"value": "body-medium", "label": "Medium"},
-            {"value": "body-large", "label": "Large"},
-            {"value": "body-x-large", "label": "Extra large"}
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -289,9 +369,18 @@
           "label": "Style",
           "default": "text",
           "options": [
-            {"value": "text", "label": "Text"},
-            {"value": "ruler", "label": "Ruler"},
-            {"value": "question", "label": "Question mark"}
+            {
+              "value": "text",
+              "label": "Text"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "question",
+              "label": "Question mark"
+            }
           ]
         },
         {
@@ -331,10 +420,22 @@
           "label": "Color",
           "default": "btn--primary",
           "options": [
-            {"value": "btn--black", "label": "Black"},
-            {"value": "btn--white", "label": "White"},
-            {"value": "btn--primary", "label": "Primary"},
-            {"value": "btn--secondary", "label": "Secondary"}
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
           ]
         },
         {
@@ -343,9 +444,18 @@
           "label": "Size",
           "default": "",
           "options": [
-            {"label": "Small", "value": "btn--small"},
-            {"label": "Medium", "value": ""},
-            {"label": "Large", "value": "btn--large"}
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
           ]
         },
         {
@@ -354,8 +464,14 @@
           "label": "Style",
           "default": "btn--solid",
           "options": [
-            {"label": "Solid", "value": "btn--solid"},
-            {"label": "Outline", "value": "btn--outline"}
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            }
           ]
         },
         {
@@ -375,10 +491,22 @@
           "label": "Color",
           "default": "btn--secondary",
           "options": [
-            {"value": "btn--black", "label": "Black"},
-            {"value": "btn--white", "label": "White"},
-            {"value": "btn--primary", "label": "Primary"},
-            {"value": "btn--secondary", "label": "Secondary"}
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
           ]
         },
         {
@@ -388,9 +516,18 @@
           "default": "",
           "info": "Max size: 55px (Shopify limitation).",
           "options": [
-            {"label": "Small", "value": "btn--small"},
-            {"label": "Medium", "value": ""},
-            {"label": "Large", "value": "btn--large"}
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
           ]
         },
         {
@@ -399,8 +536,14 @@
           "label": "Style",
           "default": "btn--solid",
           "options": [
-            {"label": "Solid", "value": "btn--solid"},
-            {"label": "Outline", "value": "btn--outline"}
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            }
           ]
         },
         {
@@ -505,12 +648,30 @@
           "label": "Tab heading size",
           "default": "heading-x-small",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -617,12 +778,30 @@
           "label": "Heading size",
           "default": "heading-x-small",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -658,8 +837,14 @@
           "label": "Show notice",
           "default": "low-inventory",
           "options": [
-            {"label": "Always", "value": "always"},
-            {"label": "Low inventory", "value": "low-inventory"}
+            {
+              "label": "Always",
+              "value": "always"
+            },
+            {
+              "label": "Low inventory",
+              "value": "low-inventory"
+            }
           ]
         },
         {
@@ -788,11 +973,26 @@
           "info": "Applies only when content in Text field is set to Paragraph.",
           "default": "body-medium",
           "options": [
-            {"value": "body-x-small", "label": "Extra small"},
-            {"value": "body-small", "label": "Small"},
-            {"value": "body-medium", "label": "Medium"},
-            {"value": "body-large", "label": "Large"},
-            {"value": "body-x-large", "label": "Extra large"}
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -801,8 +1001,14 @@
           "label": "Text alignment",
           "default": "text-left",
           "options": [
-            {"value": "text-left", "label": "Left"},
-            {"value": "text-center", "label": "Centered"}
+            {
+              "value": "text-left",
+              "label": "Left"
+            },
+            {
+              "value": "text-center",
+              "label": "Centered"
+            }
           ]
         },
         {
@@ -1566,10 +1772,22 @@
           "label": "Width",
           "default": "full",
           "options": [
-            {"label": "Full width", "value": "full"},
-            {"label": "Half", "value": "half"},
-            {"label": "One third", "value": "third"},
-            {"label": "One quarter", "value": "quarter"}
+            {
+              "label": "Full width",
+              "value": "full"
+            },
+            {
+              "label": "Half",
+              "value": "half"
+            },
+            {
+              "label": "One third",
+              "value": "third"
+            },
+            {
+              "label": "One quarter",
+              "value": "quarter"
+            }
           ]
         },
         {
@@ -1578,8 +1796,14 @@
           "label": "Text alignment",
           "default": "align--middle-left",
           "options": [
-            {"value": "align--middle-left", "label": "Left"},
-            {"value": "align--middle-center", "label": "Centered"}
+            {
+              "value": "align--middle-left",
+              "label": "Left"
+            },
+            {
+              "value": "align--middle-center",
+              "label": "Centered"
+            }
           ]
         },
         {
@@ -2318,19 +2542,37 @@
           "label": "Heading size",
           "default": "heading-small",
           "options": [
-            {"value": "heading-mini", "label": "Mini"},
-            {"value": "heading-x-small", "label": "Extra small"},
-            {"value": "heading-small", "label": "Small"},
-            {"value": "heading-medium", "label": "Medium"},
-            {"value": "heading-large", "label": "Large"},
-            {"value": "heading-x-large", "label": "Extra large"}
+            {
+              "value": "heading-mini",
+              "label": "Mini"
+            },
+            {
+              "value": "heading-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "heading-small",
+              "label": "Small"
+            },
+            {
+              "value": "heading-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "heading-large",
+              "label": "Large"
+            },
+            {
+              "value": "heading-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
           "type": "richtext",
           "id": "text",
           "label": "Text",
-          "default": "<p>Title<\/p>"
+          "default": "<p>Title</p>"
         },
         {
           "type": "select",
@@ -2339,11 +2581,26 @@
           "info": "Applies only when content in Text field is set to Paragraph.",
           "default": "body-medium",
           "options": [
-            {"value": "body-x-small", "label": "Extra small"},
-            {"value": "body-small", "label": "Small"},
-            {"value": "body-medium", "label": "Medium"},
-            {"value": "body-large", "label": "Large"},
-            {"value": "body-x-large", "label": "Extra large"}
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -2356,10 +2613,22 @@
           "label": "Width",
           "default": "full",
           "options": [
-            {"label": "Full width", "value": "full"},
-            {"label": "Half", "value": "half"},
-            {"label": "One third", "value": "third"},
-            {"label": "One quarter", "value": "quarter"}
+            {
+              "label": "Full width",
+              "value": "full"
+            },
+            {
+              "label": "Half",
+              "value": "half"
+            },
+            {
+              "label": "One third",
+              "value": "third"
+            },
+            {
+              "label": "One quarter",
+              "value": "quarter"
+            }
           ]
         },
         {
@@ -2368,8 +2637,14 @@
           "label": "Text alignment",
           "default": "align--middle-left",
           "options": [
-            {"value": "align--middle-left", "label": "Left"},
-            {"value": "align--middle-center", "label": "Centered"}
+            {
+              "value": "align--middle-left",
+              "label": "Left"
+            },
+            {
+              "value": "align--middle-center",
+              "label": "Centered"
+            }
           ]
         },
         {
@@ -2426,9 +2701,18 @@
           "label": "Type",
           "default": "text",
           "options": [
-            {"label": "Text", "value": "text"},
-            {"label": "Checkbox", "value": "checkbox"},
-            {"label": "Dropdown", "value": "dropdown"}
+            {
+              "label": "Text",
+              "value": "text"
+            },
+            {
+              "label": "Checkbox",
+              "value": "checkbox"
+            },
+            {
+              "label": "Dropdown",
+              "value": "dropdown"
+            }
           ]
         },
         {
@@ -2532,10 +2816,22 @@
           "label": "Color",
           "default": "btn--secondary",
           "options": [
-            {"value": "btn--black", "label": "Black"},
-            {"value": "btn--white", "label": "White"},
-            {"value": "btn--primary", "label": "Primary"},
-            {"value": "btn--secondary", "label": "Secondary"}
+            {
+              "value": "btn--black",
+              "label": "Black"
+            },
+            {
+              "value": "btn--white",
+              "label": "White"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            }
           ]
         },
         {
@@ -2544,9 +2840,18 @@
           "label": "Size",
           "default": "btn--small",
           "options": [
-            {"label": "Small", "value": "btn--small"},
-            {"label": "Medium", "value": ""},
-            {"label": "Large", "value": "btn--large"}
+            {
+              "label": "Small",
+              "value": "btn--small"
+            },
+            {
+              "label": "Medium",
+              "value": ""
+            },
+            {
+              "label": "Large",
+              "value": "btn--large"
+            }
           ]
         },
         {
@@ -2555,8 +2860,14 @@
           "label": "Style",
           "default": "btn--outline",
           "options": [
-            {"label": "Solid", "value": "btn--solid"},
-            {"label": "Outline", "value": "btn--outline"}
+            {
+              "label": "Solid",
+              "value": "btn--solid"
+            },
+            {
+              "label": "Outline",
+              "value": "btn--outline"
+            }
           ]
         },
         {
@@ -2591,11 +2902,26 @@
           "label": "Text size",
           "default": "body-small",
           "options": [
-            {"value": "body-x-small", "label": "Extra small"},
-            {"value": "body-small", "label": "Small"},
-            {"value": "body-medium", "label": "Medium"},
-            {"value": "body-large", "label": "Large"},
-            {"value": "body-x-large", "label": "Extra large"}
+            {
+              "value": "body-x-small",
+              "label": "Extra small"
+            },
+            {
+              "value": "body-small",
+              "label": "Small"
+            },
+            {
+              "value": "body-medium",
+              "label": "Medium"
+            },
+            {
+              "value": "body-large",
+              "label": "Large"
+            },
+            {
+              "value": "body-x-large",
+              "label": "Extra large"
+            }
           ]
         },
         {
@@ -2604,8 +2930,14 @@
           "label": "Text alignment",
           "default": "text-left",
           "options": [
-            {"value": "text-left", "label": "Left"},
-            {"value": "text-center", "label": "Centered"}
+            {
+              "value": "text-left",
+              "label": "Left"
+            },
+            {
+              "value": "text-center",
+              "label": "Centered"
+            }
           ]
         },
         {
@@ -3510,6 +3842,64 @@
           "unit": "px",
           "label": "Bottom",
           "default": 8
+        }
+      ]
+    },
+    {
+      "type": "specs",
+      "name": "Specifications",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Specifications"
+        },
+        {
+          "type": "checkbox",
+          "id": "default_open",
+          "label": "Open by default",
+          "default": true
+        },
+        {
+          "type": "textarea",
+          "id": "rows",
+          "label": "Spec fields",
+          "default": "Steel type | custom.steel_type\nBlade length | custom.blade_length\nOverall length | custom.overall_length\nHandle material | custom.handle_material\nCutting capacity | custom.cutting_capacity\nFormulation | custom.formulation",
+          "info": "One per line: Label | namespace.key of a product metafield. Only filled fields show, in this order (up to 5)."
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Maximum spec rows",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "checkbox",
+          "id": "show_maker",
+          "label": "Show Made by",
+          "default": true,
+          "info": "From the product's Maker (custom.maker), or the vendor."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_sku",
+          "label": "Show SKU",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom padding",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 16
         }
       ]
     },

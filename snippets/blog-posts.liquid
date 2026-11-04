@@ -4,6 +4,7 @@
   Accepts:
   - blog_articles: {Array} blog articles (required)
   - is_blog_page: {Boolean} product (required)
+  - use_given_articles: {Boolean} use blog_articles as given, not the section's blog (optional)
 
   Usage:
   {% render 'blog-posts', blog_articles: blog.articles, is_blog_page: true %}
@@ -31,7 +32,10 @@
     assign onboarding = false
   endif
 
-  if section.settings.blog_name != blank and blogs[section.settings.blog_name].articles.size > 0
+  if use_given_articles
+    # Potager: articles chosen by the section (e.g. guides for a product)
+    assign onboarding = false
+  elsif section.settings.blog_name != blank and blogs[section.settings.blog_name].articles.size > 0
     assign onboarding = false
     assign blog_articles = blogs[section.settings.blog_name].articles
   endif
