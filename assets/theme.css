@@ -10503,24 +10503,22 @@ body:has(.header-floating):has(.main-content > .shopify-section.section-floating
 .rte a,
 .hero__rte a,
 p a {
+  /* Potager: one 1px underline (Style Guide, links in copy); scarlet 2px on hover */
   display: inline;
-  text-decoration: none;
   cursor: pointer;
-  padding: 0 0 5px;
   color: var(--link);
-  line-height: normal;
-  background: linear-gradient(to right, currentcolor, currentcolor);
-  background-size: 100% var(--underline-thickness, 1px);
-  background-position: 50% var(--underline-position, 86%);
-  background-repeat: no-repeat;
-  transition: color 0.25s ease-in, background-size 0.25s ease-in;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.25s ease-in, text-decoration-color 0.25s ease-in;
 }
 @media (hover: hover) {
   .text-link:hover,
   .rte a:hover,
   .hero__rte a:hover,
   p a:hover {
-    background-size: 0% var(--underline-thickness, 1px);
+    text-decoration-color: var(--signal);
+    text-decoration-thickness: 2px;
   }
 }
 

@@ -114,9 +114,8 @@ p,.rte,.body-medium,.body-large{line-height:1.6;}
 /* Prices: lining, tabular figures */
 [class*="price"],.money{font-variant-numeric:lining-nums tabular-nums;}
 
-/* Links in long copy */
-.rte a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;}
-.rte a:hover{color:var(--ink);text-decoration-color:var(--signal);text-decoration-thickness:2px;}
+/* Links in long copy: theme.css (.rte a, p a), one 1px underline */
+.rte a{color:var(--ink)}
 
 ::selection{background:var(--green);color:var(--bone-page);}
 
@@ -373,7 +372,7 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .index-rte .hero__content__wrapper{background:none}
 .index-rte .hero__content.text-left{margin-inline:0 auto;padding-inline:0}
 .index-rte .hero__rte.body-large{color:var(--ink-muted)}
-.index-rte .hero__rte a{color:var(--ink);text-decoration:none}
+.index-rte .hero__rte a{color:var(--ink)}
 
 /* Image with text: the text column fills its half, with space against the image */
 .brick__block__text:not(.has-padding){--text-width:100%;padding:0 0 0 var(--space-5)}
