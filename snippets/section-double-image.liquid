@@ -38,8 +38,12 @@
   assign frame_desktop_height = desktop_height
   assign frame_mobile_height = mobile_height
   assign frame_aspect_ratio = aspect_ratio
-  assign frame_modifier = ''
+  assign frame_modifier = modifier | default: ''
   assign frame_style_vars = ''
+
+  if image == blank and show_when_blank
+    assign frame_modifier = frame_modifier | append: ' image__hero__frame--blank' | strip
+  endif
 
   if shape_enable
     assign frame_modifier = 'image__hero__frame--shaped image__hero__frame--shape-' | append: shape

@@ -256,7 +256,7 @@
    In wireframe: solid Bone ground box (no product photo), and clean name & price */
 .index-products .svg-placeholder,
 .clickable-details .look__image-container,
-.index-image-text .image__hero__frame {
+.index-image-text .image__hero__frame--blank {
   background-color: var(--bone-ground);
 }
 .index-products .svg-placeholder svg {
@@ -602,16 +602,18 @@
 
 .index-image-text .image__hero__frame {
   aspect-ratio: 4/5;
-  background-color: var(--bone-ground);
   border-radius: 0;
   position: relative;
   width: 100%;
   overflow: visible;
 }
 
-.index-image-text .image__hero__frame img,
-.index-image-text .image__hero__frame picture,
-.index-image-text .image__hero__frame svg {
+/* Blank placeholder frame: solid Bone ground box without broken placeholder icons */
+.index-image-text .image__hero__frame--blank {
+  background-color: var(--bone-ground);
+}
+.index-image-text .image__hero__frame--blank img,
+.index-image-text .image__hero__frame--blank svg {
   display: none;
   opacity: 0;
   visibility: hidden;
