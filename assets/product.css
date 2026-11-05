@@ -369,3 +369,8 @@ dialog[closing] .product-modal__outer {
 .product__specs .ds-specs__row + .ds-specs__row {
   border-top: 1px solid var(--hairline);
 }
+
+/* The last row brings its own bottom padding, so the accordion adds none */
+.product__specs .accordion__content {
+  padding-bottom: 0;
+}
