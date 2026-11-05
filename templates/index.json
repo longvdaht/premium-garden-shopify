@@ -35,7 +35,7 @@
           "type": "button",
           "settings": {
             "text": "SHOP PRODUCTS",
-            "link": "shopify://collections",
+            "link": "shopify://collections/all",
             "type": "btn--primary",
             "size": "",
             "style": "btn--solid",
@@ -347,7 +347,7 @@
         "source": "latest",
         "aspect_ratio": 0.7,
         "title": "Guides",
-        "view_all_text": "",
+        "view_all_text": "ALL GUIDES",
         "heading_font_size": "heading-large",
         "title_font_size": "heading-small",
         "show_tags": true,
