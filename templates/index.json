@@ -1,414 +1,305 @@
 {
   "sections": {
-    "slideshow": {
-      "type": "section-slideshow",
+    "hero": {
+      "type": "section-hero",
       "blocks": {
-        "slide-1": {
-          "type": "_slide-image",
-          "blocks": {
-            "subheading": {
-              "type": "subheading",
-              "settings": {
-                "subheading": "Start the year strong"
-              }
-            },
-            "heading": {
-              "type": "heading",
-              "settings": {
-                "text": "New drop has arrived"
-              }
-            },
-            "text": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Performance leggings designed to keep up—wherever the day takes you.<\/p>"
-              }
-            },
-            "group-buttons": {
-              "type": "group-buttons",
-              "settings": {
-                "text": "Shop the latest",
-                "text_2": "Shop all"
-              }
-            }
-          },
-          "settings": {
-            "flex_align_desktop": "align--bottom-left-desktop"
-          },
-          "block_order": [
-            "subheading",
-            "heading",
-            "text",
-            "group-buttons"
-          ]
-        },
-        "slide-2": {
-          "type": "_slide-image",
-          "blocks": {
-            "subheading": {
-              "type": "subheading",
-              "settings": {
-                "subheading": "From studio to street"
-              }
-            },
-            "heading": {
-              "type": "heading",
-              "settings": {
-                "text": "Move through it all"
-              }
-            },
-            "text": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Performance leggings designed to keep up—wherever the day takes you.<\/p>"
-              }
-            },
-            "button": {
-              "type": "button",
-              "settings": {
-                "text": "Shop now"
-              }
-            }
-          },
-          "settings": {
-            "flex_align_desktop": "align--middle-center-desktop"
-          },
-          "block_order": [
-            "subheading",
-            "heading",
-            "text",
-            "button"
-          ]
-        }
-      },
-      "block_order": [
-        "slide-1",
-        "slide-2"
-      ],
-      "settings": {
-        "autoplay": true,
-        "autoplay_delay": 12,
-        "height": "seven-fifty-height-hero",
-        "mobile_height": "seven-fifty-height-hero--mobile",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "tab-collections": {
-      "type": "section-tab-collections",
-      "blocks": {
-        "collection-1": {
-          "type": "collection",
-          "settings": {
-            "title": "Running",
-            "show_image": false
-          }
-        },
-        "collection-2": {
-          "type": "collection",
-          "settings": {
-            "title": "Yoga",
-            "show_image": false
-          }
-        },
-        "collection-3": {
-          "type": "collection",
-          "settings": {
-            "title": "Lounge",
-            "show_image": false
-          }
-        }
-      },
-      "block_order": [
-        "collection-1",
-        "collection-2",
-        "collection-3"
-      ],
-      "settings": {
-        "title": "Your favorites, on repeat",
-        "heading_font_size": "heading-large",
-        "text": "<p>The pieces our community reaches for most—because they work, wash beautifully and feel unreal.<\/p>",
-        "layout_desktop": "grid",
-        "layout_mobile": "slider",
-        "product_limit": 4,
-        "grid": 4,
-        "rows": 1,
-        "padding_top": 70,
-        "padding_bottom": 70
-      }
-    },
-    "rich-text": {
-      "type": "section-rich-text",
-      "blocks": {
-        "subheading": {
-          "type": "subheading",
-          "settings": {
-            "subheading": "Active or lounge"
-          }
-        },
-        "text-highlight": {
-          "type": "text-highlight",
-          "settings": {
-            "text": "<p>We’re here for the strong days, the soft days, and the “just show up” days. Wherever you’re at in your practice, <em>you belong here.</em></p>",
-            "heading_font_size": "heading-large",
-            "highlight_color": "#F13E31"
-          }
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {
-            "button_text": "Shop products"
-          }
-        }
-      },
-      "block_order": [
-        "subheading",
-        "text-highlight",
-        "buttons"
-      ],
-      "settings": {
-        "width": "wrapper--full-padded",
-        "headings_inline": true,
-        "overlay_opacity": 100,
-        "padding_top": 60,
-        "padding_bottom": 100
-      }
-    },
-    "announcement": {
-      "type": "section-announcement",
-      "blocks": {
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>•</p>",
-            "text_font_size": "body-x-large"
-          }
-        },
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Shop by activity",
+            "text": "Premium equipment for all gardens",
             "heading_font_size": "heading-x-large"
           }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Beautiful spaces aren\u2019t made, they\u2019re grown.</p>",
+            "text_font_size": "body-large"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "text": "SHOP PRODUCTS",
+            "link": "shopify://collections",
+            "type": "btn--primary",
+            "style": "btn--solid"
+          }
         }
       },
       "block_order": [
+        "heading",
         "text",
-        "heading"
+        "button"
       ],
       "settings": {
-        "message_spacing": 30,
-        "color_scheme": "scheme-3",
-        "padding_top": 80,
+        "width": "wrapper--full",
+        "height": "screen-height-three-quarters",
+        "flex_align_desktop": "align--middle-left-desktop",
+        "flex_align_mobile": "align--top-left-mobile",
+        "color_scheme": "scheme-4",
+        "show_text_background": true,
+        "overlay_opacity": 0,
+        "show_placeholder": true,
+        "padding_top": 0,
         "padding_bottom": 0
       }
     },
-    "collection-list": {
-      "type": "section-collection-list",
+    "facts": {
+      "type": "section-multicolumn",
       "blocks": {
-        "collection-1": {
-          "type": "collection",
+        "fact-1": {
+          "type": "text",
           "settings": {
-            "title": "Yoga"
+            "column_width": 33,
+            "title": "HAND-SHARPENED",
+            "heading_font_size": "heading-x-small",
+            "text": "<p>Every edge is set by the maker before it ships.</p>",
+            "text_font_size": "body-medium",
+            "button_text": ""
           }
         },
-        "collection-2": {
-          "type": "collection",
+        "fact-2": {
+          "type": "text",
           "settings": {
-            "title": "Lounge"
+            "column_width": 33,
+            "title": "TESTED FOR A SEASON",
+            "heading_font_size": "heading-x-small",
+            "text": "<p>We use each tool in our own garden first.</p>",
+            "text_font_size": "body-medium",
+            "button_text": ""
           }
         },
-        "collection-3": {
-          "type": "collection",
+        "fact-3": {
+          "type": "text",
           "settings": {
-            "title": "Pilates"
-          }
-        },
-        "collection-4": {
-          "type": "collection",
-          "settings": {
-            "title": "Running"
-          }
-        },
-        "collection-5": {
-          "type": "collection",
-          "settings": {
-            "title": "Sports"
+            "column_width": 33,
+            "title": "SHIPPED FROM [CITY]",
+            "heading_font_size": "heading-x-small",
+            "text": "<p>Packed by hand. USPS Ground Advantage or UPS Ground.</p>",
+            "text_font_size": "body-medium",
+            "button_text": ""
           }
         }
       },
       "block_order": [
-        "collection-1",
-        "collection-2",
-        "collection-3",
-        "collection-4",
-        "collection-5"
+        "fact-1",
+        "fact-2",
+        "fact-3"
       ],
       "settings": {
         "title": "",
-        "aspect_ratio": 1.3,
-        "grid": 5,
-        "color_scheme": "scheme-3",
-        "padding_top": 32,
-        "padding_bottom": 80
+        "show_dividers": true,
+        "width": "wrapper",
+        "layout_mobile": "1",
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
-    "double": {
-      "type": "section-double",
+    "shelf": {
+      "type": "section-collection",
+      "settings": {
+        "featured_collection": "",
+        "heading": "The tools",
+        "heading_font_size": "heading-large",
+        "link_text": "SHOP ALL",
+        "link_url": "shopify://collections",
+        "button_style": "btn--text",
+        "show_arrow": false,
+        "layout": "inline",
+        "grid": 4,
+        "rows": 1,
+        "width": "wrapper",
+        "layout_mobile": "2",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "bundles": {
+      "type": "section-collection",
+      "settings": {
+        "featured_collection": "",
+        "heading": "Bundles",
+        "heading_font_size": "heading-large",
+        "link_text": "SHOP ALL BUNDLES",
+        "link_url": "shopify://collections",
+        "button_style": "btn--text",
+        "show_arrow": false,
+        "layout": "inline",
+        "grid": 3,
+        "rows": 1,
+        "width": "wrapper",
+        "layout_mobile": "slider",
+        "color_scheme": "scheme-4",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "highlight": {
+      "type": "section-clickable-details",
       "blocks": {
-        "subheading": {
-          "type": "subheading",
+        "hotspot-pivot-2": {
+          "type": "text",
           "settings": {
-            "subheading": "The set you’ll plan outfits around"
+            "heading": "PIVOT",
+            "text": "<p>[Material and finish of the pivot. One sentence.]</p>",
+            "position_x": 53,
+            "position_y": 53,
+            "info_bubbles_position": 15
           }
         },
-        "heading": {
+        "hotspot-pivot-1": {
+          "type": "text",
+          "settings": {
+            "heading": "PIVOT",
+            "text": "<p>[Material and finish of the pivot. One sentence.]</p>",
+            "position_x": 43,
+            "position_y": 26,
+            "info_bubbles_position": 15
+          }
+        },
+        "hotspot-pivot-3": {
+          "type": "text",
+          "settings": {
+            "heading": "PIVOT",
+            "text": "<p>[Material and finish of the pivot. One sentence.]</p>",
+            "position_x": 40,
+            "position_y": 81,
+            "info_bubbles_position": 15
+          }
+        }
+      },
+      "block_order": [
+        "hotspot-pivot-2",
+        "hotspot-pivot-1",
+        "hotspot-pivot-3"
+      ],
+      "settings": {
+        "heading": "[Highlighted product]",
+        "heading_font_size": "heading-large",
+        "text": "<p>Tap a point to read what it is made of and why. [Facts from the spec sheet only.]</p><p><a href=\"/collections\">VIEW THE PRODUCT</a></p>",
+        "image_width": 55,
+        "default_open": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "who_we_are": {
+      "type": "section-double",
+      "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "WHO WE ARE",
+            "padding_bottom": 16
+          }
+        },
+        "title": {
           "type": "heading",
           "settings": {
-            "title": "Made to move with you."
+            "title": "We source, design, and manufacture high-quality products for the budding and experienced gardener",
+            "heading_font_size": "heading-large",
+            "padding_bottom": 24
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Match your bra, legging, short, or jacket in tones that go with everything. Designed together. Worn everywhere.</p>"
+            "text": "<p>From houseplants, to balconies, to yards, to estates\u2026 and everything in between.</p>",
+            "text_font_size": "body-large",
+            "padding_bottom": 32
           }
         },
-        "buttons": {
+        "button": {
           "type": "buttons",
           "settings": {
-            "button_text": "Build a set"
+            "button_text": "ABOUT THE SHOP",
+            "button_url": "/pages/about",
+            "button_type": "btn--primary",
+            "button_style": "btn--text",
+            "show_arrow": false
           }
         }
       },
       "block_order": [
-        "subheading",
-        "heading",
+        "eyebrow",
+        "title",
         "text",
-        "buttons"
+        "button"
       ],
       "settings": {
+        "image_width": "one-half",
+        "layout": "",
         "width": "wrapper",
-        "height": "six-fifty-height-hero",
-        "mobile_height": "four-fifty-height-hero--mobile",
-        "padding_top": 60,
-        "padding_bottom": 0
+        "height": "image-height",
+        "mobile_height": "image-height--mobile",
+        "color_scheme": "scheme-7",
+        "padding_top": 96,
+        "padding_bottom": 96,
+        "show_placeholder": true
       }
     },
-    "look": {
-      "type": "section-look-banner",
-      "blocks": {
-        "product-1": {
-          "type": "product",
-          "settings": {
-            "position_x_desktop": 40,
-            "position_y_desktop": 41,
-            "position_x_mobile": 21,
-            "position_y_mobile": 42,
-            "info_bubbles_position_desktop": 45,
-            "info_bubbles_position_mobile": 15
-          }
-        },
-        "product-2": {
-          "type": "product",
-          "settings": {
-            "position_x_desktop": 60,
-            "position_y_desktop": 60,
-            "position_x_mobile": 75,
-            "position_y_mobile": 60,
-            "info_bubbles_position_desktop": 15,
-            "info_bubbles_position_mobile": 45
-          }
-        },
-        "product-3": {
-          "type": "product",
-          "settings": {
-            "position_x_desktop": 46,
-            "position_y_desktop": 80,
-            "position_x_mobile": 44,
-            "position_y_mobile": 80,
-            "info_bubbles_position_desktop": 15,
-            "info_bubbles_position_mobile": 15
-          }
-        }
-      },
-      "block_order": [
-        "product-1",
-        "product-2",
-        "product-3"
-      ],
+    "guides": {
+      "type": "section-blog",
       "settings": {
-        "title": "",
-        "text": ""
-      }
-    },
-    "timeline": {
-      "type": "section-timeline",
-      "blocks": {
-        "timeline-1": {
-          "type": "timeline",
-          "settings": {
-            "subheading": "Every body",
-            "title": "Lifestyle",
-            "text": "<p>Designed to be as versatile as your lifestyle. We’re on a mission to create high quality activewear and wardrobe essentials accessible to everybody.</p>",
-            "button_text": ""
-          }
-        },
-        "timeline-2": {
-          "type": "timeline",
-          "settings": {
-            "subheading": "All together now",
-            "title": "Community",
-            "text": "<p>Athleisure designed for the way you actually train—pilates mornings, yoga nights, long runs, quick lifts, and everything between.</p>",
-            "button_text": ""
-          }
-        },
-        "timeline-3": {
-          "type": "timeline",
-          "settings": {
-            "subheading": "No forever plastics",
-            "title": "Essentials",
-            "text": "<p>We prioritize high-quality materials, responsible production partners, and fewer-but-better drops—so your wardrobe works harder and lasts longer.</p>",
-            "button_text": ""
-          }
-        }
-      },
-      "block_order": [
-        "timeline-1",
-        "timeline-2",
-        "timeline-3"
-      ],
-      "settings": {
-        "title": "",
-        "text": "",
-        "width": "wrapper--full-padded",
-        "padding_top": 0,
-        "padding_bottom": 60
-      }
-    },
-    "collection": {
-      "type": "section-collection",
-      "settings": {
-        "heading": "Everybody's everyday uniform.",
+        "blog_name": "guides",
+        "title": "Guides",
         "heading_font_size": "heading-large",
-        "description": "<p>Match your bra, legging, short, or jacket in tones that go with everything. Designed together. Worn everywhere.</p>",
-        "button_type": "btn--secondary",
+        "aspect_ratio": 0.67,
+        "show_tags": true,
+        "show_date": false,
+        "show_author": false,
+        "show_button": false,
+        "show_comments": false,
+        "grid": 3,
         "rows": 1,
-        "width": "wrapper--full-padded",
-        "color_scheme": "scheme-4",
-        "padding_top": 60,
-        "padding_bottom": 60
+        "width": "wrapper",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "stay_informed": {
+      "type": "section-newsletter",
+      "blocks": {
+        "newsletter-1": {
+          "type": "newsletter",
+          "settings": {
+            "subheading": "",
+            "heading": "Stay informed",
+            "heading_font_size": "heading-large",
+            "text": "<p>Stay up-to-date on new product launches, Guides, and other news. We promise to keep it interesting.</p>",
+            "align_text": "text-left",
+            "show_name": false,
+            "button_text": "",
+            "show_arrow": true,
+            "terms": false
+          }
+        }
+      },
+      "block_order": [
+        "newsletter-1"
+      ],
+      "settings": {
+        "height": "image-height",
+        "width": "wrapper",
+        "color_scheme": "scheme-1",
+        "padding_top": 96,
+        "padding_bottom": 96
       }
     }
   },
   "order": [
-    "slideshow",
-    "tab-collections",
-    "rich-text",
-    "announcement",
-    "collection-list",
-    "double",
-    "look",
-    "timeline",
-    "collection"
+    "hero",
+    "facts",
+    "shelf",
+    "bundles",
+    "highlight",
+    "who_we_are",
+    "guides",
+    "stay_informed"
   ]
 }

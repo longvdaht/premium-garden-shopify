@@ -72,7 +72,7 @@
               data-aos-anchor="{{ animation_anchor }}"
               data-aos-order="{{ animation_order }}"
             >
-              {{- text -}}
+              {{- text | replace: '<a ', '<a class="btn btn--text" ' -}}
             </div>
           {%- endif -%}
         </div>

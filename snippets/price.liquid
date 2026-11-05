@@ -50,6 +50,10 @@
     assign money_price = 'products.product.price.from_price_html' | t: price: money_price
   endif
 
+  if product == blank or product == empty or onboarding_product or target.price == blank
+    assign money_price = '$[00]'
+  endif
+
   # Unit price detection
   assign has_units = false
   if current_variant.unit_price_measurement

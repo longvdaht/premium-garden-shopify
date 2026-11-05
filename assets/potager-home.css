@@ -1,0 +1,1105 @@
+/* ==========================================================================
+   Global section styles
+   Scoped globally across all pages with section classes.
+   Split from potager-layout.css for clean ownership and easier maintenance.
+   Typography is handled by theme settings schema / theme.css.
+   ========================================================================== */
+
+/* 1. Hero (01.1): Desktop 16:9 media with green panel shifted downward; mobile 4:5 with green panel below */
+.index-hero .hero__images {
+  background-color: var(--bone-ground);
+}
+/* When no actual image is uploaded yet, keep background neutral bone-ground without broken placeholder icons */
+.index-hero .hero__split-image--blank img,
+.index-hero .hero__images .is-loading img {
+  opacity: 0;
+}
+
+.index-hero .hero__content__wrapper {
+  display: flex;
+}
+
+@media (min-width: 769px) {
+  .index-hero .hero__content__wrapper {
+    max-width: var(--width-normal, var(--container-max));
+    margin-inline: auto;
+    padding-inline: var(--outer, var(--gutter-desktop));
+    align-items: flex-end;
+    padding-bottom: clamp(40px, 6vw, 80px);
+  }
+  .index-hero .hero__images {
+    aspect-ratio: 16/9;
+    min-height: 480px;
+  }
+  .index-hero .hero__content {
+    background: var(--green);
+    color: var(--bone-page);
+    width: clamp(500px, 50vw, 680px);
+    max-width: 100%;
+    margin-left: 0;
+    padding: clamp(40px, 4.5vw, 64px) clamp(44px, 4.5vw, 68px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+    box-shadow: 0 12px 32px rgba(22, 39, 28, 0.12);
+  }
+  .index-hero .hero__title {
+    color: var(--bone-page);
+    margin: 0;
+    max-width: 460px;
+  }
+  .index-hero .hero__description {
+    color: var(--ink-muted);
+    margin: 0;
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 768px) {
+  .index-hero {
+    display: flex;
+    flex-direction: column;
+  }
+  .index-hero .hero__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .index-hero .hero__images {
+    aspect-ratio: 4/5;
+    position: relative;
+    height: auto;
+    width: 100%;
+  }
+  .index-hero .hero__content__wrapper {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+    padding: 0;
+    padding-inline: 0;
+  }
+  .index-hero .hero__content {
+    background: var(--green);
+    color: var(--bone-page);
+    width: 100%;
+    max-width: 100%;
+    padding: var(--space-5) var(--gutter-mobile);
+    box-sizing: border-box;
+    gap: var(--space-2);
+  }
+  .index-hero .hero__title {
+    color: var(--bone-page);
+  }
+  .index-hero .hero__description {
+    color: var(--ink-muted);
+  }
+}
+
+/* 2. Facts strip (01.2): 3 short facts between thin lines, no icons */
+.section-columns--with-dividers {
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background-color: var(--bone-page);
+  padding-block: 0;
+}
+.section-columns--with-dividers .grid-item {
+  box-sizing: border-box;
+}
+.section-columns--with-dividers .column__heading {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--label);
+  margin: 0 0 var(--space-1);
+}
+.section-columns--with-dividers .column__text {
+  color: var(--ink);
+  margin: 0;
+  max-width: 360px;
+}
+@media (min-width: 750px) {
+  .section-columns--with-dividers .multicolumn {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .section-columns--with-dividers .grid-item {
+    padding: var(--space-4) var(--space-3);
+    border-right: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .section-columns--with-dividers .grid-item:first-child {
+    padding-left: var(--space-4);
+    padding-right: var(--space-2);
+  }
+  .section-columns--with-dividers .grid-item:last-child {
+    border-right: none;
+    padding-left: var(--space-2);
+    padding-right: var(--space-4);
+  }
+}
+@media (max-width: 749px) {
+  .section-columns--with-dividers .grid-item {
+    padding: var(--space-3) var(--space-2);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .section-columns--with-dividers .grid-item:last-child {
+    border-bottom: none;
+  }
+}
+
+/* 3 & 4. Shelf (01.3) & Bundles (01.4) */
+.index-products .grid__heading-holder--inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+}
+
+.index-products .grid__heading-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.index-products.color-scheme-1 .grid__heading-text::before {
+  content: "THE SHELF";
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--label);
+  margin: 0;
+}
+
+.index-products.color-scheme-4 .grid__heading-text::before {
+  content: "BUNDLES";
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-page);
+  opacity: 0.8;
+  margin: 0;
+}
+
+.index-products .grid__heading,
+.index-products .section__header .hero__title {
+  margin: 0;
+}
+
+.index-products .grid__heading-actions {
+  display: flex;
+  align-items: flex-start;
+  align-self: flex-start;
+  flex-shrink: 0;
+  margin: 0;
+  padding-top: 18px;
+  padding-bottom: 0;
+}
+
+/* Ensure SHOP ALL & VIEW THE PRODUCT are on 1 line and have only 1 clean underline */
+.index-products .grid__heading-actions .btn--text,
+.clickable-details .btn--text,
+.clickable-details .hero__description a {
+  white-space: nowrap;
+  padding: 0 0 1px 0;
+  border: none;
+  border-bottom: 2px solid var(--signal);
+  text-decoration: none;
+  background: none !important;
+  background-image: none !important;
+  display: inline-block;
+  line-height: 1;
+}
+.index-products .grid__heading-actions .btn--text {
+  transform: translateY(-6px);
+}
+.clickable-details .btn--text,
+.clickable-details .hero__description a {
+  color: var(--ink);
+  margin-top: var(--space-2);
+}
+.index-products .grid__heading-actions .btn--text span,
+.clickable-details .btn--text span,
+.clickable-details .hero__description a span {
+  background: none !important;
+  background-image: none !important;
+  padding: 0;
+  line-height: inherit;
+  white-space: nowrap;
+}
+.index-products .grid__heading-actions .btn--text:hover,
+.clickable-details .btn--text:hover,
+.clickable-details .hero__description a:hover {
+  border-bottom-color: var(--signal-press);
+  background: none !important;
+  background-image: none !important;
+}
+.index-products.color-scheme-4 .grid__heading-actions .btn--text {
+  color: var(--bone-page);
+}
+
+/* Product placeholder cards when no images or products are uploaded yet:
+   In wireframe: solid Bone ground box (no product photo), and clean name & price */
+.index-products .svg-placeholder,
+.clickable-details .look__image-container,
+.index-image-text .image__hero__frame {
+  background-color: var(--bone-ground);
+}
+.index-products .svg-placeholder svg {
+  display: none; /* Hide Shopify placeholder bag/shoe illustrations */
+}
+/* Match wireframe card: 4:5 ratio on Bone ground, clean name & price */
+.index-products .product-card__image,
+.index-products .product-card__media {
+  aspect-ratio: 4/5;
+  background-color: var(--bone-ground);
+}
+.index-products .badge-box-container,
+.index-products .quick-add__holder,
+.index-products .quick-add-stacked,
+.index-products .quick-add-button,
+.index-products .product-card__swatches__holder,
+.index-products .product-card__tags,
+.index-products .product-card__cutline {
+  display: none;
+}
+.index-products .product-card__title {
+  margin-top: var(--space-2);
+  display: block;
+}
+
+.index-products .product-card__price__holder {
+  display: block;
+  margin-top: 2px;
+}
+
+.index-products .product-card__price {
+  display: block;
+}
+
+/* 5. Product Highlight (01.5): Wireframe Section 5 - 2-column layout (Left: title/text/button, Right: 4:5 Bone card with hotspots) */
+.clickable-details {
+  background-color: var(--bone-page);
+}
+
+.clickable-details .wrapper {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+  box-sizing: border-box;
+}
+
+@media (min-width: 990px) {
+  .clickable-details .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: center;
+  }
+}
+
+.clickable-details .hero__content__wrapper {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  min-height: auto;
+}
+
+.clickable-details .hero__content {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-2);
+  max-width: 540px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+
+.clickable-details .hero__title {
+  color: var(--ink);
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.clickable-details .hero__description {
+  color: var(--ink-muted);
+  margin: 0;
+  text-align: left;
+}
+
+.clickable-details .hero__description p {
+  margin: 0 0 var(--space-2) 0;
+}
+
+.clickable-details .hero__description p:last-child {
+  margin-bottom: 0;
+}
+
+
+.clickable-details .look__product {
+  width: 100%;
+  margin: 0;
+}
+
+/* Hide image data / photo and display clean Bone ground placeholder card with 4:5 ratio */
+.clickable-details .look__image-container {
+  aspect-ratio: 4/5;
+  background-color: var(--bone-ground) !important;
+  border-radius: 0;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.clickable-details .look__image-container img,
+.clickable-details .look__image-container picture,
+.clickable-details .look__image-container svg:not(.icon) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Remove glass reflection shimmer animation and loading overlays */
+.clickable-details .look__image-container .image__hero__frame,
+.clickable-details .look__image-container .image__hero__pane,
+.clickable-details .look__image-container .lazy-image {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.clickable-details .look__image-container .lazy-image--backfill::after,
+.clickable-details .look__image-container [class*="loading"]::after,
+.clickable-details .look__image-container [class*="backfill"]::after,
+.clickable-details .look__image-container [class*="hero"]::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+  background: none !important;
+}
+
+/* Hotspots: 3 PIVOT pins & popup card matching wireframe */
+.clickable-details .hotspots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.clickable-details .hotspot-item {
+  position: absolute;
+  z-index: 5;
+  pointer-events: auto;
+  width: 24px;
+  height: 24px;
+  margin-inline-start: -12px;
+  margin-block-start: -12px;
+}
+
+.clickable-details .hotspot__button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  box-shadow: none;
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  top: auto;
+  left: auto;
+}
+
+/* Remove default theme halo and padding distortion on .hotspot */
+.clickable-details .hotspot::before,
+.clickable-details .hotspot::after {
+  display: none !important;
+  content: none !important;
+}
+
+.clickable-details .hotspot {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  margin: 0;
+  background-color: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+}
+
+.clickable-details .hotspot__icon-toggle {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  background-color: var(--green);
+  border-radius: 50%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+}
+
+.clickable-details .hotspot__button:hover .hotspot__icon-toggle,
+.clickable-details .hotspot__button.is-active .hotspot__icon-toggle {
+  transform: scale(1.1);
+}
+
+.clickable-details .hotspot__icon-toggle svg,
+.clickable-details .hotspot__icon-toggle .icon {
+  display: none !important;
+}
+
+/* White popup card */
+.clickable-details .hotspot__content {
+  background: var(--bone-page);
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(22, 39, 28, 0.08);
+  padding: 14px 18px;
+  width: max-content;
+  max-width: 210px;
+  text-align: left;
+}
+
+.clickable-details .hotspot__title {
+  color: var(--label);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.clickable-details .hotspot__text,
+.clickable-details .hotspot__text p {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Ensure info-bubble displays inside image on both desktop and mobile */
+.clickable-details .look__product .hotspot__info-bubble {
+  display: grid !important;
+}
+
+.clickable-details .hotspot__button:hover .hotspot__info-bubble,
+.clickable-details .hotspot__button.is-active .hotspot__info-bubble,
+.clickable-details .hotspot__button.is-selected .hotspot__info-bubble {
+  opacity: 1 !important;
+  visibility: unset !important;
+  pointer-events: auto !important;
+}
+
+.clickable-details .hotspot-item:has(.is-active),
+.clickable-details .hotspot-item:has(.is-selected) {
+  z-index: 10;
+}
+
+@media (max-width: 989px) {
+  .clickable-details .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .clickable-details .hero__content__wrapper {
+    width: 100%;
+  }
+
+  .clickable-details .hero__content {
+    max-width: 100%;
+  }
+
+  .clickable-details .look__product {
+    width: 100%;
+  }
+
+  /* Hide the separate mobile content below the image */
+  .clickable-details .look__contents.mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .clickable-details .hotspot__content {
+    max-width: min(200px, calc(100vw - 80px));
+    padding: 10px 14px;
+  }
+}
+
+/* 6. Who We Are (01.6): Wireframe Section 6 - scheme 7 Green spot / deep green background, 2-column layout (Left: 4:5 hero card on Bone ground, Right: content) */
+.index-image-text.color-scheme-7 {
+  background-color: var(--green);
+  color: var(--bone-page);
+}
+
+.index-image-text .brick__section {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+@media (min-width: 990px) {
+  .index-image-text .brick__section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: center;
+  }
+}
+
+/* Left: 4:5 image frame - hide image data, style as Bone ground card (same pink/beige as above cards) without PHOTO 4:5 text */
+.index-image-text .brick__block--images,
+.index-image-text .brick__block__image {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.index-image-text .image__hero__frame {
+  aspect-ratio: 4/5;
+  background-color: var(--bone-ground);
+  border-radius: 0;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.index-image-text .image__hero__frame img,
+.index-image-text .image__hero__frame picture,
+.index-image-text .image__hero__frame svg {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Right: Content styling - remove any background wrapping the text and expand width */
+.index-image-text .brick__block--text {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  flex: 1 1 100%;
+  display: flex;
+  align-items: center;
+}
+
+.index-image-text .brick__block__text {
+  --text-width: 100%;
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  flex-basis: 100%;
+}
+
+.index-image-text .hero__content {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  background-color: transparent;
+}
+
+.index-image-text .hero__subheading {
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.index-image-text .hero__title {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  word-break: normal;
+}
+
+.index-image-text.color-scheme-7 .hero__title {
+  color: var(--bone-page);
+}
+
+.index-image-text .hero__rte,
+.index-image-text .hero__rte p {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+}
+
+.index-image-text.color-scheme-7 .hero__rte,
+.index-image-text.color-scheme-7 .hero__rte p {
+  color: var(--bone-page);
+}
+
+/* CTA button: ABOUT THE SHOP with 2px Scarlet Underline */
+.index-image-text .hero__button-group,
+.index-image-text .hero__button {
+  margin-top: var(--space-2);
+}
+
+.index-image-text .btn--text,
+.index-image-text .btn {
+  display: inline-block;
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--signal);
+  color: inherit;
+  padding: 0 0 3px 0;
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.index-image-text.color-scheme-7 .btn--text,
+.index-image-text.color-scheme-7 .btn {
+  color: var(--bone-page);
+}
+
+.index-image-text .btn--text span,
+.index-image-text .btn span {
+  background: none;
+  padding: 0;
+}
+
+.index-image-text .btn--text:hover,
+.index-image-text .btn:hover {
+  border-bottom-color: var(--signal-press);
+  background: none;
+}
+
+@media (max-width: 989px) {
+  .index-image-text .brick__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .index-image-text .brick__block__text {
+    max-width: 100%;
+  }
+}
+
+/* 7. Guides (01.7): Section header with "ALL GUIDES" action, 3:2 cards, tag, title, reading time */
+.blog-section {
+  background-color: var(--bone-page);
+  max-width: var(--container-max);
+  margin-inline: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.blog-section .page__heading.blog__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-4);
+  text-align: left;
+}
+
+.blog-section .page__heading.blog__title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.blog-section .page__heading.blog__title::after {
+  content: "ALL GUIDES";
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--signal);
+  cursor: pointer;
+}
+
+.blog-section .article__image__outer {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  overflow: visible;
+}
+
+.blog-section .article__image {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  overflow: visible;
+}
+
+.blog-section .article__image-link,
+.blog-section .image-wrapper {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3/2;
+  background-color: var(--bone-ground);
+  border-radius: 0;
+  position: relative;
+}
+
+.blog-section .article__image-link img,
+.blog-section .article__image-link svg {
+  display: none;
+  opacity: 0;
+}
+
+.blog-section .article__tags,
+.blog-section .article__image .article__tags {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  width: 100%;
+  background: transparent;
+}
+
+.blog-section .article__tags a,
+.blog-section .article__tags .article__tag {
+  color: var(--label);
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Hide second onboarding tag if present */
+.blog-section .article--onboarding .article__tag:nth-child(n+2) {
+  display: none;
+}
+
+.blog-section .article__title {
+  margin: 0 0 6px 0;
+}
+
+.blog-section .article__title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.blog-section .article__excerpt {
+  display: none;
+}
+
+/* Wireframe onboarding cards: Titles & 0 min read */
+.blog-section .article--onboarding .article__tag {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  margin: 0;
+}
+.blog-section .article--onboarding .article__tag::after {
+  content: attr(data-tag);
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--label);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  margin: 0;
+}
+.blog-section .article--onboarding:nth-child(1) .article__tag::after {
+  content: "PRUNING";
+}
+.blog-section .article--onboarding:nth-child(2) .article__tag::after {
+  content: "GROWING";
+}
+.blog-section .article--onboarding:nth-child(3) .article__tag::after {
+  content: "GOODS";
+}
+
+.blog-section .article--onboarding .article__title {
+  margin: 0;
+}
+.blog-section .article--onboarding .article__title a {
+  display: block;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  text-decoration: none;
+  margin: 0;
+}
+.blog-section .article--onboarding .article__title a::after {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: 0;
+  white-space: normal;
+  word-break: normal;
+  margin-top: -1px;
+}
+.blog-section .article--onboarding:nth-child(1) .article__title a::after {
+  content: "Sharpening bud shears on a fine stone";
+}
+.blog-section .article--onboarding:nth-child(2) .article__title a::after {
+  content: "Deadheading in late summer";
+}
+.blog-section .article--onboarding:nth-child(3) .article__title a::after {
+  content: "How the blades are made";
+}
+
+.blog-section .article__text-wrapper::after {
+  content: "[0] min read";
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .blog-section .blog-listing {
+    grid-template-columns: 1fr;
+    --columns: 1;
+    row-gap: var(--space-4);
+  }
+}
+
+/* 8. Stay informed (01.8): Homepage Newsletter section */
+.index-newsletter {
+  background-color: var(--bone-raised);
+}
+
+.index-newsletter .section-padding {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding-top: clamp(64px, 8vw, 96px);
+  padding-bottom: clamp(64px, 8vw, 96px);
+}
+
+@media (max-width: 767px) {
+  .index-newsletter .section-padding {
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-5);
+  }
+}
+
+.index-newsletter .brick__section {
+  background: transparent;
+  display: block;
+}
+
+.index-newsletter .brick__block--text,
+.index-newsletter .brick__block__text {
+  --text-width: 100%;
+  background: transparent;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.index-newsletter .hero__content {
+  text-align: left;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (min-width: 990px) {
+  .index-newsletter .hero__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: clamp(40px, 6vw, 100px);
+    row-gap: 8px;
+    align-items: center;
+  }
+
+  .index-newsletter .hero__content > .hero__title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .index-newsletter .hero__content > .hero__rte {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .index-newsletter .hero__content > .newsletter__wrapper {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    width: 100%;
+  }
+}
+
+.index-newsletter .hero__title {
+  color: var(--ink);
+  margin: 0 0 4px 0;
+}
+
+.index-newsletter .hero__rte,
+.index-newsletter .hero__rte p {
+  color: var(--ink-muted);
+  margin: 0;
+  width: 100%;
+  max-width: 580px;
+}
+
+/* Newsletter Input: Underlined field with right-arrow and helper text below */
+.index-newsletter .newsletter__wrapper {
+  width: 100%;
+}
+
+.index-newsletter .newsletter-form {
+  max-width: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.index-newsletter .newsletter-form .input-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 6px;
+  background: transparent;
+}
+
+.index-newsletter .newsletter-form .input-group:focus-within {
+  border-bottom-width: 1.5px;
+  border-bottom-color: var(--ink);
+}
+
+.index-newsletter .newsletter-form input[type="email"] {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 8px 0;
+  color: var(--ink);
+  flex: 1;
+  outline: none;
+}
+
+.index-newsletter .newsletter-form input[type="email"]::placeholder {
+  color: var(--ink-muted);
+  opacity: 1;
+}
+
+.index-newsletter .newsletter-form .input-group__btn,
+.index-newsletter .newsletter-form button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0 2px;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.index-newsletter .newsletter-form button:hover {
+  transform: translateX(3px);
+}
+
+.index-newsletter .newsletter-form button span {
+  display: none;
+}
+
+/* Ensure the arrow icon renders the long-tail right arrow matching the screenshot */
+.index-newsletter .newsletter-form button svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  stroke: var(--ink);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.index-newsletter .newsletter-form button svg path {
+  d: path("M5 12h14M12 5l7 7-7 7");
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.index-newsletter .newsletter__wrapper::after {
+  content: "One email a week. Unsubscribe any time.";
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  margin-top: 14px;
+}
