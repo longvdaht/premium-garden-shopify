@@ -156,7 +156,7 @@
     "shelf": {
       "type": "section-collection",
       "settings": {
-        "featured_collection": "",
+        "featured_collection": "pruning",
         "collection_promo_meta": "collection_featured_promo",
         "heading": "The tools",
         "heading_font_size": "heading-large",
@@ -164,7 +164,7 @@
         "text_font_size": "body-medium",
         "layout": "inline",
         "link_text": "SHOP ALL",
-        "link_url": "shopify://collections",
+        "link_url": "shopify://collections/pruning",
         "button_type": "btn--primary",
         "button_size": "",
         "button_style": "btn--text",
@@ -183,7 +183,7 @@
     "bundles": {
       "type": "section-collection",
       "settings": {
-        "featured_collection": "",
+        "featured_collection": "pruning",
         "collection_promo_meta": "collection_featured_promo",
         "heading": "Bundles",
         "heading_font_size": "heading-large",
@@ -191,7 +191,7 @@
         "text_font_size": "body-medium",
         "layout": "inline",
         "link_text": "SHOP ALL BUNDLES",
-        "link_url": "shopify://collections",
+        "link_url": "shopify://collections/bundles",
         "button_type": "btn--primary",
         "button_size": "",
         "button_style": "btn--text",
