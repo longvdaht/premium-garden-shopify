@@ -35,3 +35,18 @@ recently-viewed {
   padding: 0;
   margin: 0;
 }
+
+/* Potager: "Normal" width keeps the section in the page container, so the
+   heading and grid sit on the container edge without their own outer padding */
+.related__products.wrapper .tab__title,
+.related__products.wrapper .related__heading--link,
+.related__products.wrapper .grid-outer {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Potager: hairline above the heading (wireframe 03.4) */
+.related__products--divider .tab-content {
+  border-top: 1px solid var(--hairline);
+  padding-top: var(--space-4);
+}

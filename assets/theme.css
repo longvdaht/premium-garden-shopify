@@ -12529,7 +12529,7 @@ shopify-paypal-button {
 }
 
 .product-card__link {
-  --link: var(--text-dark);
+  --link: var(--text);
   --link-hover: var(--text-a80);
   display: block;
   height: 100%;

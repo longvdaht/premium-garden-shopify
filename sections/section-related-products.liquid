@@ -197,7 +197,7 @@
 >
   {%- if has_related_products or has_recently_products -%}
     <{{ wrapper_tag }}
-      class="tabs-wrapper related__products section-padding"
+      class="tabs-wrapper related__products section-padding{% if section.settings.width == 'wrapper' %} wrapper{% endif %}{% if section.settings.show_divider %} related__products--divider{% endif %}"
     >
       {%- if enable_tabs -%}
         <div
@@ -303,6 +303,28 @@
       "type": "checkbox",
       "id": "enable_tabs",
       "label": "Enable tabs",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "wrapper",
+          "label": "Normal"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider above heading",
       "default": true
     },
     {
