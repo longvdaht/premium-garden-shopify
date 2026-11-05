@@ -745,10 +745,7 @@
 }
 
 .blog-section .page__heading.blog__title {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: var(--space-4);
+  margin-bottom: 0;
   text-align: left;
 }
 
@@ -757,8 +754,14 @@
   text-decoration: none;
 }
 
-.blog-section .page__heading.blog__title::after {
-  content: "ALL GUIDES";
+.blog-section .blog__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-4);
+}
+
+.blog-section .blog__heading .ds-cta {
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 600;
@@ -767,7 +770,9 @@
   color: var(--ink);
   padding-bottom: 3px;
   border-bottom: 2px solid var(--signal);
+  text-decoration: none;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .blog-section .article__image__outer {
@@ -796,27 +801,44 @@
   position: relative;
 }
 
-.blog-section .article__image-link img,
-.blog-section .article__image-link svg {
+/* Hide only placeholder icons when in onboarding mode */
+.blog-section .article--onboarding .article__image-link img,
+.blog-section .article--onboarding .article__image-link svg {
   display: none;
   opacity: 0;
 }
 
 .blog-section .article__tags,
-.blog-section .article__image .article__tags {
+.blog-section .article__image .article__tags,
+.blog-section .blog-listing .article__tags {
   position: static;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 0;
-  margin-top: 12px;
-  margin-bottom: 6px;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 16px;
+  margin-bottom: 8px;
   width: 100%;
   background: transparent;
 }
 
+.blog-section .article__text-wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-top: 0;
+}
+
 .blog-section .article__tags a,
 .blog-section .article__tags .article__tag {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--label);
   text-decoration: none;
   background: transparent;
