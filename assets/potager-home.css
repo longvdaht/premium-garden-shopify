@@ -255,8 +255,8 @@
 /* Product placeholder cards when no images or products are uploaded yet:
    In wireframe: solid Bone ground box (no product photo), and clean name & price */
 .index-products .svg-placeholder,
-.clickable-details .look__image-container,
-.index-image-text .image__hero__frame {
+.clickable-details .look__image-container--blank,
+.index-image-text .image__hero__frame--blank {
   background-color: var(--bone-ground);
 }
 .index-products .svg-placeholder svg {
@@ -364,19 +364,22 @@
   margin: 0;
 }
 
-/* Hide image data / photo and display clean Bone ground placeholder card with 4:5 ratio */
+/* 4:5 image container matching wireframe */
 .clickable-details .look__image-container {
   aspect-ratio: 4/5;
-  background-color: var(--bone-ground) !important;
   border-radius: 0;
   position: relative;
   width: 100%;
   overflow: visible;
 }
 
-.clickable-details .look__image-container img,
-.clickable-details .look__image-container picture,
-.clickable-details .look__image-container svg:not(.icon) {
+/* When no actual image is uploaded yet, show clean Bone ground placeholder card */
+.clickable-details .look__image-container--blank {
+  background-color: var(--bone-ground) !important;
+}
+.clickable-details .look__image-container--blank img,
+.clickable-details .look__image-container--blank picture,
+.clickable-details .look__image-container--blank svg:not(.icon) {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
@@ -602,16 +605,18 @@
 
 .index-image-text .image__hero__frame {
   aspect-ratio: 4/5;
-  background-color: var(--bone-ground);
   border-radius: 0;
   position: relative;
   width: 100%;
   overflow: visible;
 }
 
-.index-image-text .image__hero__frame img,
-.index-image-text .image__hero__frame picture,
-.index-image-text .image__hero__frame svg {
+/* Blank placeholder frame: solid Bone ground box without broken placeholder icons */
+.index-image-text .image__hero__frame--blank {
+  background-color: var(--bone-ground);
+}
+.index-image-text .image__hero__frame--blank img,
+.index-image-text .image__hero__frame--blank svg {
   display: none;
   opacity: 0;
   visibility: hidden;
