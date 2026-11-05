@@ -156,7 +156,7 @@
     "shelf": {
       "type": "section-collection",
       "settings": {
-        "featured_collection": "",
+        "featured_collection": "pruning",
         "collection_promo_meta": "collection_featured_promo",
         "heading": "The tools",
         "heading_font_size": "heading-large",
