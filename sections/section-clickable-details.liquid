@@ -80,7 +80,7 @@
     {%- endif -%}
 
     <clickable-details class="look__product" style="--image-width: {{ image_width }}%;">
-      <div class="look__image-container">
+      <div class="look__image-container{% if image == blank %} look__image-container--blank{% endif %}">
         {%- render 'image-hero',
           image: image,
           sizes: sizes,
