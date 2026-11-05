@@ -359,3 +359,13 @@ dialog[closing] .product-modal__outer {
   font-size: var(--font-body-small);
   text-transform: uppercase;
 }
+/* Potager: Specifications accordion. Rows are divided by a line above each
+   row after the first, so the list never adds its own bottom line on top of
+   the accordion's (also when the SKU row is hidden). */
+.product__specs .ds-specs__row {
+  border-bottom: 0;
+}
+
+.product__specs .ds-specs__row + .ds-specs__row {
+  border-top: 1px solid var(--hairline);
+}
