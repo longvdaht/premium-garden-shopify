@@ -164,7 +164,7 @@
         "text_font_size": "body-medium",
         "layout": "inline",
         "link_text": "SHOP ALL",
-        "link_url": "shopify://collections",
+        "link_url": "shopify://collections/pruning",
         "button_type": "btn--primary",
         "button_size": "",
         "button_style": "btn--text",
