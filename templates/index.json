@@ -16,15 +16,20 @@
           "type": "heading",
           "settings": {
             "text": "Premium equipment for all gardens",
-            "heading_font_size": "heading-x-large"
-          }
+            "heading_font_size": "heading-x-large",
+            "padding_bottom": 16,
+            "heading_tag": "automatic"
+          },
+          "blocks": {}
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Beautiful spaces aren\u2019t made, they\u2019re grown.</p>",
-            "text_font_size": "body-large"
-          }
+            "text": "<p>Beautiful spaces aren’t made, they’re grown.</p>",
+            "text_font_size": "body-large",
+            "padding_bottom": 16
+          },
+          "blocks": {}
         },
         "button": {
           "type": "button",
@@ -32,8 +37,13 @@
             "text": "SHOP PRODUCTS",
             "link": "shopify://collections",
             "type": "btn--primary",
-            "style": "btn--solid"
-          }
+            "size": "",
+            "style": "btn--solid",
+            "show_arrow": false,
+            "full_width": false,
+            "padding_bottom": 16
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -42,16 +52,29 @@
         "button"
       ],
       "settings": {
+        "image": "shopify://shop_images/premium-garden-hero-banner.png",
+        "link": "",
+        "product": "",
+        "product_desktop_alignment_vertical": "bottom",
+        "product_desktop_alignment_horizontal": "center",
+        "upsell_color_scheme": "",
+        "upsell_button_type": "btn--secondary",
+        "upsell_button_size": "btn--small",
+        "upsell_button_style": "btn--outline",
         "width": "wrapper--full",
         "height": "screen-height-three-quarters",
         "flex_align_desktop": "align--middle-left-desktop",
+        "content_width": 50,
+        "mobile_image": "shopify://shop_images/premium-garden-product.png",
+        "mobile_height": "screen-height-three-quarters--mobile",
         "flex_align_mobile": "align--top-left-mobile",
         "color_scheme": "scheme-4",
         "show_text_background": true,
         "overlay_opacity": 0,
-        "show_placeholder": true,
+        "show_overlay_text": false,
         "padding_top": 0,
-        "padding_bottom": 0
+        "padding_bottom": 0,
+        "show_placeholder": true
       }
     },
     "facts": {
@@ -65,7 +88,13 @@
             "heading_font_size": "heading-x-small",
             "text": "<p>Every edge is set by the maker before it ships.</p>",
             "text_font_size": "body-medium",
-            "button_text": ""
+            "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         },
         "fact-2": {
@@ -76,7 +105,13 @@
             "heading_font_size": "heading-x-small",
             "text": "<p>We use each tool in our own garden first.</p>",
             "text_font_size": "body-medium",
-            "button_text": ""
+            "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         },
         "fact-3": {
@@ -87,7 +122,13 @@
             "heading_font_size": "heading-x-small",
             "text": "<p>Packed by hand. USPS Ground Advantage or UPS Ground.</p>",
             "text_font_size": "body-medium",
-            "button_text": ""
+            "button_text": "",
+            "button_url": "",
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_arrow": false,
+            "heading_tag": "automatic"
           }
         }
       },
@@ -98,52 +139,72 @@
       ],
       "settings": {
         "title": "",
+        "heading_font_size": "heading-medium",
+        "description": "",
+        "align_heading": "text-left",
+        "align_text": "text-left",
         "show_dividers": true,
         "width": "wrapper",
+        "align_columns": "flex-align-top",
         "layout_mobile": "1",
         "color_scheme": "scheme-1",
         "padding_top": 0,
-        "padding_bottom": 0
+        "padding_bottom": 0,
+        "heading_tag": "automatic"
       }
     },
     "shelf": {
       "type": "section-collection",
       "settings": {
         "featured_collection": "",
+        "collection_promo_meta": "collection_featured_promo",
         "heading": "The tools",
         "heading_font_size": "heading-large",
+        "description": "",
+        "text_font_size": "body-medium",
+        "layout": "inline",
         "link_text": "SHOP ALL",
         "link_url": "shopify://collections",
+        "button_type": "btn--primary",
+        "button_size": "",
         "button_style": "btn--text",
         "show_arrow": false,
-        "layout": "inline",
+        "button_bottom_mobile": false,
         "grid": 4,
         "rows": 1,
         "width": "wrapper",
         "layout_mobile": "2",
         "color_scheme": "scheme-1",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "bundles": {
       "type": "section-collection",
       "settings": {
         "featured_collection": "",
+        "collection_promo_meta": "collection_featured_promo",
         "heading": "Bundles",
         "heading_font_size": "heading-large",
+        "description": "",
+        "text_font_size": "body-medium",
+        "layout": "inline",
         "link_text": "SHOP ALL BUNDLES",
         "link_url": "shopify://collections",
+        "button_type": "btn--primary",
+        "button_size": "",
         "button_style": "btn--text",
         "show_arrow": false,
-        "layout": "inline",
+        "button_bottom_mobile": false,
         "grid": 3,
         "rows": 1,
         "width": "wrapper",
         "layout_mobile": "slider",
         "color_scheme": "scheme-4",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "highlight": {
@@ -189,11 +250,16 @@
         "heading": "[Highlighted product]",
         "heading_font_size": "heading-large",
         "text": "<p>Tap a point to read what it is made of and why. [Facts from the spec sheet only.]</p><p><a href=\"/collections\">VIEW THE PRODUCT</a></p>",
+        "text_font_size": "body-medium",
+        "image": "shopify://shop_images/home_product_cc35c50a-9df6-47a2-8134-aca53e80ef44.png",
         "image_width": 55,
         "default_open": true,
         "color_scheme": "scheme-1",
+        "hotspot_color": "",
+        "hotspot_bg": "",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "who_we_are": {
@@ -203,6 +269,7 @@
           "type": "subheading",
           "settings": {
             "subheading": "WHO WE ARE",
+            "pin_to_bottom": false,
             "padding_bottom": 16
           }
         },
@@ -211,14 +278,17 @@
           "settings": {
             "title": "We source, design, and manufacture high-quality products for the budding and experienced gardener",
             "heading_font_size": "heading-large",
-            "padding_bottom": 24
+            "pin_to_bottom": false,
+            "padding_bottom": 24,
+            "heading_tag": "automatic"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>From houseplants, to balconies, to yards, to estates\u2026 and everything in between.</p>",
+            "text": "<p>From houseplants, to balconies, to yards, to estates… and everything in between.</p>",
             "text_font_size": "body-large",
+            "pin_to_bottom": false,
             "padding_bottom": 32
           }
         },
@@ -228,8 +298,11 @@
             "button_text": "ABOUT THE SHOP",
             "button_url": "/pages/about",
             "button_type": "btn--primary",
+            "button_size": "",
             "button_style": "btn--text",
-            "show_arrow": false
+            "show_arrow": false,
+            "pin_to_bottom": false,
+            "padding_bottom": 16
           }
         }
       },
@@ -240,12 +313,28 @@
         "button"
       ],
       "settings": {
+        "image_1": "shopify://shop_images/premium-garden-product.png",
+        "image_shape_enable": false,
+        "image_crop": "none",
+        "image_shape": "scalloped-circle-1",
+        "image_2_shape_enable": false,
+        "image_2_crop": "none",
+        "image_2_shape": "scalloped-circle-1",
         "image_width": "one-half",
+        "product": "",
+        "upsell_color_scheme": "",
+        "upsell_button_type": "btn--secondary",
+        "upsell_button_size": "btn--small",
+        "upsell_button_style": "btn--outline",
+        "text_alignment": "text-left",
         "layout": "",
         "width": "wrapper",
         "height": "image-height",
         "mobile_height": "image-height--mobile",
+        "reverse_blocks": false,
         "color_scheme": "scheme-7",
+        "content_bg": "",
+        "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
         "show_placeholder": true
@@ -255,20 +344,25 @@
       "type": "section-blog",
       "settings": {
         "blog_name": "guides",
+        "source": "latest",
+        "aspect_ratio": 0.7,
         "title": "Guides",
+        "view_all_text": "",
         "heading_font_size": "heading-large",
-        "aspect_ratio": 0.67,
+        "title_font_size": "heading-small",
         "show_tags": true,
-        "show_date": false,
         "show_author": false,
+        "show_date": false,
         "show_button": false,
         "show_comments": false,
+        "width": "wrapper",
         "grid": 3,
         "rows": 1,
-        "width": "wrapper",
         "color_scheme": "scheme-1",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic",
+        "title_tag": "automatic"
       }
     },
     "stay_informed": {
@@ -281,11 +375,20 @@
             "heading": "Stay informed",
             "heading_font_size": "heading-large",
             "text": "<p>Stay up-to-date on new product launches, Guides, and other news. We promise to keep it interesting.</p>",
+            "text_font_size": "body-medium",
+            "text_columns": 1,
             "align_text": "text-left",
             "show_name": false,
             "button_text": "",
             "show_arrow": true,
-            "terms": false
+            "terms": false,
+            "button_type": "btn--primary",
+            "button_size": "",
+            "button_style": "btn--solid",
+            "show_social_links": false,
+            "bg_color": "",
+            "color": "",
+            "heading_tag": "automatic"
           }
         }
       },
@@ -293,8 +396,9 @@
         "newsletter-1"
       ],
       "settings": {
-        "height": "image-height",
         "width": "wrapper",
+        "height": "image-height",
+        "mobile_height": "screen-height-one-half--mobile",
         "color_scheme": "scheme-1",
         "padding_top": 96,
         "padding_bottom": 96
