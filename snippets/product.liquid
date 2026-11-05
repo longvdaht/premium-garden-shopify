@@ -487,13 +487,19 @@
             {%- endif -%}
           {%- else -%}
             <div class="product__slides product__slides--{{ image_size }} product-single__photos">
-              <div
-                class="product__photo product__slide{% if onboarding_product %} svg-placeholder{% else %} product__photo--blank{% endif %} {% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
-              >
-                {%- if onboarding_product -%}
-                  {{ 'product-1' | placeholder_svg_tag }}
-                {%- endif -%}
-              </div>
+              {%- if onboarding_product == false and settings.product_placeholder_image != blank -%}
+                <div class="product__photo product__slide product__photo--placeholder" style="--aspect-ratio: {{ settings.product_placeholder_image.aspect_ratio | default: 0.8 }};">
+                  {%- render 'image', image: settings.product_placeholder_image, sizes: '(min-width: 990px) 58vw, 100vw', loading: 'eager', alt: product.title -%}
+                </div>
+              {%- else -%}
+                <div
+                  class="product__photo product__slide{% if onboarding_product %} svg-placeholder{% else %} product__photo--blank{% endif %} {% if settings.show_image_bg != 'none' %} show-gray-bg{% endif %}"
+                >
+                  {%- if onboarding_product -%}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
 
               {{- gallery_image_badges -}}
             </div>

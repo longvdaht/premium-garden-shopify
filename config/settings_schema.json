@@ -1239,6 +1239,12 @@
         "content": "Images"
       },
       {
+        "type": "image_picker",
+        "id": "product_placeholder_image",
+        "label": "Placeholder image",
+        "info": "Shown for products without photos, on product cards and the product page. Use a 4:5 image, e.g. 1600 × 2000 px."
+      },
+      {
         "type": "range",
         "id": "product_grid_aspect_ratio",
         "min": 0.5,

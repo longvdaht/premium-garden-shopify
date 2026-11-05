@@ -554,8 +554,14 @@
         </div>
       {%- endif -%}
     {%- else -%}
-      {%- comment -%} Show Empty image if product has no media {%- endcomment -%}
-      <div class="product-card__bg image--empty" data-product-image-default></div>
+      {%- comment -%} Show the placeholder image (Theme settings > Product grid) or an empty box if product has no media {%- endcomment -%}
+      {%- if settings.product_placeholder_image != blank -%}
+        <div class="product-card__bg" data-product-image-default>
+          {%- render 'image', image: settings.product_placeholder_image, aspect_ratio: aspect_ratio, sizes: sizes, widths: widths, loading: loading, fetchpriority: 'auto', attributes: image_animations, cover: true, alt: product.title -%}
+        </div>
+      {%- else -%}
+        <div class="product-card__bg image--empty" data-product-image-default></div>
+      {%- endif -%}
     {%- endif -%}
 
     {{- siblings_image -}}
