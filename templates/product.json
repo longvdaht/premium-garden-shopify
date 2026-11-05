@@ -71,8 +71,8 @@
           "settings": {
             "heading": "Specifications",
             "default_open": true,
-            "rows": "Steel type | custom.steel_type\nBlade length | custom.blade_length\nOverall length | custom.overall_length\nHandle material | custom.handle_material\nCutting capacity | custom.cutting_capacity\nFormulation | custom.formulation",
-            "limit": 5,
+            "rows": "Steel type | custom.steel_type\nBlade length | custom.blade_length\nHead length | custom.head_length\nHandle length | custom.handle_length\nOverall length | custom.overall_length\nHandle material | custom.handle_material\nCutting capacity | custom.cutting_capacity\nFormulation | custom.formulation",
+            "limit": 6,
             "show_maker": true,
             "show_sku": true,
             "padding_bottom": 0
