@@ -1,0 +1,183 @@
+<!-- /sections/product-in-use.liquid -->
+{%- comment -%}
+  Potager: "In use" band on the product page (wireframe 03.2).
+  Headline and text come from each product's custom.in_use_headline and
+  custom.in_use_text fields, so every product has its own. The section
+  renders nothing when the product has no headline.
+{%- endcomment -%}
+{%- liquid
+  assign in_use_headline = product.metafields.custom.in_use_headline.value
+  assign in_use_text = product.metafields.custom.in_use_text | metafield_tag
+
+  assign color_scheme = 'color-' | append: section.settings.color_scheme
+  assign animation_anchor = 'InUse--' | append: section.id
+-%}
+
+{%- if in_use_headline != blank -%}
+  {%- style -%}
+    #InUse--{{ section.id }} {
+      --PT: {{ section.settings.padding_top }}px;
+      --PB: {{ section.settings.padding_bottom }}px;
+      --hero-content-width: {{ section.settings.content_width }}%;
+      --hero-content-padding-top: 0px;
+      --hero-content-padding-bottom: 0px;
+    }
+  {%- endstyle -%}
+
+  <section
+    id="InUse--{{ section.id }}"
+    class="index-rte product-in-use section-padding {{ color_scheme }}"
+    data-section-id="{{ section.id }}"
+  >
+    <div class="{{ section.settings.width }}">
+      <div class="hero__content__wrapper text-center">
+        <div class="hero__content hero__content--width hero__content--transparent {{ section.settings.align_text }}">
+          {%- if section.settings.subheading != blank -%}
+            <p
+              class="hero__subheading block-padding"
+              style="--block-padding-bottom: 16px;"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="1"
+            >
+              {{ section.settings.subheading | escape }}
+            </p>
+          {%- endif -%}
+
+          <h2
+            class="hero__title {{ section.settings.heading_font_size }} block-padding"
+            style="--block-padding-bottom: 24px;"
+            data-aos="hero"
+            data-aos-anchor="{{ animation_anchor }}"
+            data-aos-order="2"
+          >
+            {{ in_use_headline | escape }}
+          </h2>
+
+          {%- if in_use_text != blank -%}
+            <div
+              class="hero__rte {{ section.settings.text_font_size }} block-padding"
+              style="--block-padding-bottom: 0px;"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="3"
+            >
+              {{ in_use_text }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product in use",
+  "class": "section-product-in-use",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Headline and text come from the product's In use fields (custom.in_use_headline, custom.in_use_text). Hidden when the product has no headline."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "In use"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_size",
+      "label": "Heading size",
+      "default": "heading-large",
+      "options": [
+        { "value": "heading-small", "label": "Small" },
+        { "value": "heading-medium", "label": "Medium" },
+        { "value": "heading-large", "label": "Large" },
+        { "value": "heading-x-large", "label": "Extra large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_font_size",
+      "label": "Text size",
+      "default": "body-large",
+      "options": [
+        { "value": "body-small", "label": "Small" },
+        { "value": "body-medium", "label": "Medium" },
+        { "value": "body-large", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "align_text",
+      "label": "Text alignment",
+      "default": "text-left",
+      "options": [
+        { "value": "text-left", "label": "Left" },
+        { "value": "text-center", "label": "Center" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper",
+      "options": [
+        { "value": "wrapper", "label": "Normal" },
+        { "value": "wrapper--narrow", "label": "Narrow" },
+        { "value": "wrapper--full-padded", "label": "Full width padded" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product in use"
+    }
+  ]
+}
+{% endschema %}
