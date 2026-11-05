@@ -24,8 +24,8 @@
           "settings": {
             "title": "Write to us",
             "heading_font_size": "heading-x-large",
-            "heading_tag": "h1",
-            "padding_bottom": 24
+            "padding_bottom": 24,
+            "heading_tag": "h1"
           }
         },
         "text": {
@@ -45,8 +45,11 @@
       "settings": {
         "align_text": "text-left",
         "width": "wrapper",
+        "headings_inline": false,
         "content_width": 60,
         "color_scheme": "scheme-6",
+        "overlay_opacity": 0,
+        "show_overlay_text": false,
         "padding_top": 96,
         "padding_bottom": 96,
         "padding_top_content": 0,
@@ -137,12 +140,14 @@
       ],
       "settings": {
         "title": "",
+        "heading_font_size": "heading-large",
         "terms": true,
         "submit_note": "We reply within [one] business day.",
         "width": "wrapper",
         "color_scheme": "scheme-1",
         "padding_top": 96,
-        "padding_bottom": 96
+        "padding_bottom": 96,
+        "heading_tag": "automatic"
       }
     },
     "contact_shipping": {
@@ -152,6 +157,7 @@
           "type": "subheading",
           "settings": {
             "subheading": "Shipping",
+            "pin_to_bottom": false,
             "padding_bottom": 16
           }
         },
@@ -160,7 +166,9 @@
           "settings": {
             "title": "Packed by hand, shipped from [City]",
             "heading_font_size": "heading-large",
-            "padding_bottom": 24
+            "pin_to_bottom": false,
+            "padding_bottom": 24,
+            "heading_tag": "automatic"
           }
         },
         "text": {
@@ -168,6 +176,7 @@
           "settings": {
             "text": "<p>[One line on packing and carriers.]</p>",
             "text_font_size": "body-medium",
+            "pin_to_bottom": false,
             "padding_bottom": 24
           }
         },
@@ -180,6 +189,7 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
+            "pin_to_bottom": false,
             "padding_bottom": 0
           }
         }
@@ -191,13 +201,28 @@
         "button"
       ],
       "settings": {
+        "image_1": "shopify://shop_images/contact.png",
+        "image_shape_enable": false,
+        "image_crop": "none",
+        "image_shape": "scalloped-circle-1",
+        "image_2_shape_enable": false,
+        "image_2_crop": "none",
+        "image_2_shape": "scalloped-circle-1",
         "image_width": "one-half",
+        "product": "",
+        "upsell_color_scheme": "",
+        "upsell_button_type": "btn--secondary",
+        "upsell_button_size": "btn--small",
+        "upsell_button_style": "btn--outline",
         "text_alignment": "text-left",
         "layout": "",
         "width": "wrapper",
         "height": "image-height",
         "mobile_height": "image-height--mobile",
+        "reverse_blocks": false,
         "color_scheme": "scheme-2",
+        "content_bg": "",
+        "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
         "show_placeholder": true
