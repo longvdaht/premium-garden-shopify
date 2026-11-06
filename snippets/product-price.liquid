@@ -23,7 +23,13 @@
     -%}
   </div>
 
-  {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
+  {%- liquid
+    assign show_tax_note = true
+    if block.settings.show_tax_note == false
+      assign show_tax_note = false
+    endif
+  -%}
+  {%- if show_tax_note and cart.taxes_included or show_tax_note and cart.duties_included or show_tax_note and shop.shipping_policy.body != blank -%}
     <div class="product__tax caption rte">
       {%- if cart.duties_included and cart.taxes_included -%}
         {{ 'products.product.duties_and_taxes_included' | t }}

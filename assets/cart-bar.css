@@ -7,7 +7,7 @@
   width: 100%;
   overflow: hidden;
   background: var(--bg);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--hairline);
   opacity: 0;
   visibility: hidden;
   transform: translateY(100%);
@@ -117,4 +117,31 @@
 
 .cart-bar__submit {
   margin-right: 0;
+}
+/* Potager: mobile only, one slim row of price and Add to cart (wireframe 03.5).
+   On desktop the buy box is sticky, so the bar is not used. */
+@media only screen and (min-width: 750px) {
+  .cart-bar {
+    display: none;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .cart-bar__info {
+    display: none;
+  }
+  .cart-bar__form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .cart-bar__product__price {
+    min-width: 0;
+    flex-shrink: 0;
+  }
+  .cart-bar__submit {
+    flex: 1 1 auto;
+  }
+}
+.cart-bar__product__price.product__price .price {
+  font-size: 20px;
 }

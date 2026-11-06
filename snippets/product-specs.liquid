@@ -67,9 +67,10 @@
   <collapsible-elements single="true">
     <div class="product-accordion">
       <details class="accordion" data-collapsible{% if block.settings.default_open %} open="true"{% endif %}>
-        <summary class="accordion__title" data-collapsible-trigger>
+        <summary class="accordion__title product__specs__title" data-collapsible-trigger>
           {{ block.settings.heading | default: 'Specifications' }}
-          {%- render 'icon', name: 'caret-down' -%}
+          <span class="product__specs__icon product__specs__icon--plus">{%- render 'icon', name: 'plus' -%}</span>
+          <span class="product__specs__icon product__specs__icon--minus">{%- render 'icon', name: 'minus' -%}</span>
         </summary>
         <div class="accordion__body" data-collapsible-body{% if block.settings.default_open %} style="height: auto;"{% endif %}>
           <div class="accordion__content" data-collapsible-content>

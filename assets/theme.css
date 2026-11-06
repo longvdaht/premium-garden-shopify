@@ -13551,8 +13551,12 @@ quick-add-product:has(.popout-list--visible),
 
 .radio__legend__label,
 .radio__fieldset__label {
-  font-size: var(--font-body-medium);
-  font-weight: var(--FONT-WEIGHT-BODY-BOLD);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--label);
 }
 
 .form__wrapper--classic .radio__legend__label--text {
@@ -13593,7 +13597,7 @@ quick-add-product:has(.popout-list--visible),
   text-align: center;
   color: inherit;
   background-color: transparent;
-  border: var(--BORDER-THICKNESS) solid var(--text-a35);
+  border: var(--BORDER-THICKNESS) solid var(--text);
   border-radius: min(var(--RADIUS-BUTTON), 20px);
   transition: color 0.5s cubic-bezier(0.225, 0.64, 0.365, 1), background 0.5s cubic-bezier(0.225, 0.64, 0.365, 1), border 0.5s cubic-bezier(0.225, 0.64, 0.365, 1);
 }
@@ -13608,7 +13612,9 @@ quick-add-product:has(.popout-list--visible),
   border-color: var(--text-a35);
 }
 .radio__fieldset .radio__button input:checked ~ label {
-  border-color: var(--accent);
+  border-color: var(--text);
+  background-color: var(--text);
+  color: var(--bg);
 }
 
 .radio__button .option-description {

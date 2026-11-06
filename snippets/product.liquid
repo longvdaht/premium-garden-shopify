@@ -360,6 +360,23 @@
                 {%- endif -%}
               </div>
 
+              {%- if product.media.size > 1 -%}
+                <product-slides-progress
+                  class="product__slides-progress"
+                  data-swiper="swiper-{{ section.id }}"
+                  aria-hidden="true"
+                >
+                  <span class="product__slides-progress__track">
+                    {%- for media in product.media -%}
+                      <span class="product__slides-progress__segment{% if forloop.first %} is-active{% endif %}" data-segment></span>
+                    {%- endfor -%}
+                  </span>
+                  <span class="product__slides-progress__count">
+                    <span data-current>1</span> / {{ product.media.size }}
+                  </span>
+                </product-slides-progress>
+              {%- endif -%}
+
               {%- if gallery_badges_block -%}
                 <div
                   class="product__badges badge-box-container {{ settings.badge_alignment }}{{ gallery_badges_modifier }}{% if settings.badge_font == 'subheading' %} subheading{% else %} {{ settings.badge_font_size }}{% endif %}"
@@ -889,6 +906,7 @@
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-images-swiper.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-slides-progress.js' | asset_url }}" defer="defer"></script>
 
   {%- if product_sticky_enable -%}
     <script src="{{ 'product-sticky.js' | asset_url }}" defer="defer"></script>

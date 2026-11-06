@@ -24,7 +24,8 @@
           "type": "price",
           "settings": {
             "text_font_size": "body-medium",
-            "padding_bottom": 24
+            "padding_bottom": 24,
+            "show_tax_note": false
           }
         },
         "description": {
