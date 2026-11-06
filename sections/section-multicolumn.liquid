@@ -233,6 +233,10 @@
                             endunless
                           -%}
 
+                          {%- if block.settings.subheading != blank -%}
+                            <p class="column__subheading subheading">{{ block.settings.subheading | escape }}</p>
+                          {%- endif -%}
+
                           <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
                             {{- title -}}
                           </{{ heading_tag }}>
@@ -346,6 +350,10 @@
                               endunless
                             -%}
 
+                            {%- if block.settings.subheading != blank -%}
+                              <p class="column__subheading subheading">{{ block.settings.subheading | escape }}</p>
+                            {%- endif -%}
+
                             <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
                               {{- title -}}
                             </{{ heading_tag }}>
@@ -420,6 +428,10 @@
                               endunless
                             -%}
 
+                            {%- if block.settings.subheading != blank -%}
+                              <p class="column__subheading subheading">{{ block.settings.subheading | escape }}</p>
+                            {%- endif -%}
+
                             <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
                               {{ title }}
                             </{{ heading_tag }}>
@@ -454,6 +466,10 @@
                             assign heading_tag = block.settings.heading_tag
                           endunless
                         -%}
+
+                        {%- if block.settings.subheading != blank -%}
+                          <p class="column__subheading subheading">{{ block.settings.subheading | escape }}</p>
+                        {%- endif -%}
 
                         <{{ heading_tag }} class="column__heading {{ block.settings.heading_font_size }}">
                           {{ title }}
@@ -840,6 +856,11 @@
         },
         {
           "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
           "id": "title",
           "label": "Heading"
         },
@@ -1096,6 +1117,11 @@
         {
           "type": "header",
           "content": "Typography"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
         },
         {
           "type": "text",
@@ -2251,6 +2277,11 @@
         },
         {
           "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
           "id": "title",
           "label": "Heading",
           "default": "Add a title or tagline"
@@ -2848,7 +2879,11 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "aside", "footer"]
+    "groups": [
+      "header",
+      "aside",
+      "footer"
+    ]
   }
 }
 {% endschema %}

@@ -114,6 +114,19 @@
     },
     {
       "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "info": "Crops the image frame. Original keeps the uploaded image's own shape.",
+      "default": "original",
+      "options": [
+        {"value": "original", "label": "Original"},
+        {"value": "portrait", "label": "Portrait 4:5"},
+        {"value": "landscape", "label": "Landscape 3:2"},
+        {"value": "square", "label": "Square"}
+      ]
+    },
+    {
+      "type": "select",
       "id": "image_width",
       "label": "Image width",
       "default": "one-half",

@@ -337,7 +337,8 @@
         "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
-        "show_placeholder": true
+        "show_placeholder": true,
+        "image_ratio": "portrait"
       }
     },
     "guides": {

@@ -48,6 +48,21 @@
     assign only_images = true
   endif
 
+  # Potager: underline the menu link for the part of the site being viewed.
+  # Shop covers product and collection pages; a blog link covers its articles.
+  assign nav_active = false
+  if link.active or link.child_active
+    assign nav_active = true
+  elsif link.url == routes.all_products_collection_url
+    if template.name == 'product' or template.name == 'collection'
+      assign nav_active = true
+    endif
+  elsif link.type == 'blog_link' and template.name == 'article'
+    if link.object.handle == blog.handle
+      assign nav_active = true
+    endif
+  endif
+
   assign item_tag = 'div'
   if expands
     assign item_tag = 'hover-disclosure'
@@ -71,7 +86,7 @@
 -%}
 
 <{{ item_tag }}
-  class="menu__item {{ classes }}"
+  class="menu__item {{ classes }}{% if nav_active %} is-active{% endif %}"
   {% if expands %}
     aria-haspopup="true"
     aria-expanded="false"
@@ -84,6 +99,7 @@
     href="{{ link.url }}"
     data-top-link
     class="navlink navlink--toplevel{% if highlight_item == link_title_lowercase %} navlink--highlight{% endif %}"
+    {% if link.current %}aria-current="page"{% endif %}
   >
     <span class="navtext">{{ link.title | strip_html | escape }}</span>
   </a>

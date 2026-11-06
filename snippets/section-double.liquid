@@ -169,6 +169,18 @@
     assign image_aspect_ratio = ''
     assign image_2_aspect_ratio = ''
 
+    case section.settings.image_ratio
+      when 'portrait'
+        assign image_aspect_ratio = 0.8
+        assign image_2_aspect_ratio = 0.8
+      when 'landscape'
+        assign image_aspect_ratio = 1.5
+        assign image_2_aspect_ratio = 1.5
+      when 'square'
+        assign image_aspect_ratio = 1
+        assign image_2_aspect_ratio = 1
+    endcase
+
     if overlapping_images
       unless image_shape_enable
         assign image_aspect_ratio = 0.765
@@ -221,6 +233,7 @@
       shape: image_shape,
       crop: image_crop,
       shape_svg: image_shape_svg,
+      aspect_ratio: image_aspect_ratio,
       sizes: sizes,
       desktop_height: desktop_height,
       mobile_height: mobile_height

@@ -238,3 +238,12 @@
 .text-center .column__icon {
   padding-inline: var(--grid-inner);
 }
+/* Potager: small label above a column title, and room between stacked columns */
+.column__subheading {
+  margin: 0 0 var(--space-1);
+}
+@media only screen and (max-width: 749px) {
+  .multicolumn:not(.grid--mobile-slider) {
+    row-gap: var(--space-4);
+  }
+}

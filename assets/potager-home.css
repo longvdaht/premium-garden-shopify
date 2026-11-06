@@ -65,6 +65,7 @@
   .index-hero .hero__wrapper {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   .index-hero .hero__images {
     aspect-ratio: 4/5;
@@ -604,7 +605,6 @@
 }
 
 .index-image-text .image__hero__frame {
-  aspect-ratio: 4/5;
   border-radius: 0;
   position: relative;
   width: 100%;
@@ -658,7 +658,6 @@
 }
 
 .index-image-text .hero__subheading {
-  color: var(--ink-muted);
   margin: 0;
 }
 

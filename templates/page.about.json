@@ -332,7 +332,8 @@
         "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
-        "show_placeholder": true
+        "show_placeholder": true,
+        "image_ratio": "landscape"
       }
     },
     "about_onward": {
@@ -352,7 +353,8 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
-            "heading_tag": "automatic"
+            "heading_tag": "automatic",
+            "subheading": "Shop"
           }
         },
         "guides": {
@@ -369,7 +371,8 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
-            "heading_tag": "automatic"
+            "heading_tag": "automatic",
+            "subheading": "Guides"
           }
         },
         "faq": {
@@ -386,7 +389,8 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
-            "heading_tag": "automatic"
+            "heading_tag": "automatic",
+            "subheading": "Help"
           }
         }
       },

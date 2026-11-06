@@ -10426,10 +10426,13 @@ body:has(.header-floating):has(.main-content > .shopify-section.section-floating
 }
 
 .hero__title,
-.hero__subheading,
 .hero__rte,
 .hero__description {
   color: var(--text);
+}
+
+.hero__subheading {
+  color: var(--label, var(--text));
 }
 
 .pre-hero__subheading,
