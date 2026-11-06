@@ -160,15 +160,54 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .icon.ds-icon :is(circle,ellipse,g,line,path,polygon,polyline,rect){fill:none;stroke:currentColor;stroke-width:1.5;}
 .icon.ds-icon{--icon-size:20px;}
 
-/* Collection title: the page headline (display-xl). The section renders it
-   with the theme's h3 size and has no size setting. */
-.collection__title .hero__title{font-size:var(--font-heading-x-large);line-height:1.05;letter-spacing:-0.01em}
-@media only screen and (max-width:767px){.collection__title .hero__title{line-height:1.1}}
+/* Collection title & subtitle (02.1): the page headline (display-xl) and tagline sub-title */
+.collection-image-with-title{padding-top:0;padding-bottom:0}
+.collection-image-with-title .hero__content__holder{width:100%;max-width:none;margin:0;padding:0}
+.collection-image-with-title .collection__title--no-image{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;text-align:left;width:100%;max-width:none;min-height:280px;margin:0;padding-top:var(--space-6);padding-bottom:var(--space-5);padding-left:var(--gutter-desktop);padding-right:var(--gutter-desktop);background:var(--surface);box-sizing:border-box}
+.collection-image-with-title .collection__title .hero__title{font-size:var(--font-heading-x-large);line-height:1.05;letter-spacing:-0.01em;margin:0 0 var(--space-2) 0;text-align:left;color:var(--ink)}
+.collection-image-with-title .collection__title--no-image .hero__title{margin-top:0}
+.collection-image-with-title .collection__title .hero__description{font-family:var(--font-sans);font-size:16px;line-height:1.5;text-align:left;color:var(--ink-muted);margin:0}
+.collection-image-with-title .collection__title .hero__description p{margin:0;text-align:left}
+@media only screen and (max-width:767px){
+  .collection-image-with-title .collection__title--no-image{min-height:180px;padding-top:var(--space-5);padding-bottom:var(--space-4);padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile)}
+  .collection-image-with-title .collection__title .hero__title{line-height:1.1}
+}
 
-/* Product card (theme default card, used on collections): Inter name, muted
-   tabular price. No badges, no hover swap, no quick add (Theme settings). */
-.product-card__title{font-weight:500}
-.product-card .price,.product-card [class*="price"]{color:var(--ink-muted)}
+/* Filter and sort bar (02.2): Full-width bar with hairlines, uppercase Inter text */
+.filters__nav{background:var(--surface);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.popout--group{display:flex}
+@media only screen and (min-width:750px){
+  .popout--group{width:var(--sidebar-width);flex:0 0 var(--sidebar-width)}
+}
+.popout--group .popout__toggle,
+.popout--sort .popout__toggle{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);padding:18px var(--gutter-desktop)}
+.popout--group .popout__toggle{width:100%;justify-content:flex-start;border-right:1px solid var(--hairline);box-sizing:border-box}
+.popout--sort .popout__toggle{border-left:1px solid var(--hairline)}
+@media only screen and (max-width:767px){
+  .popout--group .popout__toggle,
+  .popout--sort .popout__toggle{padding:14px var(--gutter-mobile)}
+}
+
+/* Collection products & sidebar container (02.2) */
+.collection-products .collection__products{background:var(--surface);box-sizing:border-box}
+.collection__sidebar{border-right:1px solid var(--hairline);background:var(--surface)}
+@media only screen and (min-width:750px){
+  .collection__sidebar__slider .collection__sidebar{padding-left:var(--gutter-desktop)}
+}
+/* Note 02.2: Price filter removed */
+.filter-group:has(.filter__price){display:none}
+.filter-group__heading{font-family:var(--font-sans);font-size:14px;font-weight:600;letter-spacing:0;color:var(--ink);border-bottom:none;padding:12px 0}
+.filter-group__heading span{color:var(--ink)}
+.sidebar__item :is(a,label){font-family:var(--font-sans);font-size:14px;color:var(--ink)}
+.sidebar__item :is(a,label)::after{width:18px;height:18px;border:1px solid var(--ink);border-radius:var(--radius-1);background-color:var(--surface)}
+.sidebar__item.link--remove a::after,
+.sidebar__item input:checked ~ label::after{background:var(--ink) url("potager-check.svg") center/12px no-repeat;border-color:var(--ink)}
+
+/* Product card (02.3): Inter name, muted tabular price, 4:5 image, square corners */
+.product-card__content{padding-top:12px}
+.product-card__title{font-family:var(--font-sans);font-size:15px;font-weight:500;line-height:1.4;color:var(--ink)}
+.product-card .price,.product-card [class*="price"]{font-family:var(--font-sans);font-size:15px;color:var(--ink-muted);font-feature-settings:"tnum"}
+.product-card__image,.product-card__image-link{border-radius:0}
 
 /* Header (Style Guide p.07 + Nav note): Bone bar, hairline bottom edge (the
    theme separator at 15% green = the hairline), no shadow. Wordmark left,

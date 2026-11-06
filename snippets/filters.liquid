@@ -73,6 +73,7 @@
     {%- endunless -%}
 
     {%- for filter in filters_default -%}
+      {%- if filter.type == 'price_range' -%}{%- continue -%}{%- endif -%}
       {%- liquid
         assign filter_check_active = filter.values | where: 'active', false
         assign filter_check_count = filter.values | where: 'count', 0
