@@ -72,6 +72,8 @@
           assign animation_order = animation_order | plus: 1
           assign title = block.settings.title
           assign placeholder = title
+          assign field_class = ''
+          assign own_placeholder = block.settings.placeholder
 
           assign required = ''
           if block.settings.required
@@ -82,6 +84,19 @@
               assign has_required_field = true
             endunless
           endif
+
+          # Potager: a field's own placeholder is shown; otherwise the label-copy placeholder stays hidden
+          if own_placeholder != blank
+            assign placeholder = own_placeholder
+            assign field_class = ' field--placeholder'
+          endif
+
+          capture field_hint
+            if block.settings.info != blank
+              assign field_hint_text = block.settings.info | escape
+              echo '<p class="custom-form__hint">' | append: field_hint_text | append: '</p>'
+            endif
+          endcapture
         -%}
 
         {%- case block.type -%}
@@ -96,7 +111,7 @@
               <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <input
                 type="email"
-                class="input field"
+                class="input field{{ field_class }}"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
                 name="contact[email]"
                 placeholder="{{ placeholder }}"
@@ -104,6 +119,7 @@
                 autocapitalize="off"
                 {{ required }}
               >
+              {{ field_hint }}
             </div>
 
           {%- when 'body' -%}
@@ -118,11 +134,12 @@
               <textarea
                 rows="10"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
-                class="contactFormMessage textarea field"
+                class="contactFormMessage textarea field{{ field_class }}"
                 name="contact[body]"
                 placeholder="{{ placeholder }}"
                 {{ required -}}
               ></textarea>
+              {{ field_hint }}
             </div>
 
           {%- when 'text' -%}
@@ -136,7 +153,7 @@
               <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
               <input
                 type="text"
-                class="contactFormText input field"
+                class="contactFormText input field{{ field_class }}"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
                 name="contact[{{ title | handleize | default: 'text' }}]"
                 placeholder="{{ placeholder }}"
@@ -144,6 +161,7 @@
                 value=""
                 {{ required }}
               >
+              {{ field_hint }}
             </div>
 
           {%- when 'textarea' -%}
@@ -158,11 +176,12 @@
               <textarea
                 rows="10"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
-                class="contactFormMessage textarea field"
+                class="contactFormMessage textarea field{{ field_class }}"
                 name="contact[{{ title | handleize | default: 'textarea' }}]"
                 placeholder="{{ placeholder }}"
                 {{ required -}}
               ></textarea>
+              {{ field_hint }}
             </div>
 
           {%- when 'telephone' -%}
@@ -177,12 +196,13 @@
               <input
                 type="tel"
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
-                class="contactFormPhone input field"
+                class="contactFormPhone input field{{ field_class }}"
                 name="contact[telephone]"
                 placeholder="{{ placeholder }}"
                 value=""
                 {{ required }}
               >
+              {{ field_hint }}
             </div>
 
           {%- when 'formHeading' -%}
@@ -347,11 +367,13 @@
               {%- endif -%}
               <select
                 id="Form-{{ section.id }}-{{ forloop.index0 }}"
-                class="contactFormSelect select field"
+                class="contactFormSelect select field{{ field_class }}"
                 name="contact[{{ title | handleize | default: 'select' }}]"
                 {{ required }}
               >
-                {%- if required != blank -%}
+                {%- if own_placeholder != blank -%}
+                  <option value="" disabled selected>{{ own_placeholder | escape }}</option>
+                {%- elsif required != blank -%}
                   <option value="">{{ 'contact.form.select_default' | t }}</option>
                 {%- endif -%}
                 {%- if block.settings['label-one'] != blank -%}
@@ -373,6 +395,7 @@
                   <option value="{{ block.settings.label-six }}">{{ block.settings['label-six'] }}</option>
                 {%- endif -%}
               </select>
+              {{ field_hint }}
             </fieldset>
           {%- else -%}
         {%- endcase -%}
@@ -688,6 +711,18 @@
           "id": "required",
           "label": "Required",
           "default": true
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         }
       ]
     },
@@ -707,6 +742,18 @@
           "id": "required",
           "label": "Required",
           "default": true
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         }
       ]
     },
@@ -726,6 +773,18 @@
           "id": "required",
           "label": "Required",
           "default": false
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         }
       ]
     },
@@ -745,6 +804,18 @@
           "id": "required",
           "label": "Required",
           "default": false
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         }
       ]
     },
@@ -764,6 +835,18 @@
           "id": "required",
           "label": "Required",
           "default": false
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         }
       ]
     },
@@ -827,6 +910,18 @@
           "id": "required",
           "label": "Required",
           "default": false
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "info": "Shown inside an empty field. Leave blank to show nothing."
+        },
+        {
+          "type": "text",
+          "id": "info",
+          "label": "Help text",
+          "info": "Short note shown under the field."
         },
         {
           "type": "header",

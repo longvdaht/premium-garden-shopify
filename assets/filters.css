@@ -382,5 +382,5 @@
    a 1em box filled with --accent and an inset shadow. */
 :is(.link--remove,.link--add,.link--disable) :is(a,label){padding-left:32px}
 .sidebar__item :is(a,label)::after{width:20px;height:20px;border:1px solid var(--ink);border-radius:var(--radius-1);background-color:var(--surface)}
-.sidebar__item.link--remove a::after,.sidebar__item input:checked ~ label::after{background:var(--ink) url("potager-check.svg") center/14px no-repeat;border-color:var(--ink)}
+.sidebar__item.link--remove a::after,.sidebar__item input:checked ~ label::after{background:var(--ink) var(--potager-icon-check) center/14px no-repeat;border-color:var(--ink)}
 .sidebar__item.link--disable :is(a,label)::after{border-color:var(--hairline);background-color:var(--surface-sunk)}

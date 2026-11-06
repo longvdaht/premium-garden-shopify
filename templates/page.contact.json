@@ -70,14 +70,16 @@
           "type": "email",
           "settings": {
             "title": "Email",
-            "required": true
+            "required": true,
+            "placeholder": "you@example.com"
           }
         },
         "order": {
           "type": "text",
           "settings": {
-            "title": "Order number (optional)",
-            "required": false
+            "title": "Order number",
+            "required": false,
+            "info": "Optional. Starts with #."
           }
         },
         "topic": {
@@ -90,7 +92,8 @@
             "label-three": "Returns",
             "label-four": "A tool or its care",
             "label-five": "Something else",
-            "label-six": ""
+            "label-six": "",
+            "placeholder": "Choose a topic"
           }
         },
         "message": {

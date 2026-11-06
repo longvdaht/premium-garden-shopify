@@ -34,10 +34,12 @@
 .index-contact .custom-form__label{display:block;margin:0 0 var(--space-1);font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--label)}
 .index-contact .custom-form__block--group{border:0;padding:0;min-width:0}
 .index-contact :is(input.field,textarea.field,select.field){box-sizing:border-box;width:100%;height:auto;margin:0;padding:14px var(--space-2);border:1px solid var(--ink);border-radius:var(--radius-1);background:var(--surface);font-family:var(--font-sans);font-size:16px;line-height:1.6;color:var(--ink);box-shadow:none}
-.index-contact :is(input.field,textarea.field)::placeholder{color:transparent;-webkit-text-fill-color:transparent}
+.index-contact :is(input.field,textarea.field):not(.field--placeholder)::placeholder{color:transparent;-webkit-text-fill-color:transparent}
+.index-contact .field--placeholder::placeholder{color:var(--ink-muted);-webkit-text-fill-color:var(--ink-muted);opacity:1}
+.custom-form__hint{margin:var(--space-1) 0 0;font-size:13px;line-height:1.5;color:var(--ink-muted)}
 .index-contact :is(input.field,textarea.field,select.field):focus{border:1px solid var(--ink)}
-.index-contact textarea.field{min-height:180px;resize:vertical}
-.index-contact select.field{appearance:none;-webkit-appearance:none;padding-right:48px;background:var(--surface) url("potager-chevron-down.svg") right 16px center/20px no-repeat;cursor:pointer}
+.index-contact textarea.field{height:160px;min-height:120px;resize:vertical}
+.index-contact select.field{appearance:none;-webkit-appearance:none;padding-right:48px;background:var(--surface) var(--potager-icon-chevron-down) right 16px center/20px no-repeat;cursor:pointer}
 .index-contact :is(input.field,textarea.field,select.field):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
 .index-contact .checkbox label{font-size:16px;line-height:1.5;color:var(--ink)}
 /* Send message + reply note */
