@@ -1072,7 +1072,9 @@
 {{ 'theme.css' | asset_url | stylesheet_tag }}
 {%- comment -%} Keep the core Potager styles in the main stylesheet and load homepage-only overrides separately. {%- endcomment -%}
 {{ 'potager.css' | asset_url | stylesheet_tag }}
-{{ 'potager-home.css' | asset_url | stylesheet_tag }}
+{%- if template.name == 'index' or template.name == 'product' -%}
+  {{ 'potager-home.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
 {%- comment -%}
   Potager icon files as absolute URLs. Stylesheets that Shopify may inline into the page
   (component CSS) cannot use relative url()s, so they use these variables instead.

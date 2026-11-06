@@ -929,14 +929,6 @@
   content: "How the blades are made";
 }
 
-.blog-section .article__text-wrapper::after {
-  content: "[0] min read";
-  display: block;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  color: var(--ink-muted);
-  margin-top: 4px;
-}
 
 @media (max-width: 768px) {
   .blog-section .blog-listing {
