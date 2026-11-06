@@ -434,9 +434,9 @@ dialog[closing] .product-modal__outer {
 }
 
 /* Potager: quantity stepper ( − | 1 | + ) with hairline dividers (style guide ds-qty) */
-.product__block--buttons .product-form__quantity {
-  width: 136px;
-  flex-shrink: 0;
+.product__block--buttons .product__submit__item--inline {
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: var(--space-2);
 }
 .product__block--buttons .quantity__button {
   width: 44px;
@@ -486,4 +486,16 @@ dialog[closing] .product-modal__outer {
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   color: var(--ink-muted);
+}
+
+/* Potager: the Mosaic, Grid and Stacked galleries show every photo on desktop
+   and are swiped on mobile (with the slide counter), so the slider arrows
+   have no use there */
+.product__wrapper--grid-1 .product__slides .swiper-button-prev,
+.product__wrapper--grid-1 .product__slides .swiper-button-next,
+.product__wrapper--grid-2 .product__slides .swiper-button-prev,
+.product__wrapper--grid-2 .product__slides .swiper-button-next,
+.product__wrapper--stacked .product__slides .swiper-button-prev,
+.product__wrapper--stacked .product__slides .swiper-button-next {
+  display: none;
 }
