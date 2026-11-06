@@ -213,55 +213,55 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .product-card__image,.product-card__image-link{border-radius:0}
 
 /* Guides (blog listing) (04.1, 04.2, 04.3, 04.4) */
-.template-blog .blog-section{background:var(--surface);max-width:none;width:100%;margin:0;padding-left:0;padding-right:0}
-.template-blog .blog-section .wrapper--full-padded{max-width:none;width:100%;box-sizing:border-box;padding-left:var(--gutter-desktop);padding-right:var(--gutter-desktop)}
+.blog-section:not(.wrapper){background:var(--surface);max-width:none;width:100%;margin:0;padding-left:0;padding-right:0}
+.blog-section .wrapper--full-padded{max-width:none;width:100%;box-sizing:border-box;padding-left:var(--gutter-desktop);padding-right:var(--gutter-desktop)}
 @media only screen and (max-width:767px){
-  .template-blog .blog-section .wrapper--full-padded{padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile)}
+  .blog-section .wrapper--full-padded{padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile)}
 }
 
 /* 04.1 Blog title: restyled to display-xl (same as collection title), flush left */
-.template-blog .blog-section .blog__title{font-family:var(--font-display);font-size:var(--font-heading-x-large);line-height:1.05;letter-spacing:-0.01em;text-align:left;color:var(--ink);margin:0;padding-top:var(--space-6);padding-bottom:var(--space-4)}
+.blog-section:not(.wrapper) .blog__title{font-family:var(--font-display);font-size:var(--font-heading-x-large);line-height:1.05;letter-spacing:-0.01em;text-align:left;color:var(--ink);margin:0;padding-top:var(--space-6);padding-bottom:var(--space-4)}
 @media only screen and (max-width:767px){
-  .template-blog .blog-section .blog__title{line-height:1.1;padding-top:var(--space-5);padding-bottom:var(--space-3)}
+  .blog-section:not(.wrapper) .blog__title{line-height:1.1;padding-top:var(--space-5);padding-bottom:var(--space-3)}
 }
 
 /* 04.2 Section headers / tag navigation: Full-width border bar, left-aligned, Inter 13px caps, 2px scarlet underline */
-.template-blog .blog-section .inline-nav{display:flex;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:calc(var(--space-4) + 8px);margin:0 calc(-1 * var(--gutter-desktop)) var(--space-5) calc(-1 * var(--gutter-desktop));padding:var(--space-2) var(--gutter-desktop);text-align:left;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
-.template-blog .blog-section .inline-nav::-webkit-scrollbar{display:none}
-.template-blog .blog-section .inline-nav li{display:inline-flex;flex-shrink:0;margin:0;padding:0}
-.template-blog .blog-section .inline-nav li a{font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);padding:var(--space-1) 0;position:relative;text-decoration:none}
-.template-blog .blog-section .inline-nav li a::after{content:"";position:absolute;bottom:calc(-1 * var(--space-2) - 1px);left:0;width:100%;height:2px;background:var(--signal);opacity:0;transform:scaleX(0);transition:transform 0.2s ease,opacity 0.2s ease}
-.template-blog .blog-section .inline-nav li.inline-nav--active a::after,
-.template-blog .blog-section .inline-nav li a:hover::after{opacity:1;transform:scaleX(1)}
-.template-blog .blog-section .inline-nav li.inline-nav--active a{color:var(--ink)}
+.blog-section .inline-nav{display:flex;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:calc(var(--space-4) + 8px);margin:0 calc(-1 * var(--gutter-desktop)) var(--space-5) calc(-1 * var(--gutter-desktop));padding:var(--space-2) var(--gutter-desktop);text-align:left;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.blog-section .inline-nav::-webkit-scrollbar{display:none}
+.blog-section .inline-nav li{display:inline-flex;flex-shrink:0;margin:0;padding:0}
+.blog-section .inline-nav li a{font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);padding:var(--space-1) 0;position:relative;text-decoration:none}
+.blog-section .inline-nav li a::after{content:"";position:absolute;bottom:calc(-1 * var(--space-2) - 1px);left:0;width:100%;height:2px;background:var(--signal);opacity:0;transform:scaleX(0);transition:transform 0.2s ease,opacity 0.2s ease}
+.blog-section .inline-nav li.inline-nav--active a::after,
+.blog-section .inline-nav li a:hover::after{opacity:1;transform:scaleX(1)}
+.blog-section .inline-nav li.inline-nav--active a{color:var(--ink)}
 @media only screen and (max-width:767px){
-  .template-blog .blog-section .inline-nav{margin-left:calc(-1 * var(--gutter-mobile));margin-right:calc(-1 * var(--gutter-mobile));padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile);gap:var(--space-4)}
+  .blog-section .inline-nav{margin-left:calc(-1 * var(--gutter-mobile));margin-right:calc(-1 * var(--gutter-mobile));padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile);gap:var(--space-4)}
 }
 
 /* 04.3 Article grid & card */
-.template-blog .blog-section .blog-listing{margin:0;gap:var(--space-4) var(--space-3)}
-.template-blog .blog-section .article{display:flex;flex-direction:column}
-.template-blog .blog-section .article__image__outer{border-radius:0;overflow:hidden}
-.template-blog .blog-section .article__image,.template-blog .blog-section .article__image-link{border-radius:0}
-.template-blog .blog-section .article .article__tags{position:static;padding:var(--space-2) 0 var(--space-1) 0;margin:0}
-.template-blog .blog-section .article .article__tag{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--label);background:transparent;padding:0;margin:0;border-radius:0;text-decoration:none}
-.template-blog .blog-section .article__text-wrapper{padding:0}
-.template-blog .blog-section .article__title{margin:0 0 var(--space-1) 0}
-.template-blog .blog-section .article__title a{font-family:var(--font-display);font-size:var(--font-heading-small);font-weight:400;line-height:1.25;color:var(--ink);text-decoration:none}
-.template-blog .blog-section .article__title a:hover{color:var(--ink-hover)}
-.template-blog .blog-section .article__meta{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--ink-muted);margin:0}
-.template-blog .blog-section .article__meta time{color:var(--ink-muted)}
-.template-blog .blog-section .article__excerpt{display:none}
+.blog-section .blog-listing{margin:0;gap:var(--space-4) var(--space-3)}
+.blog-section .article{display:flex;flex-direction:column}
+.blog-section .article__image__outer{border-radius:0;overflow:hidden}
+.blog-section .article__image,.blog-section .article__image-link{border-radius:0}
+.blog-section .article .article__tags{position:static;padding:var(--space-2) 0 var(--space-1) 0;margin:0}
+.blog-section .article .article__tag{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--label);background:transparent;padding:0;margin:0;border-radius:0;text-decoration:none}
+.blog-section .article__text-wrapper{padding:0}
+.blog-section .article__title{margin:0 0 var(--space-1) 0}
+.blog-section .article__title a{font-family:var(--font-display);font-size:var(--font-heading-small);font-weight:400;line-height:1.25;color:var(--ink);text-decoration:none}
+.blog-section .article__title a:hover{color:var(--ink-hover)}
+.blog-section .article__meta{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--ink-muted);margin:0}
+.blog-section .article__meta time{color:var(--ink-muted)}
+.blog-section .article__excerpt{display:none}
 
 /* 04.4 Pagination */
-.template-blog .blog-section .pagination-custom{border-top:1px solid var(--hairline);margin-top:var(--space-6);padding:var(--space-4) 0}
-.template-blog .blog-section .pagination-custom__inner{gap:var(--space-3);margin:0 var(--space-3)}
-.template-blog .blog-section .pagination-custom__page,
-.template-blog .blog-section .pagination-custom__prev,
-.template-blog .blog-section .pagination-custom__next{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);border-radius:0;box-shadow:none;text-decoration:none;padding:var(--space-1) var(--space-2)}
-.template-blog .blog-section .pagination-custom__page--active{border-bottom:2px solid var(--signal);box-shadow:none}
-.template-blog .blog-section .pagination-custom__prev .icon,
-.template-blog .blog-section .pagination-custom__next .icon{display:none}
+.blog-section .pagination-custom{border-top:1px solid var(--hairline);margin-top:var(--space-6);padding:var(--space-4) 0}
+.blog-section .pagination-custom__inner{gap:var(--space-3);margin:0 var(--space-3)}
+.blog-section .pagination-custom__page,
+.blog-section .pagination-custom__prev,
+.blog-section .pagination-custom__next{font-family:var(--font-sans);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);border-radius:0;box-shadow:none;text-decoration:none;padding:var(--space-1) var(--space-2)}
+.blog-section .pagination-custom__page--active{border-bottom:2px solid var(--signal);box-shadow:none}
+.blog-section .pagination-custom__prev .icon,
+.blog-section .pagination-custom__next .icon{display:none}
 
 /* Header (Style Guide p.07 + Nav note): Bone bar, hairline bottom edge (the
    theme separator at 15% green = the hairline), no shadow. Wordmark left,
