@@ -111,6 +111,8 @@
    turns to minus; on mobile the topics scroll sideways above the questions. */
 .section-sidebar .section-sidebar__aside{flex:0 0 33.333%;max-width:33.333%}
 .section-sidebar .section-sidebar__content{flex:1 1 auto}
+@media only screen and (min-width: 750px){.section-sidebar .section-sidebar__content{padding:0 calc(var(--gap) / 2) 0 calc(var(--space-5) - var(--gap) / 2)}}
+sidebar-anchors{display:block}
 .section-sidebar .widget__links{margin:0;padding:0;list-style:none}
 .section-sidebar .widget__links li{margin:0;border-bottom:1px solid var(--hairline)}
 .section-sidebar .widget__link{display:block;width:100%;padding:12px 0;font-family:var(--font-sans);font-size:12px;font-weight:500;line-height:1.6;letter-spacing:.14em;text-transform:uppercase;text-align:left;color:var(--ink)}

@@ -11,6 +11,10 @@
   assign color_scheme = 'color-' | append: section.settings.color_scheme
   assign animation_anchor = unique
   assign animation_order = 1
+  assign heading_tag = 'h2'
+  unless section.settings.heading_tag == 'automatic' or section.settings.heading_tag == blank
+    assign heading_tag = section.settings.heading_tag
+  endunless
 -%}
 
 {%- render 'stylesheet', name: 'sidebar.css' -%}
@@ -39,18 +43,14 @@
 
         {%- if block.type == 'header' and title != blank -%}
           <li>
-            <scroll-spy data-scroll-spy-container="#{{ widget_id }}">
-              <scroll-to-element>
-                <button type="button" class="widget__link{% if first_element_flag %} is-selected{% endif %}"
-                  data-scroll-to="#{{ widget_id }}"
-                  data-scroll-spy="#{{ widget_id }}"
-                  data-scroll-spy-desktop
-                  data-scroll-trigger-point="top"
-                  {{ block.shopify_attributes }}>
-                  {{- title -}}
-                </button>
-              </scroll-to-element>
-            </scroll-spy>
+            <scroll-to-element>
+              <button type="button" class="widget__link{% if first_element_flag %} is-selected{% endif %}"
+                data-scroll-to="#{{ widget_id }}"
+                data-anchor-target="#{{ widget_id }}"
+                {{ block.shopify_attributes }}>
+                {{- title -}}
+              </button>
+            </scroll-to-element>
           </li>
           {%- assign first_element_flag = false -%}
         {%- endif -%}
@@ -61,7 +61,7 @@
       {{ content_html }}
 
       {%- if block.type == 'header' and title != blank -%}
-        <h6 class="section-sidebar__title {{ section.settings.heading_font_size }}" id="{{ widget_id }}" {{ block.shopify_attributes }}>{{ title }}</h6>
+        <{{ heading_tag }} class="section-sidebar__title {{ section.settings.heading_font_size }}" id="{{ widget_id }}" {{ block.shopify_attributes }}>{{ title }}</{{ heading_tag }}>
       {%- endif -%}
 
       {%- if block.type == 'text' and text != blank -%}
@@ -69,14 +69,14 @@
       {%- endif -%}
 
       {%- if block.type == 'accordion' and title != blank and content != blank -%}
-        <details class="accordion" data-collapsible {{ block.shopify_attributes }}>
+        <details class="accordion" data-collapsible{% if block.settings.open %} open="true"{% endif %} {{ block.shopify_attributes }}>
           <summary class="accordion__title subheading" data-collapsible-trigger>
             <span>{{ title }}</span>
 
             {%- render 'icon', name: 'caret-down'-%}
           </summary>
 
-          <div class="accordion__body rte" data-collapsible-body>
+          <div class="accordion__body rte" data-collapsible-body{% if block.settings.open %} style="height: auto;"{% endif %}>
             <div class="accordion__content" data-collapsible-content>
               {{ content }}
             </div>
@@ -116,7 +116,7 @@
 
 {%- if aside_html != '' and anchor_links -%}
   <script src="{{ 'scroll-to-element.js' | asset_url }}" defer="defer"></script>
-  <script src="{{ 'scroll-spy.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'sidebar-anchors.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
 <section
@@ -137,9 +137,11 @@
             data-aos-order="{{ animation_order }}"
           >
             <div class="section-sidebar__widget">
+              {%- if anchor_links -%}<sidebar-anchors>{%- endif -%}
               <ul class="widget__links widget__links--secondary{% unless anchor_links %} desktop{% endunless %}">
                 {{ aside_html | replace: '#@#@', 'widget__link' | replace: '@#@#', '' }}
               </ul>
+              {%- if anchor_links -%}</sidebar-anchors>{%- endif -%}
 
               {%- unless anchor_links -%}
                 <popout-select class="select-popout mobile">

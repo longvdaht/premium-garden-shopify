@@ -58,7 +58,8 @@
           "type": "accordion",
           "settings": {
             "title": "When will my order ship?",
-            "content": "<p>Orders ship within [0] business days. We use USPS Ground Advantage and UPS Ground, and email tracking when the parcel leaves.</p>"
+            "content": "<p>Orders ship within [0] business days. We use USPS Ground Advantage and UPS Ground, and email tracking when the parcel leaves.</p>",
+            "open": true
           }
         },
         "orders_q2": {

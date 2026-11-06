@@ -43,6 +43,38 @@
       ]
     },
     {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "default": "automatic",
+      "options": [
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
       "type": "header",
       "content": "Layout"
     },
@@ -125,6 +157,12 @@
           "id": "content",
           "label": "Answer",
           "default": "<p>Share details about your shipping policies, item returns, or customer service.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
         }
       ]
     },
@@ -276,7 +314,12 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "aside", "custom.pre_footer", "footer"]
+    "groups": [
+      "header",
+      "aside",
+      "custom.pre_footer",
+      "footer"
+    ]
   }
 }
 {% endschema %}
