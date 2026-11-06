@@ -929,7 +929,7 @@
   content: "How the blades are made";
 }
 
-.blog-section .article__text-wrapper::after {
+.blog-section .article--onboarding .article__text-wrapper::after {
   content: "[0] min read";
   display: block;
   font-family: var(--font-sans);
