@@ -2,7 +2,23 @@
   "name": "Blog",
   "sections": {
     "main": {
-      "type": "blog"
+      "type": "blog",
+      "settings": {
+        "show_title": true,
+        "show_tag_nav": true,
+        "aspect_ratio": 0.7,
+        "title_font_size": "heading-small",
+        "show_tags": true,
+        "show_author": false,
+        "show_date": true,
+        "show_button": false,
+        "show_comments": false,
+        "grid": 3,
+        "rows": 3,
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 96
+      }
     }
   },
   "order": [
