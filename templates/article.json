@@ -4,17 +4,45 @@
     "main": {
       "type": "article",
       "blocks": {
+        "topics": {
+          "type": "links",
+          "settings": {
+            "title": "Topics"
+          }
+        },
         "related-products": {
-          "type": "related"
+          "type": "related",
+          "settings": {
+            "title": "Tools in this guide"
+          }
+        },
+        "shop-collection": {
+          "type": "collection",
+          "settings": {
+            "title": "Shop the collection"
+          }
         },
         "recent-articles": {
-          "type": "recent"
+          "type": "recent",
+          "settings": {
+            "title": ""
+          }
         }
       },
       "block_order": [
+        "topics",
         "related-products",
+        "shop-collection",
         "recent-articles"
-      ]
+      ],
+      "settings": {
+        "height": "image-height",
+        "mobile_height": "image-height--mobile",
+        "show_date": true,
+        "show_author": true,
+        "show_sharing": true,
+        "arrows": true
+      }
     }
   },
   "order": [

@@ -208,7 +208,7 @@
               </p>
             {%- endif -%}
 
-            <p class="article__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+            <p class="article__excerpt">{{ article.metafields.custom.summary.value | default: article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
 
             {%- if show_button -%}
               <div class="article__link">

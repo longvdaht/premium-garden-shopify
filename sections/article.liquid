@@ -12,6 +12,7 @@
 
   assign show_date = section.settings.show_date
   assign show_author = section.settings.show_author
+  assign article_topic = article.tags | first
   assign color_scheme = 'color-' | append: section.settings.color_scheme
   assign header_color = settings.menu_transparent_color
   assign selected_color_scheme = section.settings.color_scheme | strip
@@ -45,7 +46,13 @@
 >
   <div class="article__hero text-center">
     <div class="wrapper">
-      <h2 class="article__title h2">{{ article.title }}</h2>
+      {%- if article_topic != blank -%}
+        <p class="article__eyebrow">
+          <a href="{{ blog.url }}/tagged/{{ article_topic | handleize }}">{{ article_topic }}</a>
+        </p>
+      {%- endif -%}
+
+      <h1 class="article__title h2">{{ article.title }}</h1>
 
       {%- if show_date or show_author -%}
         <p class="article__meta">
@@ -53,6 +60,11 @@
 
           {%- if show_date -%}
             <time datetime="{{ published_at }}">{{ published_at }}</time>
+          {%- endif -%}
+
+          {%- assign read_time = article.metafields.custom.read_time.value -%}
+          {%- if read_time != blank -%}
+            <span class="article__read-time">{{ read_time }} min read</span>
           {%- endif -%}
 
           {%- if show_author -%}
@@ -110,32 +122,36 @@
           </div>
         {%- endif -%}
 
-        {%- if section.settings.tags -%}
-          <h4 class="article__tags h3">
-            {%- for tag in article.tags -%}
-              {%- if forloop.index0 == 0 -%}
-                <span class="label">{{ 'blogs.article.tags' | t }}: </span>
+        {%- if article_topic != blank or section.settings.show_sharing -%}
+          <div class="article__footer-links">
+            <div class="article__footer-meta">
+              {%- if article_topic != blank -%}
+                <span class="article__footer-label">Topic:</span>
+                <a href="{{ blog.url }}/tagged/{{ article_topic | handleize }}" class="article__footer-link">{{ article_topic | downcase | capitalize }}</a>
+                <span class="article__footer-sep">·</span>
+                <span class="article__footer-label">Shop:</span>
+                <a href="{{ routes.root_url }}collections/{{ article_topic | handleize }}" class="article__footer-link">{{ article_topic | downcase | capitalize }}</a>
               {%- endif -%}
-              <a
-                href="{{ blog.url }}/tagged/{{ tag | handleize }}"
-                title="{{ blog.title | strip_html | escape }} tagged {{ tag | strip_html | escape }}"
-              >
-                {{- tag -}}
-              </a>
-              {%- unless forloop.last %},{% endunless %}
-            {%- endfor -%}
-          </h4>
-        {%- endif -%}
+            </div>
 
-        {%- if section.settings.show_sharing -%}
-          {%- assign share_url = article.url | prepend: request.origin -%}
-          {%- render 'share-button', share_url: share_url %}
+            {%- if section.settings.show_sharing -%}
+              <div class="article__footer-share">
+                {%- assign share_url = article.url | prepend: request.origin -%}
+                <span class="article__footer-label">Share:</span>
+                <a href="mailto:?subject={{ article.title | url_encode }}&body={{ share_url | url_encode }}" class="article__footer-link">Email</a>
+                <span class="article__footer-sep">·</span>
+                <button
+                  class="article__footer-link article__footer-copy-link"
+                  data-copy-url="{{ share_url }}"
+                  type="button"
+                >Copy link</button>
+              </div>
+            {%- endif -%}
+          </div>
         {%- endif -%}
 
         {%- if section.settings.arrows -%}
           {%- if blog.next_article or blog.previous_article -%}
-            <div class="hr"></div>
-
             <aside class="flex justify-space-between">
               {%- if blog.previous_article -%}
                 <small>
@@ -148,7 +164,7 @@
                       >
                         {%- render 'icon', name: 'caret-left' -%}
 
-                        <span>{{ 'blogs.article.older_post' | t }}</span>
+                        <span>[PREVIOUS ARTICLE]</span>
                       </a>
                     {%- endif -%}
                   {%- endfor -%}
@@ -164,7 +180,7 @@
                         class="btn btn--text btn--text-no-underline btn--small"
                         title="{{ post.title | strip_html | escape }}"
                       >
-                        <span>{{ 'blogs.article.newer_post' | t }}</span>
+                        <span>[NEXT ARTICLE]</span>
 
                         {%- render 'icon', name: 'caret-right' -%}
                       </a>
@@ -186,219 +202,251 @@
                 {%- when '@app' -%}
                   {%- render block -%}
                 {%- when 'links' -%}
-                  <div class="widget widget--categories" {{ block.shopify_attributes }}>
-                    {%- if block.settings.blog_linklist != blank -%}
-                      <collapsible-elements>
-                        {%- assign list_html = '' -%}
-
+                  <div class="widget widget--topics" {{ block.shopify_attributes }}>
+                    {%- assign topics_title = block.settings.title | default: 'Topics' -%}
+                    <h3 class="widget__title">{{ topics_title }}</h3>
+                    <ul class="widget__links">
+                      {%- if block.settings.blog_linklist != blank -%}
                         {%- for link in linklists[block.settings.blog_linklist].links -%}
-                          {%- assign current_blog = link.object -%}
-                          {%- assign open_submenu = false -%}
-                          {%- assign current_blog_articles = '' -%}
-
-                          {%- capture list_html -%}
-                            {{ list_html }}
-
-                            {%- if current_blog.articles.size > 0 -%}
-                              {%- for article in current_blog.articles limit: 5 -%}
-                                {%- if article_url == article.url and open_submenu == false -%}
-                                  {%- assign open_submenu = true -%}
-                                {%- endif -%}
-
-                                {%- capture current_blog_articles -%}
-                                  {{ current_blog_articles }}
-
-                                  <li>
-                                    <a href="{{ article.url }}"
-                                      title="{{ article.title | strip_html | escape }}"
-                                      class="widget__link">{{ article.title }}</a>
-                                  </li>
-                                {%- endcapture -%}
-                              {%- endfor -%}
-                            {%- endif -%}
-
-                            <li data-slide="{{ forloop.index0 }}">
-                              {% if current_blog_articles != '' %}
-                                <details class="widget__link" data-collapsible{% if open_submenu %} open="true"{% endif %}>
-                                  <summary class="widget__accordion-title" data-collapsible-trigger>
-                                    {{- link.title -}}
-
-                                    {%- render 'icon', name: 'caret-down' -%}
-                                  </summary>
-
-                                  <div data-collapsible-body{% if open_submenu %} style="height: auto;"{% endif %}>
-                                    <div class="submenu" data-collapsible-content>
-                                      {{ current_blog_articles }}
-
-                                      {% comment %}
-                                        If blog posts are more than 5 then show 'See more...' link
-                                      {% endcomment %}
-                                      {%- if current_blog.articles.size > 5 -%}
-                                        <li>
-                                          <a href="{{ link.url }}"
-                                            title="{{ link.title | strip_html | escape }}"
-                                            class="widget__link">{{ 'blogs.sidebar.see_more' | t }}</a>
-                                        </li>
-                                      {%- endif -%}
-                                    </div>
-                                  </div>
-                                </details>
-                              {%- else -%}
-                                <a href="{{ link.url }}" title="{{ link.title | strip_html | escape }}" class="widget__link">
-                                  {{- link.title -}}
-                                </a>
-                              {%- endif -%}
-                            </li>
-                          {%- endcapture -%}
-                        {%- endfor -%}
-
-                        {%- if list_html != '' -%}
-                          {%- if block.settings.title != blank -%}
-                            <h3 class="widget__title h4">{{ block.settings.title }}</h3>
-                          {%- endif -%}
-
-                          <ul class="widget__links widget__links--primary">
-                            {{ list_html }}
-                          </ul>
-                        {%- endif -%}
-                    {%- elsif blog.all_tags.size > 0 -%}
-                      {%- if block.settings.title != blank -%}
-                        <h3 class="widget__title h4">{{ block.settings.title }}</h3>
-                      {%- endif -%}
-
-                      <ul class="widget__links widget__links--primary">
-                        {%- for tag in blog.all_tags -%}
-                          <li
-                            {% if article.tags contains tag %}
-                              class="widget__links--active"
-                            {% endif %}
-                            data-slide="{{ forloop.index0 }}"
-                          >
-                            <a class="widget__link" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+                          <li{% if article.tags contains link.title or article_topic == link.title %} class="widget__links--active"{% endif %}>
+                            <a class="widget__link" href="{{ link.url }}">{{ link.title | downcase | capitalize }}</a>
                           </li>
                         {%- endfor -%}
-                      </ul>
-                      </collapsible-elements>
-                    {%- endif -%}
+                      {%- elsif blog.all_tags.size > 0 -%}
+                        {%- for tag in blog.all_tags -%}
+                          <li{% if article.tags contains tag %} class="widget__links--active"{% endif %}>
+                            <a class="widget__link" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag | downcase | capitalize }}</a>
+                          </li>
+                        {%- endfor -%}
+                      {%- else -%}
+                        {%- assign default_topics = 'Growing,Potting,Planting,Watering,Feeding,Pruning,Goods' | split: ',' -%}
+                        {%- for topic in default_topics -%}
+                          <li{% if article_topic == topic %} class="widget__links--active"{% endif %}>
+                            <a class="widget__link" href="{{ blog.url }}/tagged/{{ topic | handle }}">{{ topic | downcase | capitalize }}</a>
+                          </li>
+                        {%- endfor -%}
+                      {%- endif -%}
+                    </ul>
                   </div>
 
                 {%- when 'related' -%}
-                  {% comment %}
-                    Extract product handles from links in article content
-                  {% endcomment %}
+                  {% comment %} Extract product handles from metafield, settings, or links in article content {% endcomment %}
+                  {%- assign guide_products = article.metafields.custom.related_products.value -%}
                   {%- assign article_content = article.content | split: '/products/' -%}
-
-                  {%- if article_content.size > 0 and block.settings.product_list.count < 1 -%}
-                    {%- assign starts_with_handle = '' -%}
-
+                  {%- assign handles = '' -%}
+                  {%- if article_content.size > 1 and block.settings.product_list.count < 1 and guide_products == blank -%}
                     {%- for item in article_content -%}
-                      {% comment %}
-                        The first item is empty, subsequent items start with a product handle
-                        Split on URL encoded string to handle params
-                      {% endcomment %}
                       {%- unless forloop.index0 == 0 -%}
                         {%- assign starts_with_handle = item | url_encode | split: '%' -%}
                         {%- assign handles = handles | append: starts_with_handle[0] | append: ',' -%}
                       {%- endunless -%}
                     {%- endfor -%}
                   {%- endif -%}
-
                   {%- assign handles_arr = handles | split: ',' | compact | uniq -%}
 
-                  <div class="widget" {{ block.shopify_attributes }}>
-                    {%- if handles_arr.size > 0 or block.settings.product_list.count > 0 -%}
-                      {%- if block.settings.title != blank -%}
-                        <h3 class="widget__title h4">{{ block.settings.title }}</h3>
-                      {%- endif -%}
+                  <div class="widget widget--tools" {{ block.shopify_attributes }}>
+                    {%- assign tools_title = block.settings.title | default: 'Tools in this guide' -%}
+                    <h3 class="widget__title">{{ tools_title }}</h3>
 
-                      <div class="widget__products">
-                        {%- liquid
-                          if block.settings.product_list.count > 0
-                            for product in block.settings.product_list
-                              render 'upsell-product', upsell_product: product, is_compact: true
-                            endfor
-                          elsif handles_arr.size > 0
-                            for handle in handles_arr limit: 20
-                              assign product = all_products[handle]
-
-                              if product.id != ''
-                                render 'upsell-product', upsell_product: product, is_compact: true
-                              endif
-                            endfor
-                          endif
-                        -%}
-                      </div>
-                    {%- endif -%}
+                    <div class="widget__products">
+                      {%- liquid
+                        if guide_products != blank and guide_products.count > 0
+                          for product in guide_products limit: 5
+                            render 'upsell-product', upsell_product: product, is_compact: true, upsell_button_text: 'ADD', button_style: 'btn--outline'
+                          endfor
+                        elsif block.settings.product_list.count > 0
+                          for product in block.settings.product_list
+                            render 'upsell-product', upsell_product: product, is_compact: true, upsell_button_text: 'ADD', button_style: 'btn--outline'
+                          endfor
+                        elsif handles_arr.size > 0
+                          for handle in handles_arr limit: 5
+                            assign product = all_products[handle]
+                            if product.id != ''
+                              render 'upsell-product', upsell_product: product, is_compact: true, upsell_button_text: 'ADD', button_style: 'btn--outline'
+                            endif
+                          endfor
+                        endif
+                      -%}
+                    </div>
                   </div>
-                {%- when 'recent' -%}
+
+                {%- when 'collection' -%}
                   {%- liquid
-                    assign counter = 0
-                    assign article_limit = 3
-                    assign recent_articles = ''
+                    assign sidebar_collection = article.metafields.custom.related_collections.value | first
+                    if sidebar_collection == blank and block.settings.collection != blank
+                      assign sidebar_collection = block.settings.collection
+                    endif
+                    if sidebar_collection == blank and article_topic != blank
+                      assign topic_handle = article_topic | handleize
+                      assign sidebar_collection = collections[topic_handle]
+                    endif
+                    if sidebar_collection == blank
+                      assign sidebar_collection = collections.first
+                    endif
+
+                    assign collection_image = block.settings.image | default: sidebar_collection.image | default: sidebar_collection.featured_image | default: sidebar_collection.products.first.featured_image
+
+                    assign collection_desc = block.settings.description | default: sidebar_collection.description
+                    if collection_desc == blank
+                      assign handle_key = sidebar_collection.handle | default: topic_handle
+                      case handle_key
+                        when 'pruning'
+                          assign collection_desc = 'Edge tools for shaping, maintenance, and collecting'
+                        when 'growing'
+                          assign collection_desc = 'Essentials, tools, and supplies for sowing, tending, and harvesting'
+                        when 'potting'
+                          assign collection_desc = 'Containers, potting mixes, tools and workbenches'
+                        when 'planting'
+                          assign collection_desc = 'Bulbs, tools, soil preparation, and planting gear'
+                        when 'watering'
+                          assign collection_desc = 'Hoses, cans, sprayers, and irrigation equipment'
+                        when 'feeding'
+                          assign collection_desc = 'Organic fertilizers, composts, and plant nutrients'
+                        when 'goods'
+                          assign collection_desc = 'Handcrafted garden goods, accessories, and wear'
+                        else
+                          assign collection_desc = 'Tools and essentials for the working garden'
+                      endcase
+                    endif
                   -%}
-
-                  {%- for recent_article in blog.articles -%}
-                    {%- if recent_article.handle == article.handle -%}
-                      {%- continue -%}
-                    {%- endif -%}
-
-                    {%- capture recent_markup -%}
-                      <article class="article">
-                        {%- if recent_article.image != blank -%}
-                          <div class="article__image__outer">
-                            <div class="article__image">
-                              <a class="article__image-link" href="{{ recent_article.url }}" aria-label="{{ recent_article.title | strip_html | escape }}">
-                                {%- render 'image' image: recent_article.image, widths: '320, 480, 560, 640, 780, 960, 1280, 1440, 1960', sizes: '(min-width: 750px) 320px, calc(100vw - 32px)' -%}
-                              </a>
-                            </div>
-                          </div>
-                        {%- endif -%}
-
-                        <div class="article__text-wrapper">
-                          <h2 class="article__title h4">
-                            <a href="{{ recent_article.url }}" title="{{ recent_article.title | strip_html | escape }}">
-                              {{ recent_article.title }}
-                            </a>
-                          </h2>
-
-                          {%- if show_date or show_author -%}
-                            <p class="article__meta">
-                              {%- if show_date -%}
-                                {%- assign published_at = recent_article.published_at | date: format: 'full_date' -%}
-                                <time datetime="{{ published_at }}">{{ published_at }}</time>
-                              {%- elsif show_author -%}
-                                <span class="article__meta__author">{{ 'blogs.article.by_author' | t: author: article.author }} </span>
-                              {%- endif -%}
-                            </p>
+                  {%- if sidebar_collection != blank -%}
+                    <div class="widget widget--collection" {{ block.shopify_attributes }}>
+                      {%- assign collection_title = block.settings.title | default: 'Shop the collection' -%}
+                      <h3 class="widget__title">{{ collection_title }}</h3>
+                      <a href="{{ sidebar_collection.url }}" class="widget__collection-image-link" aria-label="{{ sidebar_collection.title }}">
+                        <div class="widget__collection-image">
+                          {%- if collection_image != blank -%}
+                            {%- render 'image',
+                              image: collection_image,
+                              widths: '320, 480, 640',
+                              sizes: '(min-width: 750px) 320px, calc(100vw - 40px)'
+                            -%}
+                          {%- else -%}
+                            {{ 'collection-1' | placeholder_svg_tag: 'svg-placeholder' }}
                           {%- endif -%}
                         </div>
-                      </article>
-                    {%- endcapture -%}
+                      </a>
+                      <h4 class="widget__collection-name">
+                        <a href="{{ sidebar_collection.url }}">{{ sidebar_collection.title }}</a>
+                      </h4>
+                      {%- if collection_desc != blank -%}
+                        <p class="widget__collection-tagline">{{ collection_desc | strip_html | truncate: 120 }}</p>
+                      {%- endif -%}
+                      <a href="{{ sidebar_collection.url }}" class="btn btn--text widget__collection-cta">
+                        <span>{{ block.settings.cta_text | default: 'Shop the collection' }}</span>
+                      </a>
+                    </div>
+                  {%- endif -%}
 
-                    {%- assign recent_articles = recent_articles | append: recent_markup -%}
-                    {%- assign counter = counter | plus: 1 -%}
+                {%- when 'recent' -%}
+                  {%- liquid
+                    assign article_limit = 3
+                    assign counter = 0
+                    assign topic_handle = article_topic | handleize
+                  -%}
 
-                    {%- if counter == article_limit -%}
-                      {%- break -%}
-                    {%- endif -%}
-                  {%- endfor -%}
-
-                  <div class="widget" {{ block.shopify_attributes }}>
-                    {%- if recent_articles != '' -%}
-                      {%- if block.settings.title != blank -%}
-                        <h3 class="widget__title h4">{{ block.settings.title }}</h3>
+                  {%- capture recent_markup -%}
+                    {% comment %} First: try matching topic/tag {% endcomment %}
+                    {%- for recent_article in blog.articles -%}
+                      {%- if recent_article.handle == article.handle -%}
+                        {%- continue -%}
+                      {%- endif -%}
+                      {%- assign post_matches_topic = false -%}
+                      {%- if article_topic != blank -%}
+                        {%- for t in recent_article.tags -%}
+                          {%- assign thandle = t | handleize -%}
+                          {%- if thandle == topic_handle -%}
+                            {%- assign post_matches_topic = true -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
                       {%- endif -%}
 
-                      <div class="widget__recent">
-                        {{ recent_articles }}
-                      </div>
+                      {%- if post_matches_topic or article_topic == blank -%}
+                        <article class="widget__article-card">
+                          {%- if recent_article.image != blank -%}
+                            <a class="widget__article-image-link" href="{{ recent_article.url }}" aria-label="{{ recent_article.title | strip_html | escape }}">
+                              <div class="widget__article-image">
+                                {%- render 'image', image: recent_article.image, widths: '160, 240, 320', sizes: '88px' -%}
+                              </div>
+                            </a>
+                          {%- endif -%}
+
+                          <div class="widget__article-info">
+                            <h4 class="widget__article-title">
+                              <a href="{{ recent_article.url }}">{{ recent_article.title }}</a>
+                            </h4>
+                            {%- assign recent_read_time = recent_article.metafields.custom.read_time.value -%}
+                            <p class="widget__article-meta">
+                              {%- if recent_read_time != blank -%}
+                                {{ recent_read_time }} min read
+                              {%- elsif show_date -%}
+                                {{ recent_article.published_at | date: format: 'full_date' }}
+                              {%- endif -%}
+                            </p>
+                          </div>
+                        </article>
+                        {%- assign counter = counter | plus: 1 -%}
+                        {%- if counter == article_limit -%}{%- break -%}{%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+
+                    {% comment %} Fallback: if fewer than article_limit, fill with other recent articles {% endcomment %}
+                    {%- if counter < article_limit -%}
+                      {%- for recent_article in blog.articles -%}
+                        {%- if recent_article.handle == article.handle -%}
+                          {%- continue -%}
+                        {%- endif -%}
+                        <article class="widget__article-card">
+                          {%- if recent_article.image != blank -%}
+                            <a class="widget__article-image-link" href="{{ recent_article.url }}" aria-label="{{ recent_article.title | strip_html | escape }}">
+                              <div class="widget__article-image">
+                                {%- render 'image', image: recent_article.image, widths: '160, 240, 320', sizes: '88px' -%}
+                              </div>
+                            </a>
+                          {%- endif -%}
+
+                          <div class="widget__article-info">
+                            <h4 class="widget__article-title">
+                              <a href="{{ recent_article.url }}">{{ recent_article.title }}</a>
+                            </h4>
+                            {%- assign recent_read_time = recent_article.metafields.custom.read_time.value -%}
+                            <p class="widget__article-meta">
+                              {%- if recent_read_time != blank -%}
+                                {{ recent_read_time }} min read
+                              {%- elsif show_date -%}
+                                {{ recent_article.published_at | date: format: 'full_date' }}
+                              {%- endif -%}
+                            </p>
+                          </div>
+                        </article>
+                        {%- assign counter = counter | plus: 1 -%}
+                        {%- if counter == article_limit -%}{%- break -%}{%- endif -%}
+                      {%- endfor -%}
                     {%- endif -%}
+                  {%- endcapture -%}
+
+                  <div class="widget widget--recent" {{ block.shopify_attributes }}>
+                    {%- liquid
+                      if block.settings.title != blank
+                        assign more_title = block.settings.title
+                      elsif article_topic != blank
+                        assign more_title = 'More in ' | append: article_topic
+                      else
+                        assign more_title = 'More guides'
+                      endif
+                    -%}
+                    <h3 class="widget__title">{{ more_title }}</h3>
+                    <div class="widget__recent-list">
+                      {{ recent_markup }}
+                    </div>
                   </div>
+
                 {%- when 'image' -%}
                   {%- if article.image -%}
                     <div class="widget widget--image" {{ block.shopify_attributes }}>
                       {%- if block.settings.title != blank -%}
-                        <h3 class="widget__title h4">{{ block.settings.title }}</h3>
+                        <h3 class="widget__title">{{ block.settings.title }}</h3>
                       {%- endif -%}
 
                       <div class="widget__image">
@@ -412,8 +460,6 @@
                   {%- endif -%}
               {%- endcase -%}
             {%- endfor -%}
-          </div>
-        </aside>
         <!-- end sidebar -->
       {%- endif -%}
     </div>
@@ -571,6 +617,26 @@
   {%- render 'shape-dividers', mode: 'host' -%}
 </section>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyBtn = document.querySelector('.article__footer-copy-link');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        const url = this.getAttribute('data-copy-url');
+        if (navigator.clipboard && url) {
+          navigator.clipboard.writeText(url).then(function() {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            setTimeout(function() {
+              copyBtn.textContent = originalText;
+            }, 2000);
+          });
+        }
+      });
+    }
+  });
+</script>
+
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",
@@ -581,8 +647,9 @@
       "@id": {{ shop.url | append: page.url | json }}
     },
     "headline": {{ article.title | json }},
-    {% if article.excerpt != blank %}
-      "description": {{ article.excerpt | strip_html | json }},
+    {%- assign article_seo_desc = article.metafields.custom.summary.value | default: article.excerpt -%}
+    {% if article_seo_desc != blank %}
+      "description": {{ article_seo_desc | strip_html | json }},
     {% endif %}
     {% if article.image %}
       "image": [
@@ -766,6 +833,40 @@
           "id": "product_list",
           "label": "Products",
           "limit": 5
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "Shop the collection",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Shop the collection"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection fallback"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description override"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button text",
+          "default": "Shop the collection"
         }
       ]
     },
