@@ -6,6 +6,12 @@
   metaobject: name, country; or the vendor) and SKU, which the theme updates
   on variant change through #Sku-[section id].
 
+  Spec notes (custom.spec_notes, multi-line text): one "Label | text" line per row,
+  for specs that differ by option (e.g. Kihachi No. 128,
+  "Handle length | 270 mm (hatchet) / 450 mm (tapered)"). A note whose label
+  matches a spec row replaces that row's value; other notes are added as rows
+  after the spec fields. Labels match without regard to case.
+
   @param {object} product
   @param {object} current_variant
   @param {object} block
@@ -15,6 +21,37 @@
   assign spec_lines = block.settings.rows | newline_to_br | split: '<br />'
   assign spec_limit = block.settings.limit | default: 5
   assign spec_count = 0
+
+  # Spec notes: parallel lists of lower-case label, display label and escaped text
+  assign note_keys = ''
+  assign note_labels = ''
+  assign note_values = ''
+  assign notes_raw = product.metafields.custom.spec_notes.value
+  if notes_raw != blank
+    assign note_lines = notes_raw | newline_to_br | split: '<br />'
+    for note_line in note_lines
+      assign note_row = note_line | strip_newlines | strip
+      unless note_row contains '|'
+        continue
+      endunless
+      assign note_parts = note_row | split: '|'
+      assign note_label = note_parts[0] | strip
+      assign note_value = note_row | remove_first: note_parts[0] | remove_first: '|' | strip
+      if note_label == blank or note_value == blank
+        continue
+      endif
+      assign note_key = note_label | downcase
+      assign note_label_safe = note_label | escape
+      assign note_value_safe = note_value | escape
+      assign note_keys = note_keys | append: note_key | append: '@@'
+      assign note_labels = note_labels | append: note_label_safe | append: '@@'
+      assign note_values = note_values | append: note_value_safe | append: '@@'
+    endfor
+  endif
+  assign note_key_list = note_keys | split: '@@'
+  assign note_label_list = note_labels | split: '@@'
+  assign note_value_list = note_values | split: '@@'
+  assign used_notes = '@@'
 
   capture spec_rows
     for line in spec_lines
@@ -27,29 +64,56 @@
       endif
       assign parts = row | split: '|'
       assign label = parts[0] | strip
-      assign path = parts[1] | strip
-      assign path_parts = path | split: '.'
-      assign mf = product.metafields[path_parts[0]][path_parts[1]]
-      if mf == blank or mf.value == blank
-        continue
-      endif
+      assign label_key = label | downcase
 
-      case mf.type
-        when 'dimension', 'weight', 'volume'
-          assign amount = mf.value.value
-          assign amount_int = amount | floor
-          if amount == amount_int
-            assign amount = amount_int
-          endif
-          assign value = amount | append: ' ' | append: mf.value.unit
-        when 'list.single_line_text_field'
-          assign value = mf.value | join: ', '
-        else
-          assign value = mf | metafield_text
-      endcase
+      # A spec note with the same label replaces the field value
+      assign value = ''
+      for note_key in note_key_list
+        if note_key == label_key
+          assign value = note_value_list[forloop.index0]
+          assign used_notes = used_notes | append: note_key | append: '@@'
+          break
+        endif
+      endfor
+
+      if value == blank
+        assign path = parts[1] | strip
+        assign path_parts = path | split: '.'
+        assign mf = product.metafields[path_parts[0]][path_parts[1]]
+        if mf == blank or mf.value == blank
+          continue
+        endif
+
+        case mf.type
+          when 'dimension', 'weight', 'volume'
+            assign amount = mf.value.value
+            assign amount_int = amount | floor
+            if amount == amount_int
+              assign amount = amount_int
+            endif
+            assign value = amount | append: ' ' | append: mf.value.unit
+          when 'list.single_line_text_field'
+            assign value = mf.value | join: ', '
+          else
+            assign value = mf | metafield_text
+        endcase
+      endif
 
       assign spec_count = spec_count | plus: 1
       echo '<div class="ds-specs__row"><dt>' | append: label | append: '</dt><dd>' | append: value | append: '</dd></div>'
+    endfor
+
+    # Spec notes that match no spec row are added as their own rows
+    for note_key in note_key_list
+      if spec_count >= spec_limit
+        break
+      endif
+      assign used_key = '@@' | append: note_key | append: '@@'
+      if used_notes contains used_key
+        continue
+      endif
+      assign spec_count = spec_count | plus: 1
+      echo '<div class="ds-specs__row"><dt>' | append: note_label_list[forloop.index0] | append: '</dt><dd>' | append: note_value_list[forloop.index0] | append: '</dd></div>'
     endfor
   endcapture
 
