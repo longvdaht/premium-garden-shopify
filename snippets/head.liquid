@@ -63,7 +63,7 @@
       when 'collection'
         assign seo_description = collection.description
       when 'article'
-        assign seo_description = article.excerpt_or_content
+        assign seo_description = article.metafields.custom.summary.value | default: article.excerpt_or_content
       when 'page'
         assign seo_description = page.content
     endcase
