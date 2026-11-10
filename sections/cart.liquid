@@ -129,14 +129,8 @@
             endif
           -%}
 
-          {%- capture block_content -%}
-            <div
-              class="cart-block"
-              data-animation="{{ animation_name }}"
-              data-animation-delay="{{ animation_delay }}"
-              {{ block.shopify_attributes }}
-            >
-              {%- case block.type -%}
+          {%- capture inner_content -%}
+            {%- case block.type -%}
                 {%- when '@app' -%}
                   {%- render block -%}
 
@@ -253,22 +247,35 @@
                   {%- render 'cart-block-discount', block: block -%}
 
               {%- endcase -%}
-            </div>
           {%- endcapture -%}
 
-          {%- liquid
-            if pin_to_top
-              capture pinned_blocks
-                echo pinned_blocks
-                echo block_content
-              endcapture
-            else
-              capture static_blocks
-                echo static_blocks
-                echo block_content
-              endcapture
-            endif
-          -%}
+          {%- assign inner_content_test = inner_content | strip -%}
+          {%- if inner_content_test != blank -%}
+            {%- capture block_content -%}
+              <div
+                class="cart-block"
+                data-animation="{{ animation_name }}"
+                data-animation-delay="{{ animation_delay }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ inner_content }}
+              </div>
+            {%- endcapture -%}
+
+            {%- liquid
+              if pin_to_top
+                capture pinned_blocks
+                  echo pinned_blocks
+                  echo block_content
+                endcapture
+              else
+                capture static_blocks
+                  echo static_blocks
+                  echo block_content
+                endcapture
+              endif
+            -%}
+          {%- endif -%}
         {%- endfor -%}
 
         <div class="cart__content">
