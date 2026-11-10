@@ -24,8 +24,8 @@
           "type": "price",
           "settings": {
             "text_font_size": "body-medium",
-            "padding_bottom": 24,
-            "show_tax_note": false
+            "show_tax_note": false,
+            "padding_bottom": 24
           }
         },
         "description": {
@@ -38,6 +38,7 @@
         "variants": {
           "type": "variants",
           "settings": {
+            "info_page": "",
             "size_chart_style": "text",
             "padding_bottom": 24
           }
@@ -50,6 +51,9 @@
             "button_size": "",
             "button_style": "btn--solid",
             "show_payment_button": false,
+            "button_type_dynamic": "btn--secondary",
+            "button_size_dynamic": "",
+            "button_style_dynamic": "btn--solid",
             "show_gift_card_recipient": false,
             "padding_bottom": 16
           }
@@ -59,7 +63,9 @@
           "settings": {
             "icon_key": "package",
             "icon_size": 20,
+            "icon_color": "",
             "heading": "",
+            "heading_font_size": "heading-small",
             "text": "<p>Ships in [0] business days · USPS Ground Advantage or UPS Ground</p>",
             "text_font_size": "body-small",
             "width": "full",
@@ -94,13 +100,17 @@
         "product_sticky_enable": true,
         "variant_image_scroll": true,
         "show_cart_bar": true,
-        "enable_zoom": false,
+        "enable_zoom": true,
         "enable_video_looping": true,
         "image_layout": "grid-1",
         "image_size": "normal",
         "mobile_image_style": "slider",
         "image_aspect_ratio_mobile_enable": false,
+        "image_aspect_ratio_mobile": 1,
+        "video_size_mobile": "cover",
         "color_scheme": "scheme-1",
+        "product_form_color_scheme_enable": false,
+        "product_form_color_scheme": "",
         "padding_top": 32,
         "padding_bottom": 96
       }
@@ -161,15 +171,15 @@
       ],
       "settings": {
         "enable_tabs": false,
+        "width": "wrapper",
+        "show_divider": true,
         "heading_alignment": "text-left",
         "heading_font_size": "heading-large",
         "heading_tag": "automatic",
         "layout_mobile": "2",
         "color_scheme": "scheme-1",
         "padding_top": 48,
-        "padding_bottom": 96,
-        "width": "wrapper",
-        "show_divider": true
+        "padding_bottom": 96
       }
     }
   },
