@@ -77,82 +77,6 @@
         "show_placeholder": true
       }
     },
-    "facts": {
-      "type": "section-multicolumn",
-      "blocks": {
-        "fact-1": {
-          "type": "text",
-          "settings": {
-            "column_width": 33,
-            "title": "HAND-SHARPENED",
-            "heading_font_size": "heading-x-small",
-            "text": "<p>Every edge is set by the maker before it ships.</p>",
-            "text_font_size": "body-medium",
-            "button_text": "",
-            "button_url": "",
-            "button_type": "btn--primary",
-            "button_size": "",
-            "button_style": "btn--solid",
-            "show_arrow": false,
-            "heading_tag": "automatic"
-          }
-        },
-        "fact-2": {
-          "type": "text",
-          "settings": {
-            "column_width": 33,
-            "title": "TESTED FOR A SEASON",
-            "heading_font_size": "heading-x-small",
-            "text": "<p>We use each tool in our own garden first.</p>",
-            "text_font_size": "body-medium",
-            "button_text": "",
-            "button_url": "",
-            "button_type": "btn--primary",
-            "button_size": "",
-            "button_style": "btn--solid",
-            "show_arrow": false,
-            "heading_tag": "automatic"
-          }
-        },
-        "fact-3": {
-          "type": "text",
-          "settings": {
-            "column_width": 33,
-            "title": "SHIPPED FROM [CITY]",
-            "heading_font_size": "heading-x-small",
-            "text": "<p>Packed by hand. USPS Ground Advantage or UPS Ground.</p>",
-            "text_font_size": "body-medium",
-            "button_text": "",
-            "button_url": "",
-            "button_type": "btn--primary",
-            "button_size": "",
-            "button_style": "btn--solid",
-            "show_arrow": false,
-            "heading_tag": "automatic"
-          }
-        }
-      },
-      "block_order": [
-        "fact-1",
-        "fact-2",
-        "fact-3"
-      ],
-      "settings": {
-        "title": "",
-        "heading_font_size": "heading-medium",
-        "description": "",
-        "align_heading": "text-left",
-        "align_text": "text-left",
-        "show_dividers": true,
-        "width": "wrapper",
-        "align_columns": "flex-align-top",
-        "layout_mobile": "1",
-        "color_scheme": "scheme-1",
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "heading_tag": "automatic"
-      }
-    },
     "shelf": {
       "type": "section-collection",
       "settings": {
@@ -276,7 +200,7 @@
         "title": {
           "type": "heading",
           "settings": {
-            "title": "We source, design, and manufacture high-quality products for the budding and experienced gardener",
+            "title": "We source, spec, and manufacture products for the budding and experienced gardener",
             "heading_font_size": "heading-large",
             "pin_to_bottom": false,
             "padding_bottom": 24,
@@ -295,7 +219,7 @@
         "button": {
           "type": "buttons",
           "settings": {
-            "button_text": "ABOUT THE SHOP",
+            "button_text": "ABOUT US",
             "button_url": "/pages/about",
             "button_type": "btn--primary",
             "button_size": "",
@@ -408,7 +332,6 @@
   },
   "order": [
     "hero",
-    "facts",
     "shelf",
     "bundles",
     "highlight",

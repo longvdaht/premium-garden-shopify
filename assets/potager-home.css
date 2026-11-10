@@ -495,9 +495,9 @@
   border: 1px solid var(--hairline);
   border-radius: 0;
   box-shadow: 0 4px 16px rgba(22, 39, 28, 0.08);
-  padding: clamp(6px, 1vw, 10px) clamp(8px, 1.2vw, 12px);
-  width: clamp(95px, 22vw, 130px);
-  max-width: clamp(95px, 22vw, 130px);
+  padding: clamp(6px, 1vw, 10px) clamp(8px, 1.2vw, 14px);
+  width: clamp(95px, 22vw, 190px);
+  max-width: clamp(95px, 22vw, 190px);
   box-sizing: border-box;
   white-space: normal;
   word-break: break-word;
@@ -966,6 +966,10 @@
     grid-template-columns: 1fr;
     --columns: 1;
     row-gap: var(--space-4);
+  }
+
+  #Blog--guides .article:nth-child(n+3) {
+    display: none;
   }
 }
 

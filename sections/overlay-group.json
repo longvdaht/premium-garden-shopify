@@ -32,9 +32,6 @@
           "type": "gift-note",
           "disabled": true
         },
-        "reviews": {
-          "type": "reviews"
-        },
         "checkout-buttons": {
           "type": "checkout-buttons"
         }
@@ -48,7 +45,6 @@
         "horizontal-product-upsell",
         "discount",
         "gift-note",
-        "reviews",
         "checkout-buttons"
       ]
     }
