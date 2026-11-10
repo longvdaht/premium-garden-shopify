@@ -6,13 +6,15 @@
       "type": "cart-drawer",
       "blocks": {
         "cart-message": {
-          "type": "cart-message"
+          "type": "cart-message",
+          "disabled": true
         },
         "title": {
           "type": "title"
         },
         "cart-promotions": {
-          "type": "cart-promotions"
+          "type": "cart-promotions",
+          "disabled": true
         },
         "mini-product-upsell": {
           "type": "mini-product-upsell"
