@@ -10,7 +10,7 @@
           "settings": {
             "title": "Potager",
             "heading_font_size": "heading-medium",
-            "text": "<p>Tools for the working garden. One seasonal note a week.</p>",
+            "text": "<p>It's time to grow. One seasonal note a week.</p>",
             "column_width": 40,
             "enable_follow_on_shop": false,
             "enable_accordion": false
