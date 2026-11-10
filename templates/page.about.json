@@ -15,14 +15,14 @@
         "eyebrow": {
           "type": "subheading",
           "settings": {
-            "subheading": "About",
+            "subheading": "About us",
             "padding_bottom": 24
           }
         },
         "title": {
           "type": "heading",
           "settings": {
-            "title": "Tools for the working garden.",
+            "title": "“It's time to grow”",
             "heading_font_size": "heading-x-large",
             "padding_bottom": 24,
             "heading_tag": "h1"
@@ -31,7 +31,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>[Two-line brand statement: what we sell, who it is for, and the standard we hold it to.]</p>",
+            "text": "<p>In the kitchen, on the balcony, in the yard, or on the farm, there are countless ways to elevate the spaces where we live, work, and play. We bring exceptional tools and products to improve the living environment around us.</p>",
             "text_font_size": "body-large",
             "padding_bottom": 0
           }
@@ -88,10 +88,18 @@
     "about_statement": {
       "type": "section-rich-text-columns",
       "blocks": {
+        "eyebrow": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Our philosophy",
+            "position": "left",
+            "padding_bottom": 16
+          }
+        },
         "title": {
           "type": "heading",
           "settings": {
-            "title": "We stock fewer tools, and we stand behind each one.",
+            "title": "High Standards. Low Restraint.",
             "heading_font_size": "heading-large",
             "position": "left",
             "padding_bottom": 0,
@@ -101,7 +109,7 @@
         "lede": {
           "type": "text",
           "settings": {
-            "text": "<p>[Lede paragraph: why the shop exists.]</p>",
+            "text": "<p>Professional-grade performance, carefully chosen materials, thoughtful design, and attention to detail. Not extravagance for its own sake, or complexity where none is needed. Exceptionally well-made things that do their job extraordinarily well.</p>",
             "text_font_size": "body-large",
             "position": "right",
             "padding_bottom": 24
@@ -110,14 +118,15 @@
         "body": {
           "type": "text",
           "settings": {
-            "text": "<p>[Body copy to come: two or three short paragraphs on how the shop works.]</p>",
-            "text_font_size": "body-medium",
+            "text": "<p>Put our goods to work. Get them dirty, use them hard, and see what they can take. Fine tools and goods aren't trophies for a shelf. They're meant to be used, tested, maintained, and put straight back to work. Scratches and scuffs are signs of a life well spent.</p>",
+            "text_font_size": "body-large",
             "position": "right",
             "padding_bottom": 0
           }
         }
       },
       "block_order": [
+        "eyebrow",
         "title",
         "lede",
         "body"
@@ -138,7 +147,7 @@
     "about_story": {
       "type": "main-page",
       "settings": {
-        "subheading": "Our story",
+        "subheading": "The company",
         "show_title": false,
         "heading_font_size": "heading-large",
         "show_content": true,
@@ -154,26 +163,27 @@
     "about_choose_intro": {
       "type": "section-rich-text",
       "blocks": {
-        "eyebrow": {
-          "type": "subheading",
-          "settings": {
-            "subheading": "How we choose",
-            "padding_bottom": 16
-          }
-        },
         "title": {
           "type": "heading",
           "settings": {
-            "title": "Three tests before a tool makes the shelf",
+            "title": "Our Standard",
             "heading_font_size": "heading-large",
-            "padding_bottom": 0,
+            "padding_bottom": 24,
             "heading_tag": "automatic"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We develop products that make you want to get back to work and give you more pleasure while you're at it, whether that's through traditional craftsmanship or advanced materials and manufacturing.</p>",
+            "text_font_size": "body-large",
+            "padding_bottom": 0
           }
         }
       },
       "block_order": [
-        "eyebrow",
-        "title"
+        "title",
+        "text"
       ],
       "settings": {
         "align_text": "text-left",
@@ -181,7 +191,7 @@
         "headings_inline": false,
         "hide_without_heading": false,
         "content_width": 60,
-        "color_scheme": "scheme-2",
+        "color_scheme": "scheme-4",
         "overlay_opacity": 0,
         "show_overlay_text": false,
         "padding_top": 96,
@@ -193,13 +203,13 @@
     "about_choose": {
       "type": "section-text-columns-with-media",
       "blocks": {
-        "material": {
+        "quality": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/masterial.png",
-            "title": "Material",
+            "title": "Obsessive about quality",
             "heading_font_size": "heading-medium",
-            "text": "<p>[What the steel, wood and fittings have to be.]</p>",
+            "text": "<p>We're hard to please when it comes to quality. Materials, construction, finish, and performance all receive the same scrutiny, including details that most people might never notice. Overbuilt is our default.</p>",
             "text_font_size": "body-medium",
             "button_text": "",
             "button_url": "",
@@ -212,13 +222,13 @@
             "heading_tag": "automatic"
           }
         },
-        "maker": {
+        "design": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/maker.png",
-            "title": "Maker",
+            "title": "Design and performance",
             "heading_font_size": "heading-medium",
-            "text": "<p>[Who makes it, and how long they have made one thing.]</p>",
+            "text": "<p>Design extends well beyond appearance. We offer products that perform exceptionally well while making the work of horticulture more enjoyable and rewarding.</p>",
             "text_font_size": "body-medium",
             "button_text": "",
             "button_url": "",
@@ -231,13 +241,13 @@
             "heading_tag": "automatic"
           }
         },
-        "use": {
+        "improve": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/use.png",
-            "title": "Use",
+            "title": "Keep improving",
             "heading_font_size": "heading-medium",
-            "text": "<p>[We use it in our own garden for a season first.]</p>",
+            "text": "<p>We don't believe in settling. There's always more to learn about growing plants, making things, and doing either well. We bring that same approach to our products, making improvements as we learn and putting one foot in front of the other.</p>",
             "text_font_size": "body-medium",
             "button_text": "",
             "button_url": "",
@@ -252,9 +262,9 @@
         }
       },
       "block_order": [
-        "material",
-        "maker",
-        "use"
+        "quality",
+        "design",
+        "improve"
       ],
       "settings": {
         "title": "",
@@ -266,74 +276,40 @@
         "layout": "grid",
         "grid": 3,
         "layout_mobile": "1",
-        "color_scheme": "scheme-2",
+        "color_scheme": "scheme-4",
         "padding_top": 48,
-        "padding_bottom": 96,
+        "padding_bottom": 0,
         "heading_tag": "automatic"
       }
     },
-    "about_makers": {
-      "type": "section-double",
+    "about_standard_close": {
+      "type": "section-rich-text",
       "blocks": {
-        "eyebrow": {
-          "type": "subheading",
+        "text": {
+          "type": "text",
           "settings": {
-            "subheading": "Where things are made",
-            "pin_to_bottom": false,
-            "padding_bottom": 16
-          }
-        },
-        "title": {
-          "type": "heading",
-          "settings": {
-            "title": "Made by people who make one thing well",
-            "heading_font_size": "heading-large",
-            "pin_to_bottom": false,
-            "padding_bottom": 32,
-            "heading_tag": "automatic"
-          }
-        },
-        "specs": {
-          "type": "specs",
-          "settings": {
-            "rows": "Yoshioka Hamono | Bud shears · Miki, Japan\n[Maker] | [Tool] · [Town, country]\n[Maker] | [Tool] · [Town, country]",
-            "pin_to_bottom": false,
+            "text": "<p>All of this is for the people who love growing things, and those who haven't yet discovered that they do. There are plenty of places around us that could use a little more life.</p>",
+            "text_font_size": "body-large",
             "padding_bottom": 0
           }
         }
       },
       "block_order": [
-        "eyebrow",
-        "title",
-        "specs"
+        "text"
       ],
       "settings": {
-        "image_1": "shopify://shop_images/maker-banner.png",
-        "image_shape_enable": false,
-        "image_crop": "none",
-        "image_shape": "scalloped-circle-1",
-        "image_2_shape_enable": false,
-        "image_2_crop": "none",
-        "image_2_shape": "scalloped-circle-1",
-        "image_width": "one-half",
-        "product": "",
-        "upsell_color_scheme": "",
-        "upsell_button_type": "btn--secondary",
-        "upsell_button_size": "btn--small",
-        "upsell_button_style": "btn--outline",
-        "text_alignment": "text-left",
-        "layout": "",
+        "align_text": "text-center",
         "width": "wrapper",
-        "height": "image-height",
-        "mobile_height": "image-height--mobile",
-        "reverse_blocks": false,
+        "headings_inline": false,
+        "hide_without_heading": false,
+        "content_width": 50,
         "color_scheme": "scheme-4",
-        "content_bg": "",
-        "content_gutter": false,
-        "padding_top": 96,
+        "overlay_opacity": 0,
+        "show_overlay_text": false,
+        "padding_top": 64,
         "padding_bottom": 96,
-        "show_placeholder": true,
-        "image_ratio": "landscape"
+        "padding_top_content": 0,
+        "padding_bottom_content": 0
       }
     },
     "about_onward": {
@@ -342,12 +318,12 @@
         "shop": {
           "type": "text",
           "settings": {
-            "column_width": 33,
-            "title": "The tools",
+            "column_width": 50,
+            "title": "The Collection",
             "heading_font_size": "heading-medium",
-            "text": "<p>[One line.]</p>",
+            "text": "<p>Tools, supplies, and other goods for growing, tending, and improving the spaces around us.</p>",
             "text_font_size": "body-medium",
-            "button_text": "Shop the tools",
+            "button_text": "Explore the collection",
             "button_url": "shopify://collections/all",
             "button_type": "btn--primary",
             "button_size": "",
@@ -360,10 +336,10 @@
         "guides": {
           "type": "text",
           "settings": {
-            "column_width": 33,
+            "column_width": 50,
             "title": "How-tos and notes",
             "heading_font_size": "heading-medium",
-            "text": "<p>[One line.]</p>",
+            "text": "<p>Articles on horticulture, projects, and products</p>",
             "text_font_size": "body-medium",
             "button_text": "Read the guides",
             "button_url": "/blogs/guides",
@@ -374,30 +350,11 @@
             "heading_tag": "automatic",
             "subheading": "Guides"
           }
-        },
-        "faq": {
-          "type": "text",
-          "settings": {
-            "column_width": 33,
-            "title": "Questions",
-            "heading_font_size": "heading-medium",
-            "text": "<p>[One line.]</p>",
-            "text_font_size": "body-medium",
-            "button_text": "Read the FAQ",
-            "button_url": "/pages/faqs",
-            "button_type": "btn--primary",
-            "button_size": "",
-            "button_style": "btn--text",
-            "show_arrow": false,
-            "heading_tag": "automatic",
-            "subheading": "Help"
-          }
         }
       },
       "block_order": [
         "shop",
-        "guides",
-        "faq"
+        "guides"
       ],
       "settings": {
         "title": "",
@@ -423,7 +380,7 @@
     "about_story",
     "about_choose_intro",
     "about_choose",
-    "about_makers",
+    "about_standard_close",
     "about_onward"
   ]
 }

@@ -473,20 +473,17 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .brick__block__text .ds-specs{width:100%}
 @media (max-width:767px){.brick__block__text:not(.has-padding),.brick__section--reversed .brick__block__text:not(.has-padding){padding:var(--space-4) 0 0}}
 
-/* About / Brand Story (templates/page.about.json, wireframe 06): the founder
-   story is the page content (Page section), styled as a reading column. */
+/* About / Brand Story (templates/page.about.json, wireframe 06): The Company
+   (block 04) is the page content (Page section), styled as a reading column. */
 .template-page-about .index-page .hero__content__wrapper{max-width:calc(720px + 2 * var(--gutter-desktop));overflow:visible}
-/* Our story: page content in a 720px reading column, hairline above the label */
+/* The Company: page content in a 720px reading column, hairline above the label */
 .template-page-about .index-page .hero__content{padding-inline:0}
 .template-page-about .index-page .hero__subheading{padding-top:var(--space-3);border-top:1px solid var(--hairline)}
 .template-page-about .index-page .rte{font-size:16px;line-height:1.6}
 .template-page-about .index-page .rte>*+*{margin-top:var(--space-2)}
 .template-page-about .index-page .rte h2{margin:var(--space-1) 0 var(--space-2);font-family:var(--font-display);font-size:var(--FONT-HEADING-LARGE);font-weight:500;line-height:1.1;letter-spacing:-.01em}
-/* Byline: the paragraph straight after the headline */
-.template-page-about .index-page .rte h2+p{margin-top:0;font-size:13px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
-.template-page-about .index-page .rte h2+p em{font-style:normal}
-/* Lede: the paragraph after the byline */
-.template-page-about .index-page .rte h2+p+p{margin-top:var(--space-3);font-size:20px;line-height:1.6}
+/* Lede: the first paragraph after the headline (no founder byline, 06.4) */
+.template-page-about .index-page .rte h2+p{margin-top:0;font-size:20px;line-height:1.6}
 /* Pull quote: Fraunces 28px between hairlines */
 .template-page-about .index-page .rte blockquote{margin:var(--space-5) 0;padding:var(--space-3) 0;border:0;border-block:1px solid var(--hairline);font-family:var(--font-display);font-size:28px;font-weight:400;font-style:normal;line-height:1.3;color:var(--ink)}
 .template-page-about .index-page .rte blockquote p{margin:0;font:inherit}

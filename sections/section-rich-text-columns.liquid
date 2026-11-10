@@ -53,6 +53,17 @@
 
     <div class="rte-columns-block" {{ block.shopify_attributes }} {{ block_style }}>
       {%- case block.type -%}
+        {%- when 'subheading' -%}
+          {%- if block.settings.subheading != blank -%}
+            <p class="hero__subheading subheading block-padding"
+              data-aos="hero"
+              data-aos-anchor="{{ animation_anchor }}"
+              data-aos-order="{{ animation_order }}"
+            >
+              {{ block.settings.subheading }}
+            </p>
+          {%- endif -%}
+
         {%- when 'heading' -%}
           {%- if block.settings.title != blank -%}
             {%- liquid
@@ -343,6 +354,52 @@
     }
   ],
   "blocks": [
+    {
+      "type": "subheading",
+      "name": "Subheading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Subheading"
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Column",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom",
+          "default": 16
+        }
+      ]
+    },
     {
       "type": "heading",
       "name": "Heading",
