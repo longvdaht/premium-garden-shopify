@@ -720,6 +720,11 @@ select{background-size:20px auto;background-position:right var(--space-2) center
   .cart-holder .cart__aside--pinned .cart-discount {
     padding-top: 0;
     margin-top: 0;
+    padding-inline: 0;
+  }
+  .cart-holder .cart__aside .cart__foot__inner,
+  .cart-holder .cart__aside--pinned .cart__foot__inner {
+    padding-inline: 0;
   }
   .cart-holder .cart__aside > .cart-block:first-child .cart__widget,
   .cart-holder .cart__aside > .cart-block:first-child .cart__foot__inner {
@@ -727,6 +732,7 @@ select{background-size:20px auto;background-position:right var(--space-2) center
     margin-top: 0;
   }
 }
+
 
 
 
