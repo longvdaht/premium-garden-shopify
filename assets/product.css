@@ -455,6 +455,15 @@ dialog[closing] .product-modal__outer {
   font-variant-numeric: tabular-nums;
 }
 
+/* Potager: sold-out variant. Klaviyo's "Notify me" button replaces Add to cart,
+   so the quantity stepper is hidden and the button takes the full row */
+.variant--soldout .product__block--buttons .product-form__quantity {
+  display: none;
+}
+.variant--soldout .product__block--buttons .product__submit__item--inline {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 /* Potager: slide counter under the gallery on mobile (wireframe 03, note 2) */
 .product__slides-progress {
   display: none;
