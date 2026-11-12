@@ -48,6 +48,9 @@
     assign only_images = true
   endif
 
+  # Potager: the Shop dropdown lists only collections that have products (wireframe 00.3).
+  # An empty collection is skipped; it comes back once a product is added.
+
   # Potager: underline the menu link for the part of the site being viewed.
   # Shop covers product and collection pages; a blog link covers its articles.
   assign nav_active = false
@@ -115,6 +118,7 @@
               <div class="header__grandparent__links">
                 {% if link.levels == 2 %}
                   {% for link in link.links %}
+                    {%- if link.type == 'collection_link' and link.object.products_count == 0 -%}{%- continue -%}{%- endif -%}
                     {%- assign link_title_lowercase = link.title | downcase | strip_html | escape -%}
                     <div class="dropdown__family">
                       <a
@@ -129,6 +133,7 @@
                         </span>
                       </a>
                       {% for link in link.links %}
+                        {%- if link.type == 'collection_link' and link.object.products_count == 0 -%}{%- continue -%}{%- endif -%}
                         {%- assign link_title_lowercase = link.title | downcase | strip_html | escape -%}
                         <a
                           href="{{ link.url }}"
@@ -147,6 +152,7 @@
                 {% elsif link.levels == 1 %}
                   <div class="dropdown__family">
                     {% for link in link.links %}
+                      {%- if link.type == 'collection_link' and link.object.products_count == 0 -%}{%- continue -%}{%- endif -%}
                       {%- assign link_title_lowercase = link.title | downcase | strip_html | escape -%}
                       <a
                         href="{{ link.url }}"
@@ -173,6 +179,7 @@
 
           {%- elsif parent -%}
             {% for link in link.links %}
+              {%- if link.type == 'collection_link' and link.object.products_count == 0 -%}{%- continue -%}{%- endif -%}
               {%- assign link_title_lowercase = link.title | downcase | strip_html | escape -%}
               <a
                 href="{{ link.url }}"

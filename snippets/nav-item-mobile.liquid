@@ -94,6 +94,7 @@
         </div>
         <div class="sliderow__links" data-links>
           {%- for link in link.links -%}
+            {%- if link.type == 'collection_link' and link.object.products_count == 0 -%}{%- continue -%}{%- endif -%}
             {%- assign index_recursive = index | append: 'x' | append: forloop.index -%}
             {%- assign animation_delay = 50 | times: forloop.index -%}
 
