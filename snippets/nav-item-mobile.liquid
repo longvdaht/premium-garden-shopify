@@ -45,30 +45,64 @@
 <div class="sliderule__wrapper{% if secondary_menu %} sliderule__wrapper--secondary{% endif %}">
   {%- if expands and block.type != 'menu-columns' -%}
     <mobile-sliderule id="sliderule-{{ key }}">
-      <button
-        class="sliderow"
-        type="button"
-        aria-label="{{ link.title | strip_html | escape }}"
-        data-animates="{{ link_level }}"
-        data-animation="{{ animation_name }}"
-        data-animation-delay="{{ animation_delay | plus: animation_delay_additional }}"
-        data-sliderule-open="sliderule-{{ key }}"
-      >
-        <span class="sliderow__title{% if secondary_menu %} sliderow__title--secondary{% endif %}{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}">
-          <span>
-            {{ link.title | strip_html | escape }}
+      {%- if link.url != '#' -%}
+        {%- comment -%}
+          Potager: the title opens its page (Shop goes to the shop page); only the
+          chevron opens the submenu.
+        {%- endcomment -%}
+        <div
+          class="sliderow sliderow--split"
+          data-animates="{{ link_level }}"
+          data-animation="{{ animation_name }}"
+          data-animation-delay="{{ animation_delay | plus: animation_delay_additional }}"
+        >
+          <a class="sliderow__title{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}" href="{{ link.url }}">
+            <span>
+              {{ link.title | strip_html | escape }}
 
-            {%- if link_level > 0 -%}
-              {%- render 'superscript', link_collection: link -%}
-            {%- endif -%}
-          </span>
+              {%- if link_level > 0 -%}
+                {%- render 'superscript', link_collection: link -%}
+              {%- endif -%}
+            </span>
+          </a>
 
-          <span class="sliderule__chevron sliderule__chevron--right">
-            {%- render 'icon', name: 'caret-right' -%}
-            <span class="visually-hidden">{{ 'general.accessibility.show_menu' | t }}</span>
+          <button
+            class="sliderow__toggle"
+            type="button"
+            aria-label="{{ 'general.accessibility.show_menu' | t }}: {{ link.title | strip_html | escape }}"
+            data-sliderule-open="sliderule-{{ key }}"
+          >
+            <span class="sliderule__chevron sliderule__chevron--right">
+              {%- render 'icon', name: 'caret-right' -%}
+            </span>
+          </button>
+        </div>
+      {%- else -%}
+        <button
+          class="sliderow"
+          type="button"
+          aria-label="{{ link.title | strip_html | escape }}"
+          data-animates="{{ link_level }}"
+          data-animation="{{ animation_name }}"
+          data-animation-delay="{{ animation_delay | plus: animation_delay_additional }}"
+          data-sliderule-open="sliderule-{{ key }}"
+        >
+          <span class="sliderow__title{% if secondary_menu %} sliderow__title--secondary{% endif %}{% if highlight_item == link_title_lowercase %} sliderow__title--highlight{% endif %}">
+            <span>
+              {{ link.title | strip_html | escape }}
+
+              {%- if link_level > 0 -%}
+                {%- render 'superscript', link_collection: link -%}
+              {%- endif -%}
+            </span>
+
+            <span class="sliderule__chevron sliderule__chevron--right">
+              {%- render 'icon', name: 'caret-right' -%}
+              <span class="visually-hidden">{{ 'general.accessibility.show_menu' | t }}</span>
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
+      {%- endif -%}
 
       <div
         class="mobile__menu__dropdown sliderule__panel"

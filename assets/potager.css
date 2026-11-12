@@ -530,6 +530,11 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .site-footer-wrapper .footer__block--social .newsletter__submit::after{content:"";width:20px;height:20px;background:var(--ink);-webkit-mask:url("potager-arrow-right.svg") center/20px no-repeat;mask:url("potager-arrow-right.svg") center/20px no-repeat}
 .site-footer-wrapper .footer__block--social .newsletter__submit:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-2px}
 .site-footer-wrapper .footer__block--social .newsletter__message{font-size:13px;line-height:1.5;color:var(--ink-muted)}
+/* Sign-up result: plain text in the field's place, not a pale box; the success
+   line takes focus for screen readers, so it gets no focus outline */
+.site-footer-wrapper .footer__block--social .newsletter__message{margin:0;padding:12px 0;background:none;font-style:normal}
+.site-footer-wrapper .footer__block--social .newsletter__message--success{border-bottom:1px solid var(--ink);font-size:15px;font-weight:500;color:var(--ink)}
+.site-footer-wrapper .footer__block--social .newsletter__message--success:focus{outline:none}
 /* Social icons: monochrome, 44px tap targets */
 .site-footer-wrapper .footer__block--social .socials{display:flex;flex-wrap:wrap;gap:4px;margin:var(--space-3) 0 0 -12px}
 .site-footer-wrapper .footer__block--social .socials>li{margin:0}
@@ -733,7 +738,7 @@ select{background-size:20px auto;background-position:right var(--space-2) center
   }
 }
 
-
-
-
-
+/* Mobile menu: a parent row is a link plus a chevron button (nav-item-mobile.liquid) */
+.sliderow--split .sliderow__title{flex:1 1 auto;padding-right:0}
+.sliderow--split .sliderow__toggle{flex:none;display:flex;align-items:stretch;justify-content:flex-end;min-height:var(--item-height);padding:0 var(--inner) 0 var(--space-2);border:0;background:none;color:inherit;cursor:pointer}
+.sliderow--split .sliderow__toggle:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-2px}
