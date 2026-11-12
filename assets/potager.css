@@ -535,6 +535,9 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .site-footer-wrapper .footer__block--social .newsletter__message{margin:0;padding:12px 0;background:none;font-style:normal}
 .site-footer-wrapper .footer__block--social .newsletter__message--success{border-bottom:1px solid var(--ink);font-size:15px;font-weight:500;color:var(--ink)}
 .site-footer-wrapper .footer__block--social .newsletter__message--success:focus{outline:none}
+/* After submitting, the page reloads at #Newsletter--… and the browser focuses the
+   form itself; a form is not a control, so it draws no focus ring (any sign-up form) */
+.newsletter-form:focus,.newsletter-form:focus-visible{outline:none}
 /* Social icons: monochrome, 44px tap targets */
 .site-footer-wrapper .footer__block--social .socials{display:flex;flex-wrap:wrap;gap:4px;margin:var(--space-3) 0 0 -12px}
 .site-footer-wrapper .footer__block--social .socials>li{margin:0}
