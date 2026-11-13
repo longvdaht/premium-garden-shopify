@@ -9,6 +9,12 @@
 .index-hero .hero__images {
   background-color: var(--bone-ground);
 }
+/* The image frame fills the hero box (16:9 desktop, 4:5 mobile). The theme sizes it to
+   75% of the screen height, which overran the box at tablet widths and ran under The Tools */
+.index-hero .hero__images .image__hero__frame {
+  height: 100%;
+  min-height: 0;
+}
 /* When no actual image is uploaded yet, keep background neutral bone-ground without broken placeholder icons */
 .index-hero .hero__split-image--blank img,
 .index-hero .hero__images .is-loading img {
@@ -251,6 +257,18 @@
 }
 .index-products.color-scheme-4 .grid__heading-actions .btn--text {
   color: var(--bone-page);
+}
+
+/* Mobile: 64px section padding and 24px between product columns (wireframe 01.3, 01.4).
+   section-collection sets its own mobile top padding (96px), so it is set here */
+@media (max-width: 749px) {
+  .index-products.section-padding {
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-5);
+  }
+  .index-products {
+    --grid-gap: var(--space-3);
+  }
 }
 
 /* Product placeholder cards when no images or products are uploaded yet:
@@ -966,10 +984,6 @@
     grid-template-columns: 1fr;
     --columns: 1;
     row-gap: var(--space-4);
-  }
-
-  #Blog--guides .article:nth-child(n+3) {
-    display: none;
   }
 }
 

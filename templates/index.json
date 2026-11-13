@@ -26,7 +26,7 @@
           "type": "text",
           "settings": {
             "text": "<p>Beautiful spaces aren’t made, they’re grown.</p>",
-            "text_font_size": "body-large",
+            "text_font_size": "body-medium",
             "padding_bottom": 16
           },
           "blocks": {}
@@ -211,7 +211,7 @@
           "type": "text",
           "settings": {
             "text": "<p>From houseplants, to balconies, to yards, to estates… and everything in between.</p>",
-            "text_font_size": "body-large",
+            "text_font_size": "body-medium",
             "pin_to_bottom": false,
             "padding_bottom": 32
           }
