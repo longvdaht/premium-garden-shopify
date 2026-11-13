@@ -217,19 +217,21 @@
   padding-bottom: 0;
 }
 
-/* Ensure SHOP ALL & VIEW THE PRODUCT are on 1 line and have only 1 clean underline */
+/* Ensure SHOP ALL & VIEW THE PRODUCT are on 1 line and have only 1 clean underline.
+   All homepage text links follow the style guide's TextCTA: 12px, line-height 1.2,
+   3px between the text and the 2px red underline */
 .index-products .grid__heading-actions .btn--text,
 .clickable-details .btn--text,
 .clickable-details .hero__description a {
   white-space: nowrap;
-  padding: 0 0 1px 0;
+  padding: 0 0 3px 0;
   border: none;
   border-bottom: 2px solid var(--signal);
   text-decoration: none;
   background: none !important;
   background-image: none !important;
   display: inline-block;
-  line-height: 1;
+  line-height: 1.2;
 }
 .index-products .grid__heading-actions .btn--text {
   transform: translateY(-6px);
@@ -731,6 +733,7 @@
   border-bottom: 2px solid var(--signal);
   color: var(--bone-page);
   padding: 0 0 3px 0;
+  line-height: 1.2;
   text-decoration: none;
   border-radius: 0;
   box-shadow: none;
@@ -750,6 +753,7 @@
   background-color: transparent;
   background-image: none;
   padding: 0;
+  line-height: inherit;
   color: var(--bone-page);
 }
 
@@ -811,7 +815,8 @@
 
 .blog-section .blog__heading .ds-cta {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.2;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
