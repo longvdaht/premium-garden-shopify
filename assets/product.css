@@ -457,11 +457,19 @@ dialog[closing] .product-modal__outer {
 
 /* Potager: sold-out variant. Klaviyo's "Notify me" button replaces Add to cart,
    so the quantity stepper is hidden and the button takes the full row */
-.variant--soldout .product__block--buttons .product-form__quantity {
+.variant--soldout .product__block--buttons .product-form__quantity,
+.product__submit__item--inline:has(#klaviyo-bis-button-container) .product-form__quantity {
   display: none;
 }
-.variant--soldout .product__block--buttons .product__submit__item--inline {
+.variant--soldout .product__block--buttons .product__submit__item--inline,
+.product__block--buttons .product__submit__item--inline:has(#klaviyo-bis-button-container) {
   grid-template-columns: minmax(0, 1fr);
+}
+/* Klaviyo's button matches Add to cart: 48px tall including its border */
+.product__block--buttons #klaviyo-bis-button-container button {
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
 }
 
 /* Potager: slide counter under the gallery on mobile (wireframe 03, note 2) */
