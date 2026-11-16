@@ -29,7 +29,13 @@
   {%- assign selling_plan_hide = false -%}
 {% endif %}
 
-{%- if product.has_only_default_variant and selling_plan_hide -%}
+{%- comment -%}
+  Potager: the bar adds the variant chosen in the main form (it always has one
+  selected) instead of showing "Configure" for products with options. When the
+  option changes, product-info.js re-renders this bar for the new variant, so
+  the label follows it (Add to cart / Sold out). Wireframe 03, sticky bar.
+{%- endcomment -%}
+{%- if selling_plan_hide -%}
   {%- assign button_add = true -%}
 {%- endif -%}
 
