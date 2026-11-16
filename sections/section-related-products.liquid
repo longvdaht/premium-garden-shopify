@@ -58,6 +58,21 @@
         if related_collection == blank
           assign related_collection = collections.all
         endif
+
+        # A collection with no other (visible) product would leave the
+        # section empty, so it falls back to Shop all (wireframe 03.4).
+        assign has_other_product = false
+        for related_product in related_collection.products limit: 10
+          if related_product.id != product.id
+            unless related_product.tags contains 'hide'
+              assign has_other_product = true
+              break
+            endunless
+          endif
+        endfor
+        unless has_other_product
+          assign related_collection = collections.all
+        endunless
       endif
       assign related_collection_title = related_collection.title
       if related_collection.handle == 'all'
