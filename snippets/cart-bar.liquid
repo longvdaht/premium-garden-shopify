@@ -41,7 +41,8 @@
 
 {%- comment -%}
   Potager: a sold-out choice shows "Notify me when available" and opens the
-  same Klaviyo back-in-stock popup as the main button (cart-bar.js).
+  same Klaviyo back-in-stock popup as the main button (cart-bar.js). The bar
+  skips the theme's variant--soldout class, which greys the button out.
 {%- endcomment -%}
 {%- assign bar_notify = false -%}
 {%- if button_add and current_variant.available != true -%}
@@ -60,7 +61,7 @@
 
 <cart-bar id="CartBar-{{ section.id }}" class="cart-bar">
   <div
-    class="cart-bar__form__wrapper form__wrapper{% if button_add and current_variant.available != true %} variant--soldout{% endif %}{% if settings.show_newsletter %} show-product-notification{% endif %}{% unless any_variant_available %} all-variants--soldout{% endunless %}"
+    class="cart-bar__form__wrapper form__wrapper{% if settings.show_newsletter %} show-product-notification{% endif %}{% unless any_variant_available %} all-variants--soldout{% endunless %}"
     data-form-wrapper
   >
     <div class="cart-bar__info">
