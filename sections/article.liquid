@@ -252,11 +252,8 @@
                   {%- endif -%}
                   {%- assign handles_arr = handles | split: ',' | compact | uniq -%}
 
-                  <div class="widget widget--tools" {{ block.shopify_attributes }}>
-                    {%- assign tools_title = block.settings.title | default: 'Tools in this guide' -%}
-                    <h3 class="widget__title">{{ tools_title }}</h3>
-
-                    <div class="widget__products">
+                  {%- comment -%} Potager: the block is left out when the guide has no tools to show {%- endcomment -%}
+                  {%- capture tools_html -%}
                       {%- liquid
                         if guide_products != blank and guide_products.count > 0
                           for product in guide_products limit: 5
@@ -275,8 +272,19 @@
                           endfor
                         endif
                       -%}
+                  {%- endcapture -%}
+                  {%- assign tools_html = tools_html | strip -%}
+
+                  {%- if tools_html != blank -%}
+                    <div class="widget widget--tools" {{ block.shopify_attributes }}>
+                      {%- assign tools_title = block.settings.title | default: 'Tools in this guide' -%}
+                      <h3 class="widget__title">{{ tools_title }}</h3>
+
+                      <div class="widget__products">
+                        {{- tools_html -}}
+                      </div>
                     </div>
-                  </div>
+                  {%- endif -%}
 
                 {%- when 'collection' -%}
                   {%- liquid
