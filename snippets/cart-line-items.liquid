@@ -156,20 +156,25 @@
       data-animation-delay="{{ animation_delay }}"
       {%- assign animation_delay = animation_delay | plus: animation_delay_increment -%}
     >
-      <div class="cart__item__image{% unless line_item.image %} image--empty{% endunless %}">
+      {%- comment -%}
+        Potager: a product with no photo shows the same "Photo coming soon"
+        placeholder as the shop grid (Theme settings > product placeholder image)
+      {%- endcomment -%}
+      {%- assign line_item_image = line_item.image | default: settings.product_placeholder_image -%}
+      <div class="cart__item__image{% unless line_item_image %} image--empty{% endunless %}">
         <a
           href="{{ line_item.url }}"
           aria-label="{{ line_item.title | escape }}"
-          {% unless line_item.image %}
+          {% unless line_item_image %}
             tabindex="-1"
           {% endunless %}
           {% if settings.show_image_bg != 'none' %}
             class="show-gray-bg"
           {% endif %}
         >
-          {%- if line_item.image -%}
+          {%- if line_item_image -%}
             {%- render 'image',
-              image: line_item.image,
+              image: line_item_image,
               width: 160,
               widths: '80, 120, 160, 240',
               sizes: '80px',
@@ -568,6 +573,7 @@
       {%- assign animation_delay = animation_delay | plus: animation_delay_increment -%}
       {%- assign animation_delay_bundle = animation_delay_bundle | plus: animation_delay_increment -%}
 
+      {%- assign bundle_image = bundle_image | default: settings.product_placeholder_image -%}
       <div class="cart__item__image{% unless bundle_image %} image--empty{% endunless %}">
         <a
           href="{{ bundle_url }}"
