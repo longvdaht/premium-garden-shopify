@@ -117,8 +117,11 @@ sidebar-anchors{display:block}
 .section-sidebar .widget__links li{margin:0;border-bottom:1px solid var(--hairline)}
 .section-sidebar .widget__link{display:block;width:100%;padding:12px 0;font-family:var(--font-sans);font-size:12px;font-weight:500;line-height:1.6;letter-spacing:.14em;text-transform:uppercase;text-align:left;color:var(--ink)}
 .section-sidebar .widget__link::after{display:none}
-.section-sidebar .widget__link:hover,
+/* Only the current topic is underlined. The hover underline is for mouse screens only:
+   a phone keeps the last tapped topic "hovered", which left two topics underlined */
 .section-sidebar .widget__link.is-selected{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:6px}
+@media (hover:hover){.section-sidebar .widget__link:hover{text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:6px}}
+.section-sidebar .widget__link:focus{outline:none}
 .section-sidebar .widget__link:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
 /* Topic headings. The theme's topic links scroll a heading to the very top,
    behind the sticky header; extra top padding (offset by a negative margin)
@@ -140,12 +143,17 @@ sidebar-anchors{display:block}
 @media (max-width:749px){
   /* Topics scroll sideways above the questions */
   .section-sidebar .section-sidebar__body{flex-direction:column}
-  .section-sidebar .section-sidebar__aside{flex:none;max-width:none;margin:0 0 var(--space-4);padding:0}
+  /* The topic row stays in view under the header while the questions scroll */
+  .section-sidebar .section-sidebar__aside{flex:none;max-width:none;margin:0 0 var(--space-4);padding:0;position:sticky;top:var(--header-height, 0px);z-index:2;background:var(--bg)}
   .section-sidebar .section-sidebar__widget{position:static;padding:0}
   .section-sidebar .widget__links{display:flex;gap:var(--space-3);overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--hairline);scrollbar-width:none}
   .section-sidebar .widget__links::-webkit-scrollbar{display:none}
   .section-sidebar .widget__links li{border:0;flex:none}
   .section-sidebar .widget__link{width:auto}
+  /* The sideways row clips anything outside it, so the keyboard focus ring sits inside the topic */
+  .section-sidebar .widget__link:focus-visible{outline-offset:-2px}
   .section-sidebar .section-sidebar__content{padding:0}
-  .section-sidebar .section-sidebar__title{margin-top:calc(var(--space-4) - var(--pf-jump))}
+  /* The theme's jump already stops below the header; the extra top padding keeps the
+     heading clear of the sticky topic row (44px) with 24px to spare */
+  .section-sidebar .section-sidebar__title{--pf-jump:calc(44px + var(--space-3));margin-top:calc(var(--space-4) - var(--pf-jump))}
 }

@@ -178,7 +178,12 @@
           data-aos-anchor="{{ animation_anchor }}"
           data-aos-order="{{ animation_order }}"
         >
-          <collapsible-elements single="true">
+          {%- comment -%}
+            Potager: several answers can be open at once (wireframe 07). With one-at-a-time,
+            a topic jump that opened its first answer closed an answer higher up, the page
+            got shorter mid-scroll and the topic heading ended up under the header.
+          {%- endcomment -%}
+          <collapsible-elements>
             {{ content_html }}
           </collapsible-elements>
         </div>

@@ -35,7 +35,12 @@
 .index-contact .custom-form__block--group{border:0;padding:0;min-width:0}
 .index-contact :is(input.field,textarea.field,select.field){box-sizing:border-box;width:100%;height:auto;margin:0;padding:14px var(--space-2);border:1px solid var(--ink);border-radius:var(--radius-1);background:var(--surface);font-family:var(--font-sans);font-size:16px;line-height:1.6;color:var(--ink);box-shadow:none}
 .index-contact :is(input.field,textarea.field):not(.field--placeholder)::placeholder{color:transparent;-webkit-text-fill-color:transparent}
-.index-contact .field--placeholder::placeholder{color:var(--ink-muted);-webkit-text-fill-color:var(--ink-muted);opacity:1}
+/* Placeholder text (and the select before a topic is chosen) is ink at 60%, clearly
+   lighter than typed text; ink-muted (#3B4A40) read almost the same as the answer */
+.index-contact{--field-placeholder:color-mix(in srgb, var(--ink) 60%, transparent)}
+.index-contact .field--placeholder::placeholder{color:var(--field-placeholder);-webkit-text-fill-color:var(--field-placeholder);opacity:1}
+.index-contact select.field:has(option[value=""]:checked){color:var(--field-placeholder)}
+.index-contact select.field option{color:var(--ink)}
 .custom-form__hint{margin:var(--space-1) 0 0;font-size:13px;line-height:1.5;color:var(--ink-muted)}
 .index-contact :is(input.field,textarea.field,select.field):focus{border:1px solid var(--ink)}
 .index-contact textarea.field{height:160px;min-height:120px;resize:vertical}
@@ -53,6 +58,9 @@
 /* Messages: errors start with the theme's error list in a 2px scarlet frame */
 .index-contact .errors{padding:var(--space-2);border:2px solid var(--signal);font-size:15px;line-height:1.5;color:var(--ink)}
 .index-contact .errors ul{margin:0;padding-left:var(--space-2)}
+/* After sending, Shopify jumps to the form and focuses it so screen readers read the
+   message; the form itself is not a control, so it draws no focus outline */
+.index-contact .contact-form:is(:focus,:focus-visible){outline:none}
 .index-contact .form-success{padding:var(--space-2);border:1px solid var(--ink);font-size:15px;line-height:1.5}
 /* Facts column */
 .index-contact .contact__aside{display:flex;flex-direction:column;gap:var(--space-4)}

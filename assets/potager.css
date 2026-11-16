@@ -465,7 +465,13 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .index-rte .hero__content__wrapper{background:none}
 .index-rte .hero__content.text-left{margin-inline:0 auto;padding-inline:0}
 .index-rte .hero__rte.body-large{color:var(--ink-muted)}
-.index-rte .hero__rte a{color:var(--ink)}
+/* A link in the text keeps the text's colour and is marked by its underline (wireframe 07, FAQ intro);
+   it turns to the full text colour on hover */
+.index-rte .hero__rte a{color:inherit;text-decoration-color:currentColor}
+.index-rte .hero__rte a:hover{color:var(--text)}
+/* About, Our Standard (green): the intro and the closing line use the same full text
+   colour as the column texts and headings, not the muted lede colour */
+.template-page-about .index-rte.color-scheme-4 .hero__rte.body-large{color:var(--text)}
 
 /* Image with text: the text column fills its half, with space against the image */
 .brick__block__text:not(.has-padding){--text-width:100%;padding:0 0 0 var(--space-5)}
@@ -482,8 +488,8 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .template-page-about .index-page .rte{font-size:16px;line-height:1.6}
 .template-page-about .index-page .rte>*+*{margin-top:var(--space-2)}
 .template-page-about .index-page .rte h2{margin:var(--space-1) 0 var(--space-2);font-family:var(--font-display);font-size:var(--FONT-HEADING-LARGE);font-weight:500;line-height:1.1;letter-spacing:-.01em}
-/* Lede: the first paragraph after the headline (no founder byline, 06.4) */
-.template-page-about .index-page .rte h2+p{margin-top:0;font-size:20px;line-height:1.6}
+/* First paragraph sits right under the headline; same size as the body text */
+.template-page-about .index-page .rte h2+p{margin-top:0}
 /* Pull quote: Fraunces 28px between hairlines */
 .template-page-about .index-page .rte blockquote{margin:var(--space-5) 0;padding:var(--space-3) 0;border:0;border-block:1px solid var(--hairline);font-family:var(--font-display);font-size:28px;font-weight:400;font-style:normal;line-height:1.3;color:var(--ink)}
 .template-page-about .index-page .rte blockquote p{margin:0;font:inherit}
