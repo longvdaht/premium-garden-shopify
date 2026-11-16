@@ -39,6 +39,15 @@
   {%- assign button_add = true -%}
 {%- endif -%}
 
+{%- comment -%}
+  Potager: a sold-out choice shows "Notify me when available" and opens the
+  same Klaviyo back-in-stock popup as the main button (cart-bar.js).
+{%- endcomment -%}
+{%- assign bar_notify = false -%}
+{%- if button_add and current_variant.available != true -%}
+  {%- assign bar_notify = true -%}
+{%- endif -%}
+
 {%- style -%}
   :root {
     --cart-bar-height: 80px;
@@ -67,13 +76,17 @@
           type="button"
           class="btn btn--secondary btn--solid product__submit__add{% unless button_add %} product__submit__add--default{% endunless %}"
           aria-labelledby="CartBarButtonText-{{ section.id }}"
-          {% if button_add %}
+          {% if bar_notify %}
+            data-cart-bar-notify
+          {% elsif button_add %}
             data-cart-bar-add-to-cart
           {% elsif any_variant_available %}
             data-cart-bar-scroll
           {% endif %}
-          {% if any_variant_available == false or button_add and current_variant.available != true %}
-            disabled="disabled"
+          {% if bar_notify == false %}
+            {% if any_variant_available == false or button_add and current_variant.available != true %}
+              disabled="disabled"
+            {% endif %}
           {% endif %}
         >
           <span
@@ -95,7 +108,7 @@
               {%- elsif current_variant.available -%}
                 {{ 'products.product.add_to_cart' | t }}
               {%- else -%}
-                {{ 'products.product.sold_out' | t }}
+                {{ 'products.product.notify_when_available' | t }}
               {%- endif -%}
             {%- elsif any_variant_available -%}
               {{ 'products.product.configure' | t }}
