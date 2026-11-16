@@ -605,7 +605,7 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .article-single .article__content{font-family:var(--font-sans);font-size:16px;line-height:1.6;color:var(--ink)}
 .article-single .article__content p{font-size:16px;line-height:1.6;color:var(--ink);margin:0 0 var(--space-3)}
 /* Lede: Inter 18px / 1.6 */
-.article-single .article__content>p:first-of-type{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:var(--space-4)}
+.article-single .article__content>p:first-of-type{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:var(--space-3)}
 /* Subheads: display-m (Fraunces 28px desktop, 24px mobile) */
 .article-single .article__content :is(h2,h3){font-family:var(--font-display);font-size:28px;font-weight:500;line-height:1.2;letter-spacing:-0.01em;color:var(--ink);margin:var(--space-5) 0 var(--space-2)}
 @media (max-width:767px){.article-single .article__content :is(h2,h3){font-size:24px;margin-top:var(--space-4)}}
@@ -615,7 +615,11 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .article-single .article__content table thead th{font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:0.2em;text-transform:uppercase;color:var(--signal);border-bottom:1px solid var(--hairline);padding:var(--space-2) 0}
 .article-single .article__content table caption,
 .article-single .article__content :is(h2,h3,h4,p):has(+ :is(table,.rte__table-wrapper,.rte-table)):is(.eyebrow,:has(strong:only-child)),
-.article-single .article__content :is(h2,h3,h4):has(+ :is(table,.rte__table-wrapper,.rte-table)){font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:0.2em;text-transform:uppercase;color:var(--signal);margin:var(--space-4) 0 var(--space-2);text-align:left}
+.article-single .article__content :is(h2,h3,h4):has(+ :is(table,.rte__table-wrapper,.rte-table)){font-family:var(--font-sans);font-size:11px;font-weight:600;line-height:1.4;letter-spacing:0.2em;text-transform:uppercase;color:var(--signal);margin:var(--space-3) 0;text-align:left}
+/* A table under its label ("What you need") starts 24px below it, as the wireframe;
+   the table's own 40px top margin is for tables with no label */
+.article-single .article__content :is(:is(h2,h3,h4,p):has(+ :is(table,.rte__table-wrapper,.rte-table)):is(.eyebrow,:has(strong:only-child)),:is(h2,h3,h4):has(+ :is(table,.rte__table-wrapper,.rte-table))) + :is(table,.rte__table-wrapper,.rte-table),
+.article-single .article__content :is(:is(h2,h3,h4,p):has(+ :is(table,.rte__table-wrapper,.rte-table)):is(.eyebrow,:has(strong:only-child)),:is(h2,h3,h4):has(+ :is(table,.rte__table-wrapper,.rte-table))) + :is(.rte__table-wrapper,.rte-table) > table{margin-top:0}
 .article-single .article__content table caption{caption-side:top;padding-bottom:var(--space-2);display:table-caption}
 .article-single .article__content table tr{border-bottom:1px solid var(--hairline);border-top:none;border-left:none;border-right:none}
 .article-single .article__content table th,
