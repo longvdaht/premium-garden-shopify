@@ -457,11 +457,13 @@ dialog[closing] .product-modal__outer {
 
 /* Potager: sold-out variant. Klaviyo's "Notify me" button replaces Add to cart,
    so the quantity stepper is hidden and the button takes the full row */
-.variant--soldout .product__block--buttons .product-form__quantity,
-.product__submit__item--inline:has(#klaviyo-bis-button-container) .product-form__quantity {
+/* Keyed to the live button state, not .variant--soldout: with the theme's own
+   notify popup off, that class is set on load and never removed on option change */
+.product__block--buttons .product__submit__item--inline:has([data-add-to-cart]:disabled) .product-form__quantity,
+.product__block--buttons .product__submit__item--inline:has(#klaviyo-bis-button-container) .product-form__quantity {
   display: none;
 }
-.variant--soldout .product__block--buttons .product__submit__item--inline,
+.product__block--buttons .product__submit__item--inline:has([data-add-to-cart]:disabled),
 .product__block--buttons .product__submit__item--inline:has(#klaviyo-bis-button-container) {
   grid-template-columns: minmax(0, 1fr);
 }
