@@ -96,28 +96,36 @@
           </div>
         </div>
 
-        {%- if article.user.bio and show_author -%}
+        {%- comment -%}
+          Potager: the author row shows for every guide (wireframe 05, note 5), not
+          only when the staff account has a bio. Name from the staff account, bio
+          and photo when set; with no photo the square stays as a plain tile.
+        {%- endcomment -%}
+        {%- if show_author and article.author != blank -%}
+          {%- assign author_name = article.user.first_name | append: ' ' | append: article.user.last_name | strip -%}
+          {%- if author_name == blank -%}
+            {%- assign author_name = article.author -%}
+          {%- endif -%}
           <div class="hr"></div>
 
           <div class="article__author-bio h6">
-            {%- if article.user.image != blank -%}
-              <div class="article__author__image">
+            <div class="article__author__image">
+              {%- if article.user.image != blank -%}
                 {%- render 'image',
                   image: article.user.image,
                   width: 160,
                   widths: '80, 120, 160, 240',
                   sizes: '80px'
                 -%}
-              </div>
-            {%- endif -%}
+              {%- endif -%}
+            </div>
 
             <div class="article__author__text">
-              <h3>
-                {{ article.user.first_name }}
-                {{ article.user.last_name }}
-              </h3>
+              <h3>{{ author_name }}</h3>
 
-              <p class="rte">{{ article.user.bio | newline_to_br }}</p>
+              {%- if article.user.bio != blank -%}
+                <p class="rte">{{ article.user.bio | newline_to_br }}</p>
+              {%- endif -%}
             </div>
           </div>
         {%- endif -%}
