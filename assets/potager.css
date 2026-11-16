@@ -607,8 +607,11 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 /* Lede: Inter 18px / 1.6 */
 .article-single .article__content>p:first-of-type{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:var(--space-3)}
 /* Subheads: display-m (Fraunces 28px desktop, 24px mobile) */
-.article-single .article__content :is(h2,h3){font-family:var(--font-display);font-size:28px;font-weight:500;line-height:1.2;letter-spacing:-0.01em;color:var(--ink);margin:var(--space-5) 0 var(--space-2)}
-@media (max-width:767px){.article-single .article__content :is(h2,h3){font-size:24px;margin-top:var(--space-4)}}
+.article-single .article__content :is(h2,h3){font-family:var(--font-display);font-size:28px;font-weight:500;line-height:1.2;letter-spacing:-0.01em;color:var(--ink);margin:var(--space-4) 0 var(--space-2)}
+@media (max-width:767px){.article-single .article__content :is(h2,h3){font-size:24px}}
+/* After a table the heading adds no space of its own: the table's 40px bottom margin
+   is the gap (the wrapper stops the two margins overlapping, which made 104px) */
+.article-single .article__content :is(table,.rte__table-wrapper,.rte-table) + :is(h2,h3){margin-top:0}
 
 /* "WHAT YOU NEED" table styled like ds-specs */
 .article-single .article__content table{width:100%;border-collapse:collapse;border:none;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);margin:var(--space-4) 0}
