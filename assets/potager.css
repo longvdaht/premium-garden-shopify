@@ -472,6 +472,8 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 /* About, Our Standard (green): the intro and the closing line use the same full text
    colour as the column texts and headings, not the muted lede colour */
 .template-page-about .index-rte.color-scheme-4 .hero__rte.body-large{color:var(--text)}
+/* ...while the three column texts under their headings are muted, as the wireframe (body muted) */
+.template-page-about .color-scheme-4 .column__text{color:var(--ink-muted)}
 
 /* Image with text: the text column fills its half, with space against the image */
 .brick__block__text:not(.has-padding){--text-width:100%;padding:0 0 0 var(--space-5)}
