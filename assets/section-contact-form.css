@@ -55,6 +55,12 @@
 .index-contact .contact__submit-note{margin:0;font-size:13px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
 .index-contact .custom-form__required-text{display:none}
 .index-contact .form__legal{font-size:12px;line-height:1.5;color:var(--ink-muted)}
+/* Field errors (wireframe 08, note 2): 2px scarlet border, and a line under the field that
+   starts with "Error". The padding drops 1px so the field does not grow */
+.index-contact .custom-form__block--error :is(input.field,textarea.field,select.field),
+.index-contact .custom-form__block--error :is(input.field,textarea.field,select.field):focus{border:2px solid var(--signal);padding:13px calc(var(--space-2) - 1px)}
+.index-contact .custom-form__block--error select.field{padding-right:47px}
+.index-contact .custom-form__error{margin:var(--space-1) 0 0;font-family:var(--font-sans);font-size:13px;font-weight:500;line-height:1.5;color:var(--ink)}
 /* Messages: errors start with the theme's error list in a 2px scarlet frame */
 .index-contact .errors{padding:var(--space-2);border:2px solid var(--signal);font-size:15px;line-height:1.5;color:var(--ink)}
 .index-contact .errors ul{margin:0;padding-left:var(--space-2)}

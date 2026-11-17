@@ -20,6 +20,7 @@
 -%}
 
 {%- render 'stylesheet', name: 'section-contact-form.css' -%}
+<script src="{{ 'contact-validation.js' | asset_url }}" defer="defer"></script>
 
 {%- style -%}
   #{{ unique }} {
@@ -102,13 +103,15 @@
         {%- case block.type -%}
           {%- when 'email' -%}
             <div
-              class="custom-form__block"
+              class="custom-form__block{% if form.errors and form.errors contains 'email' %} custom-form__block--error{% endif %}"
               data-aos="hero"
               data-aos-anchor="{{ animation_anchor }}"
               data-aos-order="{{ animation_order }}"
               {{ block.shopify_attributes }}
             >
               <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label">{{ title }}</label>
+              {%- assign email_error = false -%}
+              {%- if form.errors and form.errors contains 'email' -%}{%- assign email_error = true -%}{%- endif -%}
               <input
                 type="email"
                 class="input field{{ field_class }}"
@@ -117,8 +120,12 @@
                 placeholder="{{ placeholder }}"
                 autocorrect="off"
                 autocapitalize="off"
+                {% if email_error %}aria-invalid="true" aria-describedby="Form-{{ section.id }}-{{ forloop.index0 }}-error"{% endif %}
                 {{ required }}
               >
+              {%- if email_error -%}
+                <p class="custom-form__error" id="Form-{{ section.id }}-{{ forloop.index0 }}-error">Error: Enter an email address like you@example.com.</p>
+              {%- endif -%}
               {{ field_hint }}
             </div>
 
