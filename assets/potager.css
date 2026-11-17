@@ -474,6 +474,9 @@ select{background-size:20px auto;background-position:right var(--space-2) center
 .template-page-about .index-rte.color-scheme-4 .hero__rte.body-large{color:var(--text)}
 /* ...while the three column texts under their headings are muted, as the wireframe (body muted) */
 .template-page-about .color-scheme-4 .column__text{color:var(--ink-muted)}
+/* Mobile: the three columns stack with 24px between them (wireframe grid gap); the theme's 8px
+   was less than the space inside a column, so the columns ran together */
+@media (max-width:749px){.template-page-about .section-columns.color-scheme-4 .grid{row-gap:var(--space-3)}}
 
 /* Image with text: the text column fills its half, with space against the image */
 .brick__block__text:not(.has-padding){--text-width:100%;padding:0 0 0 var(--space-5)}
