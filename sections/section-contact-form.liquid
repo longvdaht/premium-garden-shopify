@@ -365,9 +365,7 @@
               {{ block.shopify_attributes }}
             >
               {%- if title != blank -%}
-                {%- if required != blank -%}
-                  {%- assign title = title | append: '*' -%}
-                {%- endif -%}
+                {%- comment -%} Potager: no asterisk on labels; a missing answer shows its own error {%- endcomment -%}
                 <label for="Form-{{ section.id }}-{{ forloop.index0 }}" class="custom-form__label label--block">
                   {{- title -}}
                 </label>
