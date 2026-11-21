@@ -200,7 +200,7 @@
         "title": {
           "type": "heading",
           "settings": {
-            "title": "We source, spec, and manufacture products for the budding and experienced gardener",
+            "title": "Exceptional products for the budding and experienced gardener",
             "heading_font_size": "heading-large",
             "pin_to_bottom": false,
             "padding_bottom": 24,
@@ -244,6 +244,7 @@
         "image_2_shape_enable": false,
         "image_2_crop": "none",
         "image_2_shape": "scalloped-circle-1",
+        "image_ratio": "portrait",
         "image_width": "one-half",
         "product": "",
         "upsell_color_scheme": "",
@@ -261,8 +262,7 @@
         "content_gutter": false,
         "padding_top": 96,
         "padding_bottom": 96,
-        "show_placeholder": true,
-        "image_ratio": "portrait"
+        "show_placeholder": true
       }
     },
     "guides": {

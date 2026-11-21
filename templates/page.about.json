@@ -31,7 +31,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>In the kitchen, on the balcony, in the yard, or on the farm, there are countless ways to elevate the spaces where we live, work, and play. We bring exceptional tools and products to improve the living environment around us.</p>",
+            "text": "<p><em><strong>Outside Interests</strong></em><em> </em>is a company focused on improving the quality of the living environment around us.</p><p>We source and build horticultural equipment to grow and maintain gardens, indoors or out.</p>",
             "text_font_size": "body-large",
             "padding_bottom": 0
           }
@@ -319,6 +319,7 @@
           "type": "text",
           "settings": {
             "column_width": 50,
+            "subheading": "Shop",
             "title": "The Collection",
             "heading_font_size": "heading-medium",
             "text": "<p>Tools, supplies, and other goods for growing, tending, and improving the spaces around us.</p>",
@@ -329,14 +330,14 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
-            "heading_tag": "automatic",
-            "subheading": "Shop"
+            "heading_tag": "automatic"
           }
         },
         "guides": {
           "type": "text",
           "settings": {
             "column_width": 50,
+            "subheading": "Guides",
             "title": "How-tos and notes",
             "heading_font_size": "heading-medium",
             "text": "<p>Articles on horticulture, projects, and products</p>",
@@ -347,8 +348,7 @@
             "button_size": "",
             "button_style": "btn--text",
             "show_arrow": false,
-            "heading_tag": "automatic",
-            "subheading": "Guides"
+            "heading_tag": "automatic"
           }
         }
       },
