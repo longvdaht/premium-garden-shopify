@@ -31,7 +31,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p><em><strong>Outside Interests</strong></em><em> </em>is a company focused on improving the quality of the living environment around us.</p><p>We source and build horticultural equipment to grow and maintain gardens, indoors or out.</p>",
+            "text": "<p><em><strong>Outside Interests</strong></em><em> </em>is a company focused on improving the living environment around us. We source and build horticultural equipment to grow and maintain gardens, indoors or out.</p>",
             "text_font_size": "body-large",
             "padding_bottom": 0
           }
@@ -99,7 +99,7 @@
         "title": {
           "type": "heading",
           "settings": {
-            "title": "High Standards. Low Restraint.",
+            "title": "High standards, low restraint.",
             "heading_font_size": "heading-large",
             "position": "left",
             "padding_bottom": 0,
@@ -109,7 +109,7 @@
         "lede": {
           "type": "text",
           "settings": {
-            "text": "<p>Professional-grade performance, carefully chosen materials, thoughtful design, and attention to detail. Not extravagance for its own sake, or complexity where none is needed. Exceptionally well-made things that do their job extraordinarily well.</p>",
+            "text": "<p>Professional-grade performance, carefully chosen materials, thoughtful design, and attention to detail. Well-made horticultural products that do their job extraordinarily well.</p>",
             "text_font_size": "body-large",
             "position": "right",
             "padding_bottom": 24
@@ -118,7 +118,7 @@
         "body": {
           "type": "text",
           "settings": {
-            "text": "<p>Put our goods to work. Get them dirty, use them hard, and see what they can take. Fine tools and goods aren't trophies for a shelf. They're meant to be used, tested, maintained, and put straight back to work. Scratches and scuffs are signs of a life well spent.</p>",
+            "text": "<p>Longevity and robustness are the hallmark of our product philosophy - we produce products meant to survive continuous use, be maintained, and put right back to work.&nbsp;</p>",
             "text_font_size": "body-large",
             "position": "right",
             "padding_bottom": 0
@@ -166,7 +166,7 @@
         "title": {
           "type": "heading",
           "settings": {
-            "title": "Our Standard",
+            "title": "Standards",
             "heading_font_size": "heading-large",
             "padding_bottom": 24,
             "heading_tag": "automatic"
@@ -175,7 +175,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>We develop products that make you want to get back to work and give you more pleasure while you're at it, whether that's through traditional craftsmanship or advanced materials and manufacturing.</p>",
+            "text": "<p>Robustness meets design and performance.&nbsp;</p>",
             "text_font_size": "body-large",
             "padding_bottom": 0
           }
@@ -209,7 +209,7 @@
             "image": "shopify://shop_images/masterial.png",
             "title": "Obsessive about quality",
             "heading_font_size": "heading-medium",
-            "text": "<p>We're hard to please when it comes to quality. Materials, construction, finish, and performance all receive the same scrutiny, including details that most people might never notice. Overbuilt is our default.</p>",
+            "text": "<p>The world is a smaller place, and it's never been easier to develop new products. We set a high bar becWe're hard to please when it comes to quality. Materials, construction, finish, and performance all receive the same scrutiny, including details that most people might never notice. Overbuilt is our default.</p>",
             "text_font_size": "body-medium",
             "button_text": "",
             "button_url": "",
@@ -245,9 +245,9 @@
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/use.png",
-            "title": "Keep improving",
+            "title": "Aim higher",
             "heading_font_size": "heading-medium",
-            "text": "<p>We don't believe in settling. There's always more to learn about growing plants, making things, and doing either well. We bring that same approach to our products, making improvements as we learn and putting one foot in front of the other.</p>",
+            "text": "<p>We don't believe in settling. There's always more to learn about growing plants and gardens and product development. We don't believe in innovation for the sake of \"being innovative\", but for building better products</p>",
             "text_font_size": "body-medium",
             "button_text": "",
             "button_url": "",

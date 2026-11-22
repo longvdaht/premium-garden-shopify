@@ -82,7 +82,7 @@
       "settings": {
         "featured_collection": "pruning",
         "collection_promo_meta": "collection_featured_promo",
-        "heading": "The tools",
+        "heading": "Products",
         "heading_font_size": "heading-large",
         "description": "",
         "text_font_size": "body-medium",
@@ -111,7 +111,7 @@
         "collection_promo_meta": "collection_featured_promo",
         "heading": "Bundles",
         "heading_font_size": "heading-large",
-        "description": "",
+        "description": "<p>Curated sets&nbsp;</p>",
         "text_font_size": "body-medium",
         "layout": "inline",
         "link_text": "SHOP ALL BUNDLES",
