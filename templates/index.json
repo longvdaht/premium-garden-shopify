@@ -15,9 +15,9 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Premium equipment for all gardens",
+            "text": "Instruments for horticulture",
             "heading_font_size": "heading-x-large",
-            "padding_bottom": 16,
+            "padding_bottom": 14,
             "heading_tag": "automatic"
           },
           "blocks": {}
