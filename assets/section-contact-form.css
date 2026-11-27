@@ -45,7 +45,8 @@
 .index-contact :is(input.field,textarea.field,select.field):focus{border:1px solid var(--ink)}
 .index-contact textarea.field{height:160px;min-height:120px;resize:vertical}
 .index-contact select.field{appearance:none;-webkit-appearance:none;padding-right:48px;background:var(--surface) var(--potager-icon-chevron-down) right 16px center/20px no-repeat;cursor:pointer}
-.index-contact :is(input.field,textarea.field,select.field):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+/* No outer focus ring on the fields: the text cursor (or the open list) shows which field is active */
+.index-contact :is(input.field,textarea.field,select.field):is(:focus,:focus-visible){outline:none}
 .index-contact .checkbox label{font-size:16px;line-height:1.5;color:var(--ink)}
 /* Send message + reply note */
 .index-contact .custom-form__block:has(>button[type=submit]){display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3)}
@@ -60,7 +61,7 @@
 .index-contact .custom-form__block--error :is(input.field,textarea.field,select.field),
 .index-contact .custom-form__block--error :is(input.field,textarea.field,select.field):focus{border:2px solid var(--signal);padding:13px calc(var(--space-2) - 1px)}
 .index-contact .custom-form__block--error select.field{padding-right:47px}
-.index-contact .custom-form__error{margin:var(--space-1) 0 0;font-family:var(--font-sans);font-size:13px;font-weight:500;line-height:1.5;color:var(--ink)}
+.index-contact .custom-form__error{margin:var(--space-1) 0 0;font-family:var(--font-sans);font-size:13px;font-weight:500;line-height:1.5;color:var(--signal)}
 /* Messages: errors start with the theme's error list in a 2px scarlet frame */
 .index-contact .errors{padding:var(--space-2);border:2px solid var(--signal);font-size:15px;line-height:1.5;color:var(--ink)}
 .index-contact .errors ul{margin:0;padding-left:var(--space-2)}
